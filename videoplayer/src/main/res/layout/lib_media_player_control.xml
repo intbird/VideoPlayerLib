@@ -1,0 +1,160 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llTopTitle"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:animateLayoutChanges="true"
+        android:background="#50000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/icon_video_player_title_arrow_back" />
+
+        <TextView
+            android:id="@+id/tvVideoName"
+            android:layout_width="188dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:gravity="start|center"
+            android:lines="2"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            tools:text="video name" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutControlPanel"
+        android:layout_width="match_parent"
+        android:layout_height="103dp"
+        android:layout_alignParentBottom="true"
+        android:background="#50000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llProgressPanel"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tvVideoCurTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"
+                android:gravity="left"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:text="00:00"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+
+            <SeekBar
+                android:id="@+id/seekBarProgress"
+                style="@style/lib_media_playerAdjustSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                tools:progress="50" />
+
+            <TextView
+                android:id="@+id/tvVideoTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:text="00:00"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp">
+
+            <ImageView
+                android:id="@+id/ivLock"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/icon_video_player_unlock" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivLast"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:padding="10dp"
+                    android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:src="@drawable/icon_video_player_last" />
+
+                <ImageButton
+                    android:id="@+id/ivPlay"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSides"
+                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSides"
+                    android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:src="@drawable/icon_video_player_play" />
+
+                <ImageView
+                    android:id="@+id/ivNext"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:padding="10dp"
+                    android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:src="@drawable/icon_video_player_next" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivDirection"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/icon_video_player_zoom_out" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivPopLock"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="12dp"
+        android:padding="10dp"
+        android:src="@drawable/icon_video_player_lock"
+        android:visibility="gone" />
+</RelativeLayout>

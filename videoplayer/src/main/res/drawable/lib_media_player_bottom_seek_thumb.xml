@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/lib_media_player_seek_bar_thumb" />
+            <size android:width="8dp" android:height="8dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <size android:width="8dp" android:height="8dp" />
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,102 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutTouchPanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llTimeIndicatorWrapper"
+        android:layout_width="112dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
+        android:background="@drawable/lib_media_player_wrapper_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/tvTouchCurrentProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:gravity="left"
+            android:text="00:00"
+            android:textColor="@color/lib_media_player_progress_text_color"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTimeSplit"
+            app:layout_constraintRight_toLeftOf="@+id/tvTimeSplit"
+            app:layout_constraintTop_toTopOf="@+id/tvTimeSplit" />
+
+        <TextView
+            android:id="@+id/tvTouchTotalProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:gravity="right"
+            android:text="00:00"
+            android:textColor="#FFFFFF"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTimeSplit"
+            app:layout_constraintLeft_toRightOf="@+id/tvTimeSplit"
+            app:layout_constraintTop_toTopOf="@+id/tvTimeSplit"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tvTimeSplit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textColor="#FFFFFF"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/pbTouchProgress"
+            style="@style/lib_media_playerPlayerAdjustProgressBar"
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/llAdjustIndicatorWrapper"
+        android:layout_gravity="center"
+        android:background="@drawable/lib_media_player_wrapper_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="112dp"
+        android:layout_height="46dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/adjustIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/icon_video_player_light_off" />
+
+        <ProgressBar
+            android:id="@+id/adjustProgressBar"
+            style="@style/lib_media_playerPlayerAdjustProgressBar"
+            android:layout_width="80dp"
+            android:layout_height="2dp" />
+    </LinearLayout>
+
+</FrameLayout>

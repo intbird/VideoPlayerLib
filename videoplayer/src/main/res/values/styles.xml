@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="lib_media_playerPlayerAdjustProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:indeterminateDrawable">@drawable/lib_media_player_adjust_progress_bar</item>
+    </style>
+
+    <style name="lib_media_playerAdjustSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressDrawable">@drawable/lib_media_player_bottom_seek_bar</item>
+        <item name="android:thumb">@drawable/lib_media_player_bottom_seek_thumb</item>
+        <item name="android:thumbOffset">0dp</item>
+        <item name="android:paddingLeft">0dip</item>
+        <item name="android:paddingRight">0dip</item>
+        <item name="android:paddingStart">0dip</item>
+        <item name="android:paddingEnd">0dip</item>
+    </style>
+</resources>

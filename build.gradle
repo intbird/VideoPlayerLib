@@ -1,0 +1,65 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        build_gradle = '3.6.3'
+        kotlin_version = '1.3.71'
+        publish_version = '1.0.0'
+    }
+    repositories {
+        google()
+        jcenter()
+        maven { url "http://intbird.world:8081/nexus/content/repositories/public/" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$build_gradle"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath("intbird.soft.gradle:publish-maven:$publish_version") {
+            changing = true
+        }
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            // don't cache dynamic versions at all
+            cacheDynamicVersionsFor 0, 'seconds'
+            // don't cache changing modules at all
+            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "http://intbird.world:8081/nexus/content/repositories/public/" }
+    }
+    configurations.all {
+        resolutionStrategy {
+            // don't cache dynamic versions at all
+            cacheDynamicVersionsFor 0, 'seconds'
+            // don't cache changing modules at all
+            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    minSdkVersion = 17
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '29.0.3'
+
+    resourcePrefix = 'lib_media_player'
+    groupId = "intbird.soft.lib"
+    versionCode = 1
+    versionName = "1.0.0"
+}

@@ -1,0 +1,4 @@
+rootProject.name='LibVideoPlayer'
+include ':app'
+include ':videoplayer'
+include ':videoplayer-api'
