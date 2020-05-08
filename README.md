@@ -5,8 +5,8 @@ This repo is for VideoPlayer
 
 my blog: [https://blog.csdn.net/intbird/article/details/105970536](https://blog.csdn.net/intbird/article/details/105970536)
 
-[video(video-QQXuJ6Lb-1588949363365)(type-bilibili)(url-https://player.bilibili.com/player.html?aid=668088806)(image-https://ss.csdn.net/p?http://i1.hdslb.com/bfs/archive/d0a0aeaa81eec14703263861a6ad53610643492f.jpg)(title-测试视频)]
-
+video demo:
+[![video(video-QQXuJ6Lb-1588949363365](https://ss.csdn.net/p?http://i1.hdslb.com/bfs/archive/d0a0aeaa81eec14703263861a6ad53610643492f.jpg)](https://player.bilibili.com/player.html?aid=668088806)
 
 step
 --------
