@@ -39,6 +39,6 @@ dependencies {
     kapt 'com.google.auto.service:auto-service:1.0-rc5'
     implementation 'com.google.auto.service:auto-service-annotations:1.0-rc5'
 
-    implementation 'intbird.soft.lib:video-player:1.0.0'
-    implementation 'intbird.soft.lib:video-player-api:1.0.0'
+    implementation "intbird.soft.lib:video-player:$versionName"
+    implementation "intbird.soft.lib:video-player-api:$versionName"
 }

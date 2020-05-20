@@ -5,8 +5,10 @@ This repo is for VideoPlayer
 
 my blog: [https://blog.csdn.net/intbird/article/details/105970536](https://blog.csdn.net/intbird/article/details/105970536)
 
-video demo:
-[![video(video-QQXuJ6Lb-1588949363365](https://ss.csdn.net/p?http://i1.hdslb.com/bfs/archive/d0a0aeaa81eec14703263861a6ad53610643492f.jpg)](https://player.bilibili.com/player.html?aid=668088806)
+video demo: [https://player.bilibili.com/player.html?aid=668088806](https://player.bilibili.com/player.html?aid=668088806)
+
+![image](./video.png)
+
 
 step
 --------

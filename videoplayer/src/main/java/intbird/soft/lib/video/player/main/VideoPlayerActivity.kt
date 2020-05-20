@@ -96,10 +96,11 @@ class VideoPlayerActivity : Activity(), ILockExecute {
         videoIndex = intent.getIntExtra(EXTRA_FILE_INDEX, 0)
 
         checkPermissionManifest(this, permissionRequestCode)
-         checkPermissionSettings(this, permissionSettingsRequestCode)
+        checkPermissionSettings(this, permissionSettingsRequestCode)
 
         locker?.addExecute(videoTouchController)
-            ?.addExecute(videoControlController)
+                ?.addExecute(videoControlController)
+                ?.addExecute(this)
 
         executeLock(false)
     }
@@ -127,10 +128,10 @@ class VideoPlayerActivity : Activity(), ILockExecute {
         return when (display.rotation) {
             // 横屏
             Surface.ROTATION_90, Surface.ROTATION_270 -> {
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             }
             else -> {
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             }
         }
     }
