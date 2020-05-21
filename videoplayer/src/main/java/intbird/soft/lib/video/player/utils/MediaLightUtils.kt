@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 
 /**
@@ -68,7 +69,11 @@ object MediaLightUtils {
     fun getActivityBrightness(activity: Activity): Float {
         val window = activity.window
         val layoutParams = window.attributes
-        return layoutParams.screenBrightness
+        val brightnessPercent = layoutParams.screenBrightness
+        if (brightnessPercent == WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE) {
+            return WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF
+        }
+        return brightnessPercent
     }
 
     fun setAppBrightness(brightnessPercent: Float, activity: Activity) {

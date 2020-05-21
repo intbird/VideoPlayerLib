@@ -40,11 +40,11 @@ Release
 --------
 see [change log](CHANGELOG.md) has release history.
 
-$lastVersion is v1.0.0
+newest $versionName is v1.0.1
 
 ```
 dependencies {
-    implementation 'intbird.soft.lib:video-player:1.0.0'
-    implementation 'intbird.soft.lib:video-player-api:1.0.0'
+   implementation "intbird.soft.lib:video-player:$versionName"
+   implementation "intbird.soft.lib:video-player-api:$versionName"
 }
 ```

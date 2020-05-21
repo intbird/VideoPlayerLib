@@ -378,7 +378,7 @@ class VideoPlayerActivity : Activity(), ILockExecute {
 
         override fun getBrightnessInfo(): AdjustInfo {
             val current = (MediaLightUtils.getActivityBrightness(this@VideoPlayerActivity))
-            return AdjustInfo(-1.0f, 1.0f, current)
+            return AdjustInfo(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF, WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_FULL, current)
         }
 
         override fun changeBrightnessImpl(newBrightness: Float) {
