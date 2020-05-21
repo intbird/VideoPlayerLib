@@ -7,7 +7,7 @@ my blog: [https://blog.csdn.net/intbird/article/details/105970536](https://blog.
 
 video demo: [https://player.bilibili.com/player.html?aid=668088806](https://player.bilibili.com/player.html?aid=668088806)
 
-![image](./video.png)
+![image](./player_video_screenshot.png)
 
 
 step
@@ -17,7 +17,7 @@ step
 repositories {
     google()
     jcenter()
-    maven { url "http://intbird.world:8081/nexus/content/repositories/public/" }
+    maven { url "http://intbird.world:8081/nexus/content/repositories/releases/" }
 ```
 
 
