@@ -3,7 +3,7 @@
         android:id="@android:id/background"
         android:gravity="center_vertical">
         <shape>
-            <corners android:radius="1dp"/>
+            <corners android:radius="1dp" />
             <solid android:color="@color/lib_media_player_progress_background" />
         </shape>
     </item>
@@ -11,10 +11,12 @@
     <item
         android:id="@android:id/progress"
         android:gravity="center_vertical|left">
-        <shape>
-            <corners android:radius="1dp"/>
-            <size android:height="2dp" />
-            <solid android:color="@color/lib_media_player_progress_indicator" />
-        </shape>
+        <clip android:clipOrientation="horizontal">
+            <shape>
+                <corners android:radius="1dp" />
+                <size android:height="2dp" />
+                <solid android:color="@color/lib_media_player_progress_indicator" />
+            </shape>
+        </clip>
     </item>
 </layer-list>
