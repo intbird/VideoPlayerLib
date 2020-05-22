@@ -2,7 +2,7 @@
 <resources>
 
     <style name="lib_media_playerPlayerAdjustProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:indeterminateDrawable">@drawable/lib_media_player_adjust_progress_bar</item>
+        <item name="android:progressDrawable">@drawable/lib_media_player_adjust_progress_bar</item>
     </style>
 
     <style name="lib_media_playerAdjustSeekBar" parent="Widget.AppCompat.SeekBar">
