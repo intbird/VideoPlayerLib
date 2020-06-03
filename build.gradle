@@ -9,6 +9,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url "http://intbird.world:8081/nexus/content/repositories/snapshots/" }
         maven { url "http://intbird.world:8081/nexus/content/repositories/releases/" }
     }
     dependencies {
@@ -36,6 +37,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "http://intbird.world:8081/nexus/content/repositories/snapshots/" }
         maven { url "http://intbird.world:8081/nexus/content/repositories/releases/" }
     }
     configurations.all {
