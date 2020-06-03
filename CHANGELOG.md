@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+## Version 1.0.2-SNAPSHOT
+_2020-06-01_
+ *  New: add thumb  image list drawable  
+ *  Mdf: change main color to yellow   
+
 ## Version 1.0.1
 _2020-05-21_
  *  Fix1: fix adjust brightness bug.

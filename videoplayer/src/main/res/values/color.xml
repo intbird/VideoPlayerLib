@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="lib_media_player_progress_loading">#3adaaf</color>
+    <color name="lib_media_player_main_color">#FFA035</color>
+
+    <color name="lib_media_player_progress_loading">@color/lib_media_player_main_color</color>
 
     <color name="lib_media_player_progress_background">#50FFFFFF</color>
-    <color name="lib_media_player_progress_indicator">#3adaaf</color>
+    <color name="lib_media_player_progress_indicator">@color/lib_media_player_main_color</color>
 
     <color name="lib_media_player_seek_bar_background">#50FFFFFF</color>
-    <color name="lib_media_player_seek_bar_indicator">#3adaaf</color>
-    <color name="lib_media_player_seek_bar_thumb">#3adaaf</color>
+    <color name="lib_media_player_seek_bar_indicator">@color/lib_media_player_main_color</color>
+    <color name="lib_media_player_seek_bar_thumb">@color/lib_media_player_main_color</color>
 
     <color name="lib_media_player_adjust_wrapper_background">#323232</color>
-    <color name="lib_media_player_progress_text_color">#3adaaf</color>
+    <color name="lib_media_player_progress_text_color">@color/lib_media_player_main_color</color>
 </resources>

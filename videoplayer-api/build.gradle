@@ -9,7 +9,7 @@ publishConfig {
     groupId = rootProject.groupId
     version = rootProject.versionName
 
-    snapshot = version.endsWith("SNAPSHOT")
+    snapshot = rootProject.versionName.endsWith("SNAPSHOT")
 }
 
 android {
