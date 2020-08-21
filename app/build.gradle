@@ -23,6 +23,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -38,8 +43,11 @@ dependencies {
 
     kapt 'com.google.auto.service:auto-service:1.0-rc5'
     implementation 'com.google.auto.service:auto-service-annotations:1.0-rc5'
+    implementation 'intbird.soft.lib:service-loader:1.0.0'
 
-    //implementation project(path: ':videoplayer')
-    implementation "intbird.soft.lib:video-player:$versionName"
-    implementation "intbird.soft.lib:video-player-api:$versionName"
+    debugImplementation project(path: ':videoplayer')
+    debugImplementation project(path: ':videoplayer-api')
+
+    releaseImplementation "intbird.soft.lib:video-player:$versionName"
+    releaseImplementation "intbird.soft.lib:video-player-api:$versionName"
 }

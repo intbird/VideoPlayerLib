@@ -6,8 +6,8 @@
     </style>
 
     <style name="lib_media_playerAdjustSeekBar" parent="Widget.AppCompat.SeekBar">
-        <item name="android:progressDrawable">@drawable/lib_media_player_bottom_seek_bar_image</item>
-        <item name="android:thumb">@drawable/lib_media_player_bottom_seek_thumb_image</item>
+        <item name="android:progressDrawable">@drawable/lib_media_player_bottom_seek_bar</item>
+        <item name="android:thumb">@drawable/lib_media_player_bottom_seek_thumb</item>
         <item name="android:thumbOffset">0dp</item>
         <item name="android:paddingLeft">0dip</item>
         <item name="android:paddingRight">0dip</item>

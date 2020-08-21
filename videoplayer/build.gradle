@@ -47,5 +47,8 @@ dependencies {
 
     kapt 'com.google.auto.service:auto-service:1.0-rc5'
     implementation 'com.google.auto.service:auto-service-annotations:1.0-rc5'
-    implementation "intbird.soft.lib:video-player-api:$versionName"
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.7'
+
+    releaseImplementation "intbird.soft.lib:video-player-api:$versionName"
+    debugImplementation project(path: ':videoplayer-api')
 }
