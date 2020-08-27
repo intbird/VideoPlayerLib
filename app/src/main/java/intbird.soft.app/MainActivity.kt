@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-//import intbird.soft.lib.service.loader.ServicesLoader
+import intbird.soft.lib.service.loader.ServicesLoader
 import intbird.soft.lib.video.player.api.IVideoPlayer
 import intbird.soft.lib.video.player.main.VideoPlayerActivity
 
@@ -14,15 +15,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        click(TextView(this))
     }
 
     fun click(view: View) {
-        val path = "sdcard/My_Feed_on_Vimeo_0324_17_40_24.mp4"
-        //ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf("path1", "path2"), 0)
-        startActivity(this, arrayOf(path), 0)
+        val pathLocal = "file:///sdcard/My_Feed_on_Vimeo_0324_17_40_24.mp4"
+        val pathHttp = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
+
+        ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf(pathHttp, pathLocal), 0)
+        //startActivity(this, arrayOf(patHttp, pathLocal), 0)
     }
 
-    fun startActivity(context: Context?, videoPaths: Array<String>?, index: Int) {
+    private fun startActivity(context: Context?, videoPaths: Array<String>?, index: Int) {
         if (null == context) return
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
         intentPlayer.putExtra(VideoPlayerActivity.EXTRA_FILE_URLS, videoPaths)

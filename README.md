@@ -17,7 +17,7 @@ step
 repositories {
     google()
     jcenter()
-    maven { url "http://intbird.world:8081/nexus/content/repositories/releases/" }
+    maven { url "https://intbird.ml/maven/releases/" }
 ```
 
 

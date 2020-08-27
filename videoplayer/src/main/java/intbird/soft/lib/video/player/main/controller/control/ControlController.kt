@@ -5,15 +5,16 @@ import android.os.Looper
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.SeekBar
-import kotlinx.android.synthetic.main.lib_media_player_control.view.*
 import intbird.soft.lib.video.player.R
-import intbird.soft.lib.video.player.main.notify.ILandscapeExecute
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.locker.call.ILockCallback
+import intbird.soft.lib.video.player.main.notify.ILandscapeExecute
 import intbird.soft.lib.video.player.main.notify.ILockExecute
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaTimeUtil
+import kotlinx.android.synthetic.main.lib_media_player_control.view.*
+import java.util.concurrent.TimeUnit
 
 /**
  * created by intbird
@@ -29,6 +30,8 @@ class ControlController(
         private val viewImpl: View,
         private val viewImplTitle: View
 ) : ILockExecute, ILandscapeExecute {
+    private val seekToInterval = TimeUnit.SECONDS.toMillis(10)
+
     private var handler = Handler(Looper.getMainLooper())
     private val progressInterval = 1000L
     private val dismissInterval = 3000L
@@ -72,6 +75,8 @@ class ControlController(
     init {
         viewImpl.setOnClickListener { toggleVisible(true) }
         viewImpl.seekBarProgress.setOnSeekBarChangeListener(onSeekBarChangeListener)
+        viewImpl.ivSeekBackward.setOnClickListener { iControlCallback?.backward(seekToInterval) }
+        viewImpl.ivSeekForward.setOnClickListener { iControlCallback?.forward(seekToInterval) }
         viewImpl.ivLast.setOnClickListener { iControlCallback?.last() }
         viewImpl.ivNext.setOnClickListener { iControlCallback?.next() }
         toggleLock(false)

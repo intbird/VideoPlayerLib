@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,15 +31,15 @@
             android:ellipsize="middle"
             android:gravity="start|center"
             android:lines="2"
-            android:textSize="14sp"
             android:textColor="#FFFFFF"
+            android:textSize="14sp"
             tools:text="video name" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutControlPanel"
         android:layout_width="match_parent"
-        android:layout_height="103dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#50000000"
         android:clickable="true"
@@ -67,14 +66,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="12dp" />
 
-            <SeekBar
+            <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/seekBarProgress"
                 style="@style/lib_media_playerAdjustSeekBar"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_gravity="center"
                 android:layout_weight="1"
                 tools:progress="50" />
 
@@ -88,9 +87,11 @@
                 android:text="00:00"
                 android:textColor="#FFFFFF"
                 android:textSize="12dp" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_bottom_control"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
@@ -112,11 +113,19 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/ivSeekBackward"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_video_player_seek_backing" />
+
+                <ImageView
                     android:id="@+id/ivLast"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:padding="10dp"
                     android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:padding="10dp"
                     android:src="@drawable/icon_video_player_last" />
 
                 <ImageButton
@@ -132,9 +141,17 @@
                     android:id="@+id/ivNext"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:padding="10dp"
                     android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:padding="10dp"
                     android:src="@drawable/icon_video_player_next" />
+
+                <ImageView
+                    android:id="@+id/ivSeekForward"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/lib_media_player_play_button_ripple"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_video_player_seek_going" />
             </LinearLayout>
 
             <ImageView

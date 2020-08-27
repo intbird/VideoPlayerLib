@@ -1,10 +1,17 @@
-package intbird.soft.lib.video.player.main.player;
+package intbird.soft.lib.video.player.main.player.player;
 
 import android.media.MediaPlayer
 import android.os.Build
 import android.view.Surface
+import android.view.TextureView
+import android.view.View
+import android.widget.Toast
+import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
+import intbird.soft.lib.video.player.main.player.display.TextureDisplay
+import intbird.soft.lib.video.player.main.player.display.IDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
+import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
 
 /**
@@ -14,10 +21,13 @@ import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
  *
  * viewImpl: 暂时没时间view接口,直接用view实现
  */
-class PlayerImpl(private val playerCallback: IPlayerCallback?) :
-        IPlayer,
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnVideoSizeChangedListener {
+class MediaPlayerImpl(
+    private val textureView: TextureView,
+    private val playerCallback: IPlayerCallback?
+) :
+    IPlayer, IDisplay,
+    MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
+    MediaPlayer.OnVideoSizeChangedListener {
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaDisplay: Surface? = null
@@ -28,9 +38,15 @@ class PlayerImpl(private val playerCallback: IPlayerCallback?) :
         get() = mediaDisplay != null && mediaPrepared
 
     private var mediaFileInfo: MediaFileInfo =
-            MediaFileInfo()
+        MediaFileInfo()
 
     private var lastVisiblePaying = false
+
+    init {
+        textureView.surfaceTextureListener =
+            TextureDisplay(this)
+        textureView.visibility = View.VISIBLE
+    }
 
     private fun createMediaPlayer() {
         if (null != mediaPlayer) {
@@ -49,10 +65,10 @@ class PlayerImpl(private val playerCallback: IPlayerCallback?) :
         }
     }
 
-    override fun available(display: Surface?) {
-        mediaDisplay = display
+    override fun displayStateChange(enableDisplay: Boolean) {
+        mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
-        mediaPlayer?.setSurface(display)
+        mediaPlayer?.setSurface(mediaDisplay)
         start()
     }
 
@@ -65,8 +81,11 @@ class PlayerImpl(private val playerCallback: IPlayerCallback?) :
         }
         try {
             mediaPlayer?.setDataSource(mediaFileInfo.filePath)
+            MediaLogUtil.log("prepare: ${mediaFileInfo.filePath}")
             mediaPlayer?.prepareAsync()
         } catch (ignored: Exception) {
+            Toast.makeText(textureView.context,"error: ${ignored.message}",Toast.LENGTH_SHORT).show()
+            MediaLogUtil.log("prepare-error: ${ignored.message}")
         }
     }
 
@@ -74,6 +93,7 @@ class PlayerImpl(private val playerCallback: IPlayerCallback?) :
         mediaPrepared = true
         playerCallback?.onPrepared(mediaFileInfo)
         start()
+        MediaLogUtil.log("onPrepared")
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
@@ -100,6 +120,7 @@ class PlayerImpl(private val playerCallback: IPlayerCallback?) :
         }
         mediaPlayer?.start()
         playerCallback?.onStart()
+        MediaLogUtil.log("start")
     }
 
     override fun seekTo(duration: Long, start: Boolean) {
@@ -146,8 +167,8 @@ class PlayerImpl(private val playerCallback: IPlayerCallback?) :
 
     override fun getCurrentTime(): Long {
         return if (playerEnable) adjustValueBoundL(
-                (mediaPlayer?.currentPosition?.toLong()?: 0L),
-                (mediaPlayer?.duration?.toLong() ?: 0L)
+            (mediaPlayer?.currentPosition?.toLong() ?: 0L),
+            (mediaPlayer?.duration?.toLong() ?: 0L)
         ) else 0L
     }
 

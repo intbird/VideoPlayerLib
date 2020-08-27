@@ -8,14 +8,12 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.SurfaceTexture
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Surface
-import android.view.TextureView
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
@@ -34,12 +32,14 @@ import intbird.soft.lib.video.player.main.notify.ILockExecute
 import intbird.soft.lib.video.player.main.notify.ITouchSystemExecute
 import intbird.soft.lib.video.player.main.notify.mode.AdjustInfo
 import intbird.soft.lib.video.player.main.player.IPlayer
-import intbird.soft.lib.video.player.main.player.PlayerImpl
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaLightUtils
 import intbird.soft.lib.video.player.utils.MediaScreenUtils
-import intbird.soft.lib.video.player.utils.MeidiaFileUtils
+import intbird.soft.lib.video.player.utils.MediaFileUtils
+import intbird.soft.lib.video.player.utils.MediaLogUtil
+import intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
+import intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
 import kotlin.properties.Delegates
 
 /**
@@ -84,13 +84,12 @@ class VideoPlayerActivity : Activity(), ILockExecute {
         )
         setContentView(R.layout.lib_media_player_main)
         ivBack.setOnClickListener { finish() }
-        textureView.surfaceTextureListener = surfaceChangeCallback
 
         locker = LockController(ivPopLock)
-        player = PlayerImpl(playerCallback)
+        player = MediaPlayerImpl(textureView, playerCallback)
+        //player = ExoPlayerImpl(this, playerView, playerCallback)
         videoTouchController = TouchController(player, locker, touchCallback, layoutTouchPanel)
-        videoControlController =
-            ControlController(player, locker, controlCallback, layoutControlPanel, llTopTitle)
+        videoControlController = ControlController(player, locker, controlCallback, layoutControlPanel, llTopTitle)
 
         videoUrls = intent.getStringArrayExtra(EXTRA_FILE_URLS)
         videoIndex = intent.getIntExtra(EXTRA_FILE_INDEX, 0)
@@ -176,13 +175,12 @@ class VideoPlayerActivity : Activity(), ILockExecute {
             return null
         }
         val urlPath = videoUrls!![newIndex]
-        if (urlPath.isEmpty()) {
+        MediaLogUtil.log("urlPath: $urlPath")
+        if (!MediaFileUtils.supportFileType(urlPath)) {
             return null
         }
-        val fileName = MeidiaFileUtils.getFileName(urlPath)
-        if (fileName.isNullOrEmpty()) {
-            return null
-        }
+        val fileName = MediaFileUtils.getFileName(urlPath)
+        MediaLogUtil.log("fileName: $fileName")
         return MediaFileInfo(
             urlPath,
             fileName
@@ -249,26 +247,6 @@ class VideoPlayerActivity : Activity(), ILockExecute {
     }
 
     //----显示器,播放器,触摸和控制功能回调 start----
-    private val surfaceChangeCallback = object : TextureView.SurfaceTextureListener {
-        override fun onSurfaceTextureSizeChanged(
-            surface: SurfaceTexture?,
-            width: Int,
-            height: Int
-        ) {
-        }
-
-        override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-        }
-
-        override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-            return true
-        }
-
-        override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-            player?.available(Surface(surface))
-        }
-    }
-
     private val playerCallback = object : IPlayerCallback {
 
         override fun onPrepared(mediaFileInfo: MediaFileInfo) {
@@ -387,6 +365,17 @@ class VideoPlayerActivity : Activity(), ILockExecute {
     }
 
     private val controlCallback = object : IControlCallback {
+
+        override fun backward(long: Long) {
+            val progress = (player?.getCurrentTime() ?: 0) - long
+            player?.seekTo(progress, start = true)
+        }
+
+        override fun forward(long: Long) {
+            val progress = (player?.getCurrentTime() ?: 0) + long
+            player?.seekTo(progress, start = true)
+        }
+
         override fun last() {
             play(-1, "No more files")
         }

@@ -9,6 +9,9 @@ import intbird.soft.lib.video.player.main.notify.IMediaSeekNotify
 interface IControlCallback :
         IMediaSeekNotify {
 
+    fun backward(long: Long)
+    fun forward(long: Long)
+
     fun last()
     fun next()
 

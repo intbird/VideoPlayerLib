@@ -1,6 +1,5 @@
 package intbird.soft.lib.video.player.main.player;
 
-import android.view.Surface
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 
 /**
@@ -9,10 +8,6 @@ import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
  * DingTalk id: intbird
  */
 interface IPlayer {
-    /**
-     * 实际上这个通知由display调用,这里先简化一下
-     */
-    fun available(display: Surface?)
 
     fun prepare(mediaFileInfo: MediaFileInfo)
 
