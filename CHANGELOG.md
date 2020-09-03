@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+## Version 1.1.0-SNAPSHOT
+_2020-09-01_
+ *  New: add VideoPlayerFragment  
+ *  Fix: fix bugs  
+ 
 ## Version 1.0.2-SNAPSHOT
 _2020-06-01_
  *  New: add thumb  image list drawable  

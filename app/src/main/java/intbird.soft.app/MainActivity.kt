@@ -20,6 +20,61 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
+    val itemTestIndex = 4
+
+    val itemTestUrl1 = "file:///sdcard/videos/test1.mp4"
+    val itemTestUrl2 = "file:///sdcard/videos/test2.mp4"
+    val itemTestUrl3 = "file:///sdcard/videos/test3.mp4"
+    val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
+    val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
+
+    var itemTest1 = MediaPlayItem(
+        "1", "fileName1", arrayListOf(
+            MediaClarity(0, "1", "360P", itemTestUrl1),
+            MediaClarity(1, "1", "720P", itemTestUrl1),
+            MediaClarity(2, "1", "1080P", itemTestUrl1),
+            MediaClarity(3, "1", "2K", itemTestUrl1),
+            MediaClarity(4, "1", "4K", itemTestUrl1)
+        ), 1, TimeUnit.SECONDS.toMillis(1)
+    )
+    var itemTest2 = MediaPlayItem(
+        "2", "fileName2", arrayListOf(
+            MediaClarity(0, "2", "360P", itemTestUrl2),
+            MediaClarity(1, "2", "720P", itemTestUrl2),
+            MediaClarity(2, "2", "1080P", itemTestUrl2),
+            MediaClarity(3, "2", "2K", itemTestUrl2),
+            MediaClarity(4, "2", "4K", itemTestUrl2)
+        ), 2, TimeUnit.SECONDS.toMillis(10)
+    )
+    var itemTest3 = MediaPlayItem(
+        "3", "fileName3", arrayListOf(
+            MediaClarity(0, "3", "360P", itemTestUrl3),
+            MediaClarity(1, "3", "720P", itemTestUrl3),
+            MediaClarity(2, "3", "1080P", itemTestUrl3),
+            MediaClarity(3, "3", "2K", itemTestUrl3),
+            MediaClarity(4, "3", "4K", itemTestUrl3)
+        ), 3, TimeUnit.SECONDS.toMillis(30)
+    )
+    var itemTest4 = MediaPlayItem(
+        "4", "fileName4", arrayListOf(
+            MediaClarity(0, "4", "360P", itemTestUrl4),
+            MediaClarity(1, "4", "720P", itemTestUrl4),
+            MediaClarity(2, "4", "1080P", itemTestUrl4),
+            MediaClarity(3, "4", "2K", itemTestUrl1),
+            MediaClarity(4, "4", "4K", itemTestUrl2)
+        ), 3, TimeUnit.SECONDS.toMillis(5)
+    )
+
+    var itemTest5 = MediaPlayItem(
+        "4", "fileName4", arrayListOf(
+            MediaClarity(0, "4", "360P", itemTestUrl5, mapOf("Key" to "value")),
+            MediaClarity(1, "4", "720P", itemTestUrl5),
+            MediaClarity(2, "4", "1080P", itemTestUrl5),
+            MediaClarity(3, "4", "2K", itemTestUrl5),
+            MediaClarity(4, "4", "4K", itemTestUrl5)
+        ), 3, TimeUnit.SECONDS.toMillis(5)
+    )
+
     private var fragment: VideoPlayerFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,60 +207,4 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(context, "MainActivity: onError", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-    val itemTestIndex = 4
-
-    val itemTestUrl1 = "file:///sdcard/videos/Instagram_0312_10_19_20.mp4"
-    val itemTestUrl2 = "file:///sdcard/videos/My_Feed_on_Vimeo_0323_14_40_13.mp4"
-    val itemTestUrl3 = "file:///sdcard/videos/tiktok_0409_10_55_07.mp4"
-    val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
-    val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
-
-    var itemTest1 = MediaPlayItem(
-        "1", "fileName1", arrayListOf(
-            MediaClarity(0, "1", "360P", itemTestUrl1),
-            MediaClarity(1, "1", "720P", itemTestUrl1),
-            MediaClarity(2, "1", "1080P", itemTestUrl1),
-            MediaClarity(3, "1", "2K", itemTestUrl1),
-            MediaClarity(4, "1", "4K", itemTestUrl1)
-        ), 1, TimeUnit.SECONDS.toMillis(1)
-    )
-    var itemTest2 = MediaPlayItem(
-        "2", "fileName2", arrayListOf(
-            MediaClarity(0, "2", "360P", itemTestUrl2),
-            MediaClarity(1, "2", "720P", itemTestUrl2),
-            MediaClarity(2, "2", "1080P", itemTestUrl2),
-            MediaClarity(3, "2", "2K", itemTestUrl2),
-            MediaClarity(4, "2", "4K", itemTestUrl2)
-        ), 2, TimeUnit.SECONDS.toMillis(10)
-    )
-    var itemTest3 = MediaPlayItem(
-        "3", "fileName3", arrayListOf(
-            MediaClarity(0, "3", "360P", itemTestUrl3),
-            MediaClarity(1, "3", "720P", itemTestUrl3),
-            MediaClarity(2, "3", "1080P", itemTestUrl3),
-            MediaClarity(3, "3", "2K", itemTestUrl3),
-            MediaClarity(4, "3", "4K", itemTestUrl3)
-        ), 3, TimeUnit.SECONDS.toMillis(30)
-    )
-    var itemTest4 = MediaPlayItem(
-        "4", "fileName4", arrayListOf(
-            MediaClarity(0, "4", "360P", itemTestUrl4),
-            MediaClarity(1, "4", "720P", itemTestUrl4),
-            MediaClarity(2, "4", "1080P", itemTestUrl4),
-            MediaClarity(3, "4", "2K", itemTestUrl1),
-            MediaClarity(4, "4", "4K", itemTestUrl2)
-        ), 3, TimeUnit.SECONDS.toMillis(5)
-    )
-
-    var itemTest5 = MediaPlayItem(
-        "4", "fileName4", arrayListOf(
-            MediaClarity(0, "4", "360P", itemTestUrl5, mapOf("Key" to "value")),
-            MediaClarity(1, "4", "720P", itemTestUrl5),
-            MediaClarity(2, "4", "1080P", itemTestUrl5),
-            MediaClarity(3, "4", "2K", itemTestUrl5),
-            MediaClarity(4, "4", "4K", itemTestUrl5)
-        ), 3, TimeUnit.SECONDS.toMillis(5)
-    )
 }
