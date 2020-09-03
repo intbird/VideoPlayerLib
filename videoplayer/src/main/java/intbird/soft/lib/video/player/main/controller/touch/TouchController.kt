@@ -27,7 +27,7 @@ import kotlin.math.abs
 class TouchController(private val player: IPlayer?, private val iLockCall: ILockCallback?,
                       private val videoTouchCallback: IVideoTouchCallback,
                       private var viewImpl: View) : ILockExecute, ILandscapeExecute {
-    private var tapInterceptor = GestureDetector(videoTouchCallback.getContext(), PlayerTapInterceptor())
+    private var tapInterceptor = GestureDetector(viewImpl.context, PlayerTapInterceptor())
     private var touchInterceptor = PlayerTouchInterceptor()
 
     private val mediaTotalTime
@@ -35,6 +35,8 @@ class TouchController(private val player: IPlayer?, private val iLockCall: ILock
 
     private val mediaCurrentTime
         get() = player?.getCurrentTime()?: 0L
+
+    private var touchControllerEnable = false
 
     init {
         executeLock(false)
@@ -49,21 +51,23 @@ class TouchController(private val player: IPlayer?, private val iLockCall: ILock
     }
 
     override fun onLandscape() {
+        this.touchControllerEnable = true
         touchInterceptor.viewSizeChange()
     }
 
     override fun onPortrait() {
+        this.touchControllerEnable = false
         touchInterceptor.viewSizeChange()
     }
 
     inner class PlayerTapInterceptor : SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-            videoTouchCallback?.onSingleTap()
+            if (touchControllerEnable) videoTouchCallback?.onSingleTap()
             return true
         }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
-            videoTouchCallback?.onDoubleTap()
+            if (touchControllerEnable) videoTouchCallback?.onDoubleTap()
             return true
         }
     }
@@ -113,6 +117,7 @@ class TouchController(private val player: IPlayer?, private val iLockCall: ILock
         }
 
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+            if (!touchControllerEnable) return false
             val viewWidth = v?.width ?: 0
             val viewHeight = v?.height ?: 0
             // 不应用滑动

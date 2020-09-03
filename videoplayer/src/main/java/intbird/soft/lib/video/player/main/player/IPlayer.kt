@@ -13,7 +13,7 @@ interface IPlayer {
 
     fun start()
 
-    fun seekTo(duration: Long, start: Boolean)
+    fun seekTo(duration: Long, autoPlay: Boolean)
 
     fun resume()
 

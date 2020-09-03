@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import com.google.auto.service.AutoService
 import intbird.soft.lib.video.player.api.IVideoPlayer
+import intbird.soft.lib.video.player.api.bean.MediaClarity
+import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaPlayerStyle
 
 /**
  * created by intbird
@@ -12,11 +15,46 @@ import intbird.soft.lib.video.player.api.IVideoPlayer
  */
 @AutoService(IVideoPlayer::class)
 class VideoPlayerServiceImpl : IVideoPlayer {
+
+    override fun startActivity(
+        context: Context?,
+        videoPaths: ArrayList<MediaPlayItem>?,
+        index: Int
+    ) {
+        if (null == context) return
+        val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_URLS, videoPaths)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, index)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_PLAYER_STYLE, MediaPlayerStyle.SHOW_BACKWARD_FORWARD)
+        context.startActivity(intentPlayer)
+    }
+
     override fun startActivity(context: Context?, videoPaths: Array<String>?, index: Int) {
         if (null == context) return
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
-        intentPlayer.putExtra(VideoPlayerActivity.EXTRA_FILE_URLS, videoPaths)
-        intentPlayer.putExtra(VideoPlayerActivity.EXTRA_FILE_INDEX, index)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_URLS, compatFileUrls(videoPaths))
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, index)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_PLAYER_STYLE, MediaPlayerStyle.SHOW_LAST_NEXT)
         context.startActivity(intentPlayer)
+    }
+
+    private fun compatFileUrls(videoPaths: Array<String>?): ArrayList<MediaPlayItem>? {
+        val mediaPlayItems = ArrayList<MediaPlayItem>()
+        return if (null == videoPaths) {
+            mediaPlayItems
+        } else {
+            for (videoPath in videoPaths) {
+                mediaPlayItems.add(compatFileUrl(videoPath))
+            }
+            mediaPlayItems
+        }
+    }
+
+    private fun compatFileUrl(videoPath: String): MediaPlayItem {
+        return MediaPlayItem(
+            "mediaId", "",
+            arrayListOf(MediaClarity(0, "mediaId", "", videoPath, null)),
+            0, 0
+        )
     }
 }

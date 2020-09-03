@@ -17,12 +17,23 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:visibility="gone" />
-
     </FrameLayout>
 
     <include layout="@layout/lib_media_player_touch" />
 
-    <include layout="@layout/lib_media_player_control" />
+    <ViewStub
+        android:id="@+id/viewStub1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/layoutControlPanel1"
+        android:layout="@layout/lib_media_player_control_style_1" />
+
+    <ViewStub
+        android:id="@+id/viewStub2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/layoutControlPanel2"
+        android:layout="@layout/lib_media_player_control_style_2" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/contentLoading"
@@ -32,4 +43,6 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/lib_media_player_content_loading" />
+
+    <include layout="@layout/lib_media_player_control_pop" />
 </FrameLayout>

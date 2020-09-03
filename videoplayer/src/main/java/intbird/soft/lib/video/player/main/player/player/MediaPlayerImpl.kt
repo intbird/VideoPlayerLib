@@ -1,15 +1,15 @@
 package intbird.soft.lib.video.player.main.player.player;
 
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
-import android.widget.Toast
 import intbird.soft.lib.video.player.main.player.IPlayer
-import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
-import intbird.soft.lib.video.player.main.player.display.TextureDisplay
+import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
 import intbird.soft.lib.video.player.main.player.display.IDisplay
+import intbird.soft.lib.video.player.main.player.display.TextureDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
@@ -23,7 +23,7 @@ import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
  */
 class MediaPlayerImpl(
     private val textureView: TextureView,
-    private val playerCallback: IPlayerCallback?
+    private val playerCallback: PlayerCallbacks?
 ) :
     IPlayer, IDisplay,
     MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
@@ -43,8 +43,7 @@ class MediaPlayerImpl(
     private var lastVisiblePaying = false
 
     init {
-        textureView.surfaceTextureListener =
-            TextureDisplay(this)
+        textureView.surfaceTextureListener = TextureDisplay(this)
         textureView.visibility = View.VISIBLE
     }
 
@@ -62,6 +61,8 @@ class MediaPlayerImpl(
             mediaPlayer?.setOnPreparedListener(this)
             start()
         } catch (ignored: Exception) {
+            log("init-error: ${ignored.message}")
+            playerCallback?.onError("init: ${ignored.message}")
         }
     }
 
@@ -74,18 +75,23 @@ class MediaPlayerImpl(
 
     override fun prepare(mediaFile: MediaFileInfo) {
         mediaFileInfo = mediaFile
+        playerCallback?.onPrepare(mediaFile)
         createMediaPlayer()
         if (mediaPrepared) {
             mediaPrepared = false
             mediaPlayer?.reset()
         }
         try {
-            mediaPlayer?.setDataSource(mediaFileInfo.filePath)
-            MediaLogUtil.log("prepare: ${mediaFileInfo.filePath}")
+            mediaPlayer?.setDataSource(
+                textureView.context,
+                Uri.parse(mediaFileInfo.mediaPath),
+                mediaFileInfo.mediaHeaders
+            )
+            log("prepare")
             mediaPlayer?.prepareAsync()
         } catch (ignored: Exception) {
-            Toast.makeText(textureView.context,"error: ${ignored.message}",Toast.LENGTH_SHORT).show()
-            MediaLogUtil.log("prepare-error: ${ignored.message}")
+            log("prepare-error: ${ignored.message}")
+            playerCallback?.onError("prepare: ${ignored.message}")
         }
     }
 
@@ -93,7 +99,7 @@ class MediaPlayerImpl(
         mediaPrepared = true
         playerCallback?.onPrepared(mediaFileInfo)
         start()
-        MediaLogUtil.log("onPrepared")
+        log("onPrepared")
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
@@ -102,6 +108,7 @@ class MediaPlayerImpl(
             mediaPlayer?.seekTo(getTotalTime().toInt())
             playerCallback?.onCompletion(mediaFileInfo)
         }
+        log("onCompletion: $mediaCompleted")
     }
 
     override fun onVideoSizeChanged(mp: MediaPlayer?, width: Int, height: Int) {
@@ -109,6 +116,7 @@ class MediaPlayerImpl(
         mediaFileInfo.width = width
         mediaFileInfo.height = height
         playerCallback?.onVideoSizeChanged(mediaFileInfo)
+        log("onVideoSizeChanged: width:$width  height:$height")
     }
 
     override fun start() {
@@ -120,27 +128,29 @@ class MediaPlayerImpl(
         }
         mediaPlayer?.start()
         playerCallback?.onStart()
-        MediaLogUtil.log("start")
+        log("start")
     }
 
-    override fun seekTo(duration: Long, start: Boolean) {
+    override fun seekTo(duration: Long, autoPlay: Boolean) {
         if (!playerEnable) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mediaPlayer?.seekTo(duration.toLong(), MediaPlayer.SEEK_CLOSEST)
+            mediaPlayer?.seekTo(duration, MediaPlayer.SEEK_CLOSEST)
         } else {
             mediaPlayer?.seekTo(duration.toInt())
         }
         playerCallback?.onSeekTo(duration)
         mediaCompleted = (duration >= getTotalTime())
-        if (start && !mediaCompleted) {
+        if (autoPlay && !mediaCompleted) {
             mediaPlayer?.start()
             playerCallback?.onStart()
         }
+        log("seekTo:$duration")
     }
 
     override fun resume() {
         if (!playerEnable) return
         seekTo(mediaPlayer?.currentPosition?.toLong() ?: 0, lastVisiblePaying)
+        log("resume")
     }
 
     override fun pause() {
@@ -149,16 +159,19 @@ class MediaPlayerImpl(
         if (!lastVisiblePaying) return
         mediaPlayer?.pause()
         playerCallback?.onPause()
+        log("pause")
     }
 
     override fun stop() {
         if (!playerEnable) return
         mediaPlayer?.stop()
         playerCallback?.onStop()
+        log("stop")
     }
 
     override fun destroy() {
         mediaPlayer?.release()
+        log("destroy")
     }
 
     override fun isPlaying(): Boolean {
@@ -174,5 +187,9 @@ class MediaPlayerImpl(
 
     override fun getTotalTime(): Long {
         return if (playerEnable) mediaPlayer?.duration?.toLong() ?: 0L else 0L
+    }
+
+    private fun log(message: String) {
+        MediaLogUtil.log("PlayerImpl $message  $mediaFileInfo")
     }
 }

@@ -14,4 +14,11 @@
         <item name="android:paddingStart">0dip</item>
         <item name="android:paddingEnd">0dip</item>
     </style>
+
+    <style name="lib_media_playerNoTitleBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>

@@ -1,6 +1,6 @@
 package intbird.soft.lib.video.player.utils
 
-import intbird.soft.lib.video.player.main.player.mode.MediaFileType
+import intbird.soft.lib.video.player.api.bean.MediaFileType
 import java.io.File
 /**
  * created by intbird

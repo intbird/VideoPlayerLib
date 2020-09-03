@@ -4,7 +4,7 @@ import android.graphics.SurfaceTexture
 import android.view.TextureView
 
 /**
- * created by Bird
+ * created by intbird
  * on 2020/8/20
  * DingTalk id: intbird
  */

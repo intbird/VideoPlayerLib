@@ -5,18 +5,18 @@ package intbird.soft.lib.video.player.main.player.mode
  * on 2020/5/1
  * DingTalk id: intbird
  */
-enum class MediaFileType(val type: String) {
-    FILE("file:///"),
-    HTTP("http://"),
-    HTTPS("https://")
-}
+class MediaFileInfo(
+    var mediaId: String = "",
+    var mediaName: String? = "",
+    var mediaPath: String = "",
+    val mediaHeaders: Map<String, String>? = null,
 
-data class MediaFileInfo(
-        var filePath: String = "",
-        var fileName: String? = "",
-        var width: Int = 0,
-        var height: Int = 0
+    var clarity: String? = "",
+    var width: Int = 0,
+    var height: Int = 0
 ) {
-    var videoWHRate = 0f
-        get() = width.toFloat() / height.toFloat()
+
+    override fun toString(): String {
+        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaPath='$mediaPath', mediaHeaders=$mediaHeaders, clarity=$clarity, width=$width, height=$height)"
+    }
 }

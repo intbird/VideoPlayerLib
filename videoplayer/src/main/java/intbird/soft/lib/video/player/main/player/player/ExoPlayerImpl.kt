@@ -55,7 +55,7 @@ class ExoPlayerImpl(
             val hlsMediaSource =
                 HlsMediaSource.Factory(dataSourceFactory)
                     .setAllowChunklessPreparation(true)
-                    .createMediaSource(Uri.parse(mediaFileInfo.filePath))
+                    .createMediaSource(Uri.parse(mediaFileInfo.mediaPath))
 
             // Prepare the player with the media source.
             player.prepare(hlsMediaSource)
@@ -82,7 +82,7 @@ class ExoPlayerImpl(
         player.playbackState
     }
 
-    override fun seekTo(duration: Long, start: Boolean) {
+    override fun seekTo(duration: Long, autoPlay: Boolean) {
         player.seekTo(duration)
     }
 

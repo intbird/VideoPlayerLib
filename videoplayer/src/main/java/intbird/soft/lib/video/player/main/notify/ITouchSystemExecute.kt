@@ -1,6 +1,5 @@
 package intbird.soft.lib.video.player.main.notify
 
-import android.content.Context
 import intbird.soft.lib.video.player.main.notify.mode.AdjustInfo
 
 /**
@@ -9,8 +8,6 @@ import intbird.soft.lib.video.player.main.notify.mode.AdjustInfo
  * DingTalk id: intbird
  */
 interface ITouchSystemExecute {
-
-    fun getContext(): Context
 
     fun getVolumeInfo() : AdjustInfo
     fun changeSystemVolumeImpl(newVolume: Float)

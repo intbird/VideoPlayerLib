@@ -13,6 +13,8 @@
     <application>
         <activity
             android:name=".main.VideoPlayerActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/lib_media_playerNoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize|locale" />
     </application>
 </manifest>

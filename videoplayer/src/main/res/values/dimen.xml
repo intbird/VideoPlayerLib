@@ -5,4 +5,9 @@
 
     <dimen name="lib_media_playerPlayButtonMarinSides">10dp</dimen>
     <dimen name="lib_media_playerPlayButtonMarinSidesLarge">49dp</dimen>
+
+    <dimen name="lib_media_playerClarityRightMargin">0dp</dimen>
+    <dimen name="lib_media_playerClarityRightMarginLarge">30dp</dimen>
+
+    <dimen name="lib_media_playerVideoPlayerHeight">200dp</dimen>
 </resources>
