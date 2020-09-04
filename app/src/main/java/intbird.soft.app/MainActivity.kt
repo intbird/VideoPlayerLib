@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 自定义高度和样式播放器
+        // used as a fragment
         add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT) }
         add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD) }
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
@@ -92,12 +92,12 @@ class MainActivity : AppCompatActivity() {
 
 
         fullScreen1.setOnClickListener {
-            // 全屏播放 : 底部 快进/快退 MediaPlayerStyle.HIDE_LAST_NEXT
+            // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
             ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
         }
 
         fullScreen2.setOnClickListener {
-            // 全屏播放 : 底部 上一个/下一个 MediaPlayerStyle.HIDE_BACKWARD_FORWARD
+            // full screen :  MediaPlayerStyle.HIDE_BACKWARD_FORWARD
             ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf(itemTestUrl1, itemTestUrl2, itemTestUrl3, itemTestUrl4, itemTestUrl5), itemTestIndex)
         }
     }
