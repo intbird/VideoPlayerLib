@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.api
+package intbird.soft.lib.video.player.api.state
 
 import androidx.fragment.app.Fragment
 
@@ -24,5 +24,5 @@ interface IVideoPlayerCallback {
 
     fun onStop()
 
-    fun onError(errorMessage: String?)
+    fun onError(errorMessage: String?="")
 }

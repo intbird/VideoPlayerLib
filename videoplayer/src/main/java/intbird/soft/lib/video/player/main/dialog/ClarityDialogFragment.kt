@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.lib_media_player_clarity_item.view.*
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
+import intbird.soft.lib.video.player.main.VideoPlayerFragmentLite
 
 /**
  * created by intbird
@@ -43,7 +44,7 @@ class ClarityDialogFragment : DialogFragment() {
         }
     }
 
-    private val viewModel: VideoPlayerFragment.SharedViewModel by activityViewModels()
+    private val viewModel: VideoPlayerFragmentLite.SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

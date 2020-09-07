@@ -14,8 +14,8 @@ interface IControlCallback :
     fun backward(long: Long)
     fun forward(long: Long)
 
-    fun last()
-    fun next()
+    fun last():Boolean
+    fun next():Boolean
 
     fun landscape()
     fun portrait()

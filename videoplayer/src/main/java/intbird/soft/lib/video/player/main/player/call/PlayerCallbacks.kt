@@ -7,23 +7,23 @@ import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
  * on 2020/5/1
  * DingTalk id: intbird
  */
-class PlayerCallbacks(vararg callbackVars: IPlayerCallback) : IPlayerCallback {
+class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
 
     private val callbacks = mutableListOf<IPlayerCallback>()
 
     init {
         for (playerCallback in callbackVars) {
-            callbacks.add(playerCallback)
+            if (null != playerCallback) callbacks.add(playerCallback)
         }
     }
 
-    fun addCallback(iPlayerCallback: IPlayerCallback): PlayerCallbacks {
-        callbacks.add(iPlayerCallback)
+    fun addCallback(iPlayerCallback: IPlayerCallback?): PlayerCallbacks {
+        if (null != iPlayerCallback) callbacks.add(iPlayerCallback)
         return this
     }
 
-    fun removeCallback(iPlayerCallback: IPlayerCallback): PlayerCallbacks {
-        callbacks.remove(iPlayerCallback)
+    fun removeCallback(iPlayerCallback: IPlayerCallback?): PlayerCallbacks {
+        if (null != iPlayerCallback) callbacks.remove(iPlayerCallback)
         return this
     }
 
@@ -80,4 +80,17 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback) : IPlayerCallback {
             callback.onVideoSizeChanged(mediaFileInfo)
         }
     }
+
+    override fun onBuffStart() {
+        for (callback in callbacks) {
+            callback.onBuffStart()
+        }
+    }
+
+    override fun onBuffEnded() {
+        for (callback in callbacks) {
+            callback.onBuffEnded()
+        }
+    }
+
 }
