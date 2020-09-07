@@ -59,6 +59,17 @@ class MediaPlayerImpl(
             mediaPlayer?.setOnVideoSizeChangedListener(this)
             mediaPlayer?.setOnCompletionListener(this)
             mediaPlayer?.setOnPreparedListener(this)
+            mediaPlayer?.setOnInfoListener { _, what, _ ->
+                log("setOnInfoListener: $what")
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) playerCallback?.onBuffStart()
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) playerCallback?.onBuffEnded()
+                false
+            }
+            mediaPlayer?.setOnErrorListener { _, what, extra ->
+                log("setOnErrorListener: $what $extra")
+                playerCallback?.onError("what:$what extra:$extra")
+                true
+            }
             start()
         } catch (ignored: Exception) {
             log("init-error: ${ignored.message}")

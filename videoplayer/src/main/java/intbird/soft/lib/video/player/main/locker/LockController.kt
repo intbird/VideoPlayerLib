@@ -11,8 +11,7 @@ import intbird.soft.lib.video.player.main.notify.ILockExecute
  * on 2020/5/1
  * DingTalk id: intbird
  */
-class LockController(private val ivPopLock: View) :
-        ILockCallback {
+class LockController(private val ivPopLock: View) : ILockCallback {
 
     private var locked = false
 
@@ -52,6 +51,8 @@ class LockController(private val ivPopLock: View) :
             ivPopLock.visibility = View.GONE
         }
     }
+
+    fun isLocked() = locked
 
     override fun needLock() {
         locked = true

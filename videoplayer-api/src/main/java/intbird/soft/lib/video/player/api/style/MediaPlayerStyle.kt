@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.api.bean
+package intbird.soft.lib.video.player.api.style
 
 /**
  * created by intbird

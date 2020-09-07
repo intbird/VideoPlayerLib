@@ -5,26 +5,25 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import intbird.soft.lib.service.loader.ServicesLoader
 import intbird.soft.lib.video.player.api.IVideoPlayer
-import intbird.soft.lib.video.player.api.IVideoPlayerCallback
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
-import intbird.soft.lib.video.player.api.bean.MediaPlayerStyle
+import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
+import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    val itemTestIndex = 4
+    val itemTestIndex = 0
 
-    val itemTestUrl1 = "file:///sdcard/videos/test1.mp4"
-    val itemTestUrl2 = "file:///sdcard/videos/test2.mp4"
-    val itemTestUrl3 = "file:///sdcard/videos/test3.mp4"
+    val itemTestUrl1 = "file:///sdcard/videos/Instagram_0312_10_19_20.mp4"
+    val itemTestUrl2 = "file:///sdcard/videos/My_Feed_on_Vimeo_0323_14_40_13.mp4"
+    val itemTestUrl3 = "file:///sdcard/videos/tiktok_0409_10_55_07.mp4"
     val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
     val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
 
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     var itemTest5 = MediaPlayItem(
-        "4", "fileName4", arrayListOf(
+        "5", "fileName5", arrayListOf(
             MediaClarity(0, "4", "360P", itemTestUrl5, mapOf("Key" to "value")),
             MediaClarity(1, "4", "720P", itemTestUrl5),
             MediaClarity(2, "4", "1080P", itemTestUrl5),
@@ -81,23 +80,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // used as a fragment
-        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT) }
-        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD) }
+        // use as a fragment
+        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT)}
+        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD)}
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
-        last.setOnClickListener { fragment?.setVideoPlayerLast() }
+        last.setOnClickListener { fragment?.getVideoPlayerController()?.last() }
         pause.setOnClickListener { fragment?.getVideoPlayerController()?.pause() }
-        next.setOnClickListener { fragment?.setVideoPlayerNext() }
+        next.setOnClickListener { fragment?.getVideoPlayerController()?.next() }
+        info.setOnClickListener { stateText.text = "info:${fragment?.getVideoPlayerStateInfo()?.getCurrentTime()}" }
 
-
+        // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
         fullScreen1.setOnClickListener {
-            // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
             ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
         }
 
+        // full screen :  MediaPlayerStyle.HIDE_BACKWARD_FORWARD
         fullScreen2.setOnClickListener {
-            // full screen :  MediaPlayerStyle.HIDE_BACKWARD_FORWARD
             ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf(itemTestUrl1, itemTestUrl2, itemTestUrl3, itemTestUrl4, itemTestUrl5), itemTestIndex)
         }
     }
@@ -137,11 +136,12 @@ class MainActivity : AppCompatActivity() {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val fragment = VideoPlayerFragment()
-        setFragmentArgs(fragment, style)
+        val fragment = VideoPlayerFragment.newInstance(arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5),itemTestIndex, style)
         fragmentTransaction.add(rid, fragment)
         fragmentTransaction.commit()
+
         this.fragment = fragment
+        this.fragment?.setPlayerStateCallback(ReceivePlayerState(this))
     }
 
     private fun removeAudioPlayer(rid:Int) {
@@ -151,60 +151,45 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    private fun setFragmentArgs(fragment: VideoPlayerFragment, style: MediaPlayerStyle) {
-        var args = fragment.arguments
-        if (null == args) args = Bundle()
-        args.putParcelableArrayList(VideoPlayerFragment.EXTRA_FILE_URLS, arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5))
-        args.putInt(VideoPlayerFragment.EXTRA_FILE_INDEX, itemTestIndex)
-        args.putSerializable(VideoPlayerFragment.EXTRA_PLAYER_STYLE, style)
-        fragment.arguments = args
-
-        fragment.registerPlayStateCallback(ReceivePlayerState(this))
-    }
-
-    inner class ReceivePlayerState(val context: Context) : IVideoPlayerCallback {
+    inner class ReceivePlayerState(val context: Context) :
+        IVideoPlayerCallback {
         override fun onCreated(fragment: Fragment) {
             // 动态数据切换
             if (fragment is VideoPlayerFragment) {
                 fragment.setVideoPlayerList(arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
-                fragment.setVideoPlayerLast()
-                fragment.setVideoPlayerNext()
-
-                fragment.getVideoPlayingInfo()
-                fragment.getVideoPlayerController()?.getTotalTime()
             }
         }
 
         override fun onPrepare() {
-            Toast.makeText(context, "MainActivity: onPrepare", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onPrepare"
         }
 
         override fun onPrepared() {
-            Toast.makeText(context, "MainActivity: onPrepared", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onPrepared"
         }
 
         override fun onStart() {
-            Toast.makeText(context, "MainActivity: onStart", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onStart ${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}"
         }
 
         override fun onSeekTo(progress: Long?) {
-            Toast.makeText(context, "MainActivity: onSeekTo: $progress", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onSeekTo:$progress"
         }
 
         override fun onPause(progress: Long?) {
-            Toast.makeText(context, "MainActivity: onPause: $progress", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onPause:${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}"
         }
 
         override fun onCompletion() {
-            Toast.makeText(context, "MainActivity: onCompletion", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onCompletion"
         }
 
         override fun onStop() {
-            Toast.makeText(context, "MainActivity: onStop", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onStop"
         }
 
         override fun onError(errorMessage: String?) {
-            Toast.makeText(context, "MainActivity: onError", Toast.LENGTH_SHORT).show()
+            stateText.text  = "MainActivity: onError$errorMessage"
         }
     }
 }
