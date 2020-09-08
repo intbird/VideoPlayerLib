@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.error.MediaError
 import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
 import intbird.soft.lib.video.player.main.controller.control.ControlController
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
@@ -137,9 +138,6 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         executeLock(false)
 
         handBackPressed()
-
-        checkPermissionManifest(getInternalActivity(), permissionRequestCode)
-        // checkPermissionSettings(this, permissionSettingsRequestCode)
     }
 
     protected fun setVideoPlayerItems(playList: ArrayList<MediaPlayItem>?, playIndex: Int) {
@@ -191,6 +189,9 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
             play(PlayFlag.SELF)
             log("clarityArrayChecked: $mediaClarity")
         })
+
+        checkPermissionManifest(getInternalActivity(), permissionRequestCode)
+        checkPermissionSettings(getInternalActivity(), permissionSettingsRequestCode)
     }
 
     override fun onResume() {
@@ -216,6 +217,10 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         videoTouchController?.destroy()
         videoControlController?.destroy()
         log("onDestroy")
+    }
+
+    protected fun keepViewScreen(screenOn: Boolean) {
+        mediaRootContainer.keepScreenOn = screenOn
     }
 
     override fun executeLock(lock: Boolean) {
@@ -265,7 +270,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
             player?.prepare(creasedFile)
             true
         } else {
-            states?.onError()
+            states?.onError(MediaError.NO_MORE_FILES)
             false
         }
     }
@@ -409,7 +414,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
                 && mediaClarity.clarityProgress > 0
                 && mediaClarity.mediaId == mediaFileInfo.mediaId
             ) {
-                player?.seekTo(mediaClarity.clarityProgress, true)
+                player?.seekTo(mediaClarity.clarityProgress, player?.isPlaying()?:false)
                 mediaClarity.clarityProgress = 0
             }
         }
@@ -417,6 +422,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         override fun onStart() {
             contentLoading.hide()
             videoControlController?.onStart()
+            keepViewScreen(true)
             log("player onStart")
         }
 
@@ -433,6 +439,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         override fun onCompletion(mediaFileInfo: MediaFileInfo) {
             contentLoading.hide()
             videoControlController?.onCompletion()
+            keepViewScreen(false)
             log("player onCompletion:$mediaFileInfo")
         }
 
@@ -442,7 +449,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
             log("player onStop")
         }
 
-        override fun onError(errorMessage: String?) {
+        override fun onError(errorCode:Int, errorMessage: String?) {
             contentLoading.hide()
             videoControlController?.onStop()
             log("player onError")

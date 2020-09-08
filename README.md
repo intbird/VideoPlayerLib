@@ -44,29 +44,35 @@ dependencies {
         val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
 ...
 
-        // used as a fragment
-        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT) }
-        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD) }
-        remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
-        last.setOnClickListener { fragment?.setVideoPlayerLast() }
-        pause.setOnClickListener { fragment?.getVideoPlayerController()?.pause() }
-        next.setOnClickListener { fragment?.setVideoPlayerNext() }
+       // use as a fragment
+       // fragment?.getVideoPlayerController()
+       // fragment?.getVideoPlayerStateInfo()
+       // fragment?.setPlayerStateCallback(callback) 
+       add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT)}
+       add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD)}
+       remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
-       
-        // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
-        ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
-        
-     
-        // full screen :  MediaPlayerStyle.HIDE_BACKWARD_FORWARD
-        ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf(itemTestUrl1, itemTestUrl2, itemTestUrl3, itemTestUrl4, itemTestUrl5), itemTestIndex)
-       
+       last.setOnClickListener { fragment?.getVideoPlayerController()?.last() }
+       pause.setOnClickListener { fragment?.getVideoPlayerController()?.pause() }
+       next.setOnClickListener { fragment?.getVideoPlayerController()?.next() }
+       info.setOnClickListener { stateText.text = "info:${fragment?.getVideoPlayerStateInfo()?.getCurrentTime()}" }
+
+       // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
+       fullScreen1.setOnClickListener {
+           ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
+       }
+
+       // full screen :  MediaPlayerStyle.HIDE_BACKWARD_FORWARD
+       fullScreen2.setOnClickListener {
+           ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf(itemTestUrl1, itemTestUrl2, itemTestUrl3, itemTestUrl4, itemTestUrl5), itemTestIndex)
+       }
 ```
 
 Release
 --------
 see [change log](CHANGELOG.md) has release history.
 
-newest $versionName is v1.1.0
+newest $versionName is v1.1.1
 
 ```
 dependencies {
@@ -80,7 +86,7 @@ dependencies {
 # ScreenShoots
 
 ## DemoActivity  
-![image](screenshoots/00.png)
+![image](screenshoots/demo.png)
 
 ## style1 portrait
 ![image](screenshoots/1.png)

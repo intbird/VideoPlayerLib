@@ -63,5 +63,5 @@ ext {
     resourcePrefix = 'lib_media_player'
     groupId = "intbird.soft.lib"
     versionCode = 1
-    versionName = "1.1.0-SNAPSHOT"
+    versionName = "1.1.1"
 }

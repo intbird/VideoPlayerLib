@@ -24,5 +24,9 @@ interface IVideoPlayerCallback {
 
     fun onStop()
 
-    fun onError(errorMessage: String?="")
+    fun onError(errorCode: Int, errorMessage: String? = "")
+
+    fun onBuffStart()
+
+    fun onBuffEnded()
 }
