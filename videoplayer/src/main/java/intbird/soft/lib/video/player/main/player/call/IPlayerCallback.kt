@@ -22,7 +22,7 @@ interface IPlayerCallback {
 
     fun onStop()
 
-    fun onError(errorMessage: String?="")
+    fun onError(errorCode: Int, errorMessage: String? = "")
 
     fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo)
 

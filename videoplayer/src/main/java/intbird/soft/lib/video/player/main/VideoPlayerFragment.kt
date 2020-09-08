@@ -36,6 +36,11 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
         states?.addCallback(playerCallback)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        mediaStateCallback?.onCreated(this)
+    }
+
     //---- 外部控制命令 start ----
     fun setVideoPlayerList(
         playList: ArrayList<MediaPlayItem>?,
@@ -68,55 +73,46 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
 
     private val playerCallback = object : IPlayerCallback {
         override fun onPrepare(mediaFileInfo: MediaFileInfo) {
-            if (isFinishing()) return
             mediaStateCallback?.onPrepare()
         }
 
         override fun onPrepared(mediaFileInfo: MediaFileInfo) {
-            if (isFinishing()) return
             mediaStateCallback?.onPrepared()
         }
 
         override fun onStart() {
-            if (isFinishing()) return
             mediaStateCallback?.onStart()
         }
 
         override fun onSeekTo(duration: Long) {
-            if (isFinishing()) return
             mediaStateCallback?.onSeekTo(duration)
         }
 
         override fun onPause() {
-            if (isFinishing()) return
             mediaStateCallback?.onPause(player?.getCurrentTime())
         }
 
         override fun onCompletion(mediaFileInfo: MediaFileInfo) {
-            if (isFinishing()) return
             mediaStateCallback?.onCompletion()
         }
 
         override fun onStop() {
-            if (isFinishing()) return
             mediaStateCallback?.onStop()
         }
 
-        override fun onError(errorMessage: String?) {
-            if (isFinishing()) return
-            mediaStateCallback?.onError(errorMessage)
+        override fun onError(errorCode:Int, errorMessage: String?) {
+            mediaStateCallback?.onError(errorCode, errorMessage)
         }
 
         override fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo) {
-            if (isFinishing()) return
         }
 
         override fun onBuffStart() {
-            if (isFinishing()) return
+            mediaStateCallback?.onBuffStart()
         }
 
         override fun onBuffEnded() {
-            if (isFinishing()) return
+            mediaStateCallback?.onBuffEnded()
         }
     }
 

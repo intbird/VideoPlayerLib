@@ -69,9 +69,9 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
         }
     }
 
-    override fun onError(errorMessage: String?) {
+    override fun onError(errorCode: Int, errorMessage: String?) {
         for (callback in callbacks) {
-            callback.onError(errorMessage)
+            callback.onError(errorCode, errorMessage)
         }
     }
 

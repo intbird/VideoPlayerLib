@@ -1,7 +1,15 @@
 Change Log
 ==========
 
-## Version 1.1.0-SNAPSHOT
+## Version 1.1.1
+_2020-09-08_
+ *  Add: fragment?.getVideoPlayerStateInfo() to get the paying info
+ *  Add: fragment?.getVideoPlayerController() to control the player
+ *  Add: MediaError & keepScreenOn() & autoStartPlayWhenPrepared ...
+ *  Mdf: make VideoPlayerFragment extends VideoPlayerFragmentLite to impl some outer calls
+ *  Fix: fix bugs  
+ 
+## Version 1.1.0
 _2020-09-01_
  *  New: add VideoPlayerFragment  
  *  Fix: fix bugs  

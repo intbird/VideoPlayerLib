@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    val itemTestIndex = 0
+    val itemTestIndex = 4
 
     val itemTestUrl1 = "file:///sdcard/videos/Instagram_0312_10_19_20.mp4"
     val itemTestUrl2 = "file:///sdcard/videos/My_Feed_on_Vimeo_0323_14_40_13.mp4"
@@ -161,7 +161,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onPrepare() {
-            stateText.text  = "MainActivity: onPrepare"
+            stateText.text  = "MainActivity: onPrepare loading... \n\n ${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}"
         }
 
         override fun onPrepared() {
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onStart() {
-            stateText.text  = "MainActivity: onStart ${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}"
+            stateText.text  = "MainActivity: onStart \n\n ${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}"
         }
 
         override fun onSeekTo(progress: Long?) {
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onPause(progress: Long?) {
-            stateText.text  = "MainActivity: onPause:${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}"
+            stateText.text  = "MainActivity: onPause: ${fragment?.getVideoPlayerStateInfo()?.getCurrentTime()}"
         }
 
         override fun onCompletion() {
@@ -188,8 +188,16 @@ class MainActivity : AppCompatActivity() {
             stateText.text  = "MainActivity: onStop"
         }
 
-        override fun onError(errorMessage: String?) {
-            stateText.text  = "MainActivity: onError$errorMessage"
+        override fun onError(errorCode: Int, errorMessage: String?) {
+            stateText.text  = "MainActivity: onError: $errorCode  = $errorMessage"
+        }
+
+        override fun onBuffStart() {
+            stateText.text  = "MainActivity: onBuffStart"
+        }
+
+        override fun onBuffEnded() {
+            stateText.text  = "MainActivity: onBuffEnded"
         }
     }
 }

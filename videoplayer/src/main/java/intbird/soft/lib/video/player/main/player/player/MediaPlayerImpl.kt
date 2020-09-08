@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import intbird.soft.lib.video.player.api.error.MediaError
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
 import intbird.soft.lib.video.player.main.player.display.IDisplay
@@ -40,7 +41,8 @@ class MediaPlayerImpl(
     private var mediaFileInfo: MediaFileInfo =
         MediaFileInfo()
 
-    private var lastVisiblePaying = false
+    private var payingStateOnPause = false
+    private var autoStartPlayWhenPrepared = true
 
     init {
         textureView.surfaceTextureListener = TextureDisplay(this)
@@ -67,13 +69,12 @@ class MediaPlayerImpl(
             }
             mediaPlayer?.setOnErrorListener { _, what, extra ->
                 log("setOnErrorListener: $what $extra")
-                playerCallback?.onError("what:$what extra:$extra")
+                playerCallback?.onError(MediaError.PLAYER_ERROR_CALLBACK,"what:$what extra:$extra")
                 true
             }
-            start()
         } catch (ignored: Exception) {
             log("init-error: ${ignored.message}")
-            playerCallback?.onError("init: ${ignored.message}")
+            playerCallback?.onError(MediaError.PLAYER_INIT_ERROR,ignored.message)
         }
     }
 
@@ -81,7 +82,7 @@ class MediaPlayerImpl(
         mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
         mediaPlayer?.setSurface(mediaDisplay)
-        start()
+        if (autoStartPlayWhenPrepared) start()
     }
 
     override fun prepare(mediaFile: MediaFileInfo) {
@@ -102,14 +103,14 @@ class MediaPlayerImpl(
             mediaPlayer?.prepareAsync()
         } catch (ignored: Exception) {
             log("prepare-error: ${ignored.message}")
-            playerCallback?.onError("prepare: ${ignored.message}")
+            playerCallback?.onError(MediaError.PLAYER_PREPARE_ERROR, ignored.message)
         }
     }
 
     override fun onPrepared(mp: MediaPlayer?) {
         mediaPrepared = true
         playerCallback?.onPrepared(mediaFileInfo)
-        start()
+        if (autoStartPlayWhenPrepared) start()
         log("onPrepared")
     }
 
@@ -160,14 +161,14 @@ class MediaPlayerImpl(
 
     override fun resume() {
         if (!playerEnable) return
-        seekTo(mediaPlayer?.currentPosition?.toLong() ?: 0, lastVisiblePaying)
+        seekTo(mediaPlayer?.currentPosition?.toLong() ?: 0, payingStateOnPause)
         log("resume")
     }
 
     override fun pause() {
         if (!playerEnable) return
-        lastVisiblePaying = mediaPlayer?.isPlaying ?: false
-        if (!lastVisiblePaying) return
+        payingStateOnPause = mediaPlayer?.isPlaying ?: false
+        if (!payingStateOnPause) return
         mediaPlayer?.pause()
         playerCallback?.onPause()
         log("pause")
