@@ -1,12 +1,13 @@
 package intbird.soft.lib.video.player.main.player.player;
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.view.Surface
 import android.view.TextureView
-import android.view.View
 import intbird.soft.lib.video.player.api.error.MediaError
+import intbird.soft.lib.video.player.main.intent.MediaIntentDelegate
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
 import intbird.soft.lib.video.player.main.player.display.IDisplay
@@ -23,7 +24,9 @@ import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
  * viewImpl: 暂时没时间view接口,直接用view实现
  */
 class MediaPlayerImpl(
-    private val textureView: TextureView,
+    private val context: Context,
+    private val textureView: TextureView?,
+    private val playerDelegate: MediaIntentDelegate?,
     private val playerCallback: PlayerCallbacks?
 ) :
     IPlayer, IDisplay,
@@ -45,8 +48,7 @@ class MediaPlayerImpl(
     private var autoStartPlayWhenPrepared = true
 
     init {
-        textureView.surfaceTextureListener = TextureDisplay(this)
-        textureView.visibility = View.VISIBLE
+        textureView?.surfaceTextureListener = TextureDisplay(this)
     }
 
     private fun createMediaPlayer() {
@@ -79,7 +81,7 @@ class MediaPlayerImpl(
     }
 
     override fun displayStateChange(enableDisplay: Boolean) {
-        mediaDisplay = Surface(textureView.surfaceTexture)
+        if (null != textureView) mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
         mediaPlayer?.setSurface(mediaDisplay)
         if (autoStartPlayWhenPrepared) start()
@@ -95,7 +97,7 @@ class MediaPlayerImpl(
         }
         try {
             mediaPlayer?.setDataSource(
-                textureView.context,
+                context,
                 Uri.parse(mediaFileInfo.mediaPath),
                 mediaFileInfo.mediaHeaders
             )
@@ -172,6 +174,14 @@ class MediaPlayerImpl(
         mediaPlayer?.pause()
         playerCallback?.onPause()
         log("pause")
+    }
+
+    override fun last():Boolean {
+        return playerDelegate?.delegateLast() == true
+    }
+
+    override fun next():Boolean {
+       return playerDelegate?.delegateNext() == true
     }
 
     override fun stop() {

@@ -7,10 +7,10 @@ import intbird.soft.lib.video.player.api.bean.MediaPlayItem
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
 import intbird.soft.lib.video.player.api.state.IVideoPlayerController
 import intbird.soft.lib.video.player.api.state.IVideoPlayerStateInfo
-import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.state.IPlayerExecute
+import intbird.soft.lib.video.player.main.view.MediaPlayerType
 
 /**
  * created by intbird
@@ -25,9 +25,10 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
         fun newInstance(
             playList: ArrayList<MediaPlayItem>?,
             playIndex: Int,
-            playerStyle: MediaPlayerStyle
+            playerStyle: MediaPlayerType,
+            autoPlay: Boolean
         ): VideoPlayerFragment {
-            return VideoPlayerFragmentLite.newInstance(playList, playIndex, playerStyle)
+            return VideoPlayerFragmentLite.newInstance(playList, playIndex, playerStyle, autoPlay)
         }
     }
 
@@ -42,17 +43,9 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
     }
 
     //---- 外部控制命令 start ----
-    fun setVideoPlayerList(
-        playList: ArrayList<MediaPlayItem>?,
-        playIndex: Int,
-        autoPlay: Boolean = false
-    ) {
+    fun setVideoPlayerList(playList: ArrayList<MediaPlayItem>?, playIndex: Int, autoPlay:Boolean) {
         if (isFinishing()) return
-        setVideoPlayerItems(playList, playIndex)
-        if (autoPlay) {
-            play(PlayFlag.SELF)
-        }
-        log("setVideoPlayerList: playList:$playList playIndex: $playIndex autoPlay: $autoPlay")
+        intentParser?.setVideoPlayerList(playList, playIndex, autoPlay)
     }
 
     var mediaStateCallback: IVideoPlayerCallback? = null
@@ -139,12 +132,12 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
 
         override fun last() {
             if (isFinishing()) return
-            play(PlayFlag.LAST)
+            player?.last()
         }
 
         override fun next() {
             if (isFinishing()) return
-            play(PlayFlag.NEXT)
+            player?.next()
         }
     }
 
@@ -152,12 +145,12 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
 
         override fun getVideoPlayingItem(): MediaPlayItem? {
             if (isFinishing()) return null
-            return mediaPlayingItem
+            return intentParser?.getPlayingItem()
         }
 
         override fun getVideoPlayingItemChild(): MediaClarity? {
             if (isFinishing()) return null
-            return mediaPlayingItemChild
+            return intentParser?.getPlayingItemChild()
         }
 
         override fun getCurrentTime(): Long? {

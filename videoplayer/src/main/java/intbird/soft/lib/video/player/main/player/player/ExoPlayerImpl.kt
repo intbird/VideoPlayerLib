@@ -92,6 +92,14 @@ class ExoPlayerImpl(
     override fun pause() {
     }
 
+    override fun last(): Boolean {
+        return false
+    }
+
+    override fun next(): Boolean {
+        return false
+    }
+
     override fun stop() {
         player.stop()
     }

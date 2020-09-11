@@ -6,7 +6,7 @@ import com.google.auto.service.AutoService
 import intbird.soft.lib.video.player.api.IVideoPlayer
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
-import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
+import intbird.soft.lib.video.player.main.view.MediaPlayerType
 
 /**
  * created by intbird
@@ -25,7 +25,7 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS, videoPaths)
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, index)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_STYLE, MediaPlayerStyle.SHOW_BACKWARD_FORWARD)
+        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE, MediaPlayerType.PLAYER_STYLE_1)
         context.startActivity(intentPlayer)
     }
 
@@ -34,7 +34,7 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS, compatFileUrls(videoPaths))
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, index)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_STYLE, MediaPlayerStyle.SHOW_LAST_NEXT)
+        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,  MediaPlayerType.PLAYER_STYLE_2)
         context.startActivity(intentPlayer)
     }
 

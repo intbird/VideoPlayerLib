@@ -12,8 +12,8 @@ import intbird.soft.lib.video.player.api.IVideoPlayer
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
-import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
+import intbird.soft.lib.video.player.main.view.MediaPlayerType
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
@@ -81,14 +81,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // use as a fragment
-        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT)}
-        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD)}
+        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1)}
+        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2)}
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
         last.setOnClickListener { fragment?.getVideoPlayerController()?.last() }
         pause.setOnClickListener { fragment?.getVideoPlayerController()?.pause() }
         next.setOnClickListener { fragment?.getVideoPlayerController()?.next() }
-        info.setOnClickListener { stateText.text = "info:${fragment?.getVideoPlayerStateInfo()?.getCurrentTime()}" }
+        info.setOnClickListener { stateText.text = "info:${fragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemChild()}" }
 
         // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
         fullScreen1.setOnClickListener {
@@ -132,11 +132,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addVideoPlayer(rid: Int, style: MediaPlayerStyle) {
+    private fun addVideoPlayer(rid: Int, type: MediaPlayerType) {
+        removeAudioPlayer(rid)
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val fragment = VideoPlayerFragment.newInstance(arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5),itemTestIndex, style)
+        val fragment = VideoPlayerFragment.newInstance(arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5),itemTestIndex, type, autoPlay = true)
         fragmentTransaction.add(rid, fragment)
         fragmentTransaction.commit()
 
@@ -156,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         override fun onCreated(fragment: Fragment) {
             // 动态数据切换
             if (fragment is VideoPlayerFragment) {
-                fragment.setVideoPlayerList(arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
+                //fragment.setVideoPlayerList(arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex, autoPlay = true)
             }
         }
 

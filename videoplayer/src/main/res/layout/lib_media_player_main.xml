@@ -3,36 +3,24 @@
     android:id="@+id/mediaRootContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="#000000"
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/displayPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000">
-
-        <TextureView
-            android:id="@+id/textureView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-    </FrameLayout>
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
 
     <include layout="@layout/lib_media_player_touch" />
 
-    <ViewStub
-        android:id="@+id/viewStub1"
+    <FrameLayout
+        android:id="@+id/controlPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inflatedId="@+id/layoutControlPanel1"
-        android:layout="@layout/lib_media_player_control_style_1" />
+        android:layout_height="wrap_content" />
 
-    <ViewStub
-        android:id="@+id/viewStub2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inflatedId="@+id/layoutControlPanel2"
-        android:layout="@layout/lib_media_player_control_style_2" />
+    <include layout="@layout/lib_media_player_control_pop" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/contentLoading"
@@ -42,6 +30,4 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/lib_media_player_content_loading" />
-
-    <include layout="@layout/lib_media_player_control_pop" />
 </FrameLayout>

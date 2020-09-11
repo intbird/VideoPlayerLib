@@ -25,13 +25,13 @@ import androidx.lifecycle.ViewModel
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
-import intbird.soft.lib.video.player.api.error.MediaError
-import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
 import intbird.soft.lib.video.player.main.controller.control.ControlController
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.controller.touch.TouchController
 import intbird.soft.lib.video.player.main.controller.touch.call.IVideoTouchCallback
 import intbird.soft.lib.video.player.main.dialog.ClarityDialogFragment
+import intbird.soft.lib.video.player.main.intent.IMediaIntentCallback
+import intbird.soft.lib.video.player.main.intent.MediaIntentParser
 import intbird.soft.lib.video.player.main.locker.LockController
 import intbird.soft.lib.video.player.main.notify.ILockExecute
 import intbird.soft.lib.video.player.main.notify.ITouchSystemExecute
@@ -41,7 +41,7 @@ import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
-import intbird.soft.lib.video.player.utils.MediaFileUtils
+import intbird.soft.lib.video.player.main.view.MediaPlayerType
 import intbird.soft.lib.video.player.utils.MediaLightUtils
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaScreenUtils
@@ -49,6 +49,8 @@ import kotlinx.android.synthetic.main.lib_media_player_control_pop.*
 import kotlinx.android.synthetic.main.lib_media_player_control_title.*
 import kotlinx.android.synthetic.main.lib_media_player_main.*
 import kotlinx.android.synthetic.main.lib_media_player_touch.*
+import intbird.soft.lib.video.player.main.view.MediaViewInfo
+import intbird.soft.lib.video.player.main.view.MediaViewProvider
 import kotlin.properties.Delegates
 
 /**
@@ -62,17 +64,20 @@ import kotlin.properties.Delegates
 open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
 
     companion object {
+        var EXTRA_PLAYER_TYPE = "videoType"
+
         var EXTRA_FILE_URLS = "videoUrls"
         var EXTRA_FILE_INDEX = "videoIndex"
-        var EXTRA_PLAYER_STYLE = "videoStyle"
+        var EXTRA_PLAYER_AUTO_PLAY = "videoAutoPlay"
 
-        fun newInstance(playList: ArrayList<MediaPlayItem>?, playIndex: Int, playerStyle: MediaPlayerStyle): VideoPlayerFragment {
+        fun newInstance(playList: ArrayList<MediaPlayItem>?, playIndex: Int, playerType: MediaPlayerType, autoPlay:Boolean): VideoPlayerFragment {
             val fragment = VideoPlayerFragment()
             var args = fragment.arguments
             if (null == args) args = Bundle()
             args.putParcelableArrayList(EXTRA_FILE_URLS, playList)
             args.putInt(EXTRA_FILE_INDEX, playIndex)
-            args.putSerializable(EXTRA_PLAYER_STYLE, playerStyle)
+            args.putSerializable(EXTRA_PLAYER_TYPE, playerType)
+            args.putBoolean(EXTRA_PLAYER_AUTO_PLAY, autoPlay)
             fragment.arguments = args
             return fragment
         }
@@ -89,14 +94,13 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
     private val permissionSettingsRequestCode = 11
     private var sdcardPermissionsGrand by Delegates.observable(false) { _, _, newValue ->
         if (newValue) {
-            play(PlayFlag.SELF)
+            intentParser?.delegatePlay()
         }
         log("sdcardPermissionsGrand: $newValue")
     }
 
-    private var videoPlayItems: ArrayList<MediaPlayItem>? = null
-    private var videoPlayIndex: Int = 0
-    private var videoPlayStyle: MediaPlayerStyle? = null
+    var intentParser: MediaIntentParser? = null
+    private var playerView: MediaViewInfo<out View, out View>? = null
 
     protected var states:PlayerCallbacks? = null
     protected var player: IPlayer? = null
@@ -104,10 +108,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
     private var videoTouchController: TouchController? = null
     private var videoControlController: ControlController? = null
 
-    protected var mediaPlayingItem: MediaPlayItem? = null
-    protected var mediaPlayingItemChild: MediaClarity? = null
     private var playingMediaInfo = MediaFileInfo()
-
     private val viewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -120,18 +121,13 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPlayItems = arguments?.getParcelableArrayList<MediaPlayItem>(EXTRA_FILE_URLS)
-        videoPlayIndex = arguments?.getInt(EXTRA_FILE_INDEX) ?: 0
-        videoPlayStyle = arguments?.getSerializable(EXTRA_PLAYER_STYLE) as? MediaPlayerStyle
-        log("Intent args: videoPlayItems: $videoPlayItems videoPlayIndex: $videoPlayIndex videoPlayStyle: $videoPlayStyle")
+        intentParser = MediaIntentParser(arguments, dataParserCallback)
 
-        states = PlayerCallbacks(playerCallback)
-        player = MediaPlayerImpl(textureView, states)
-        //player = ExoPlayerImpl(textureView, playerCallback)
-        videoTouchController = TouchController(player, locker, touchCallback, layoutTouchPanel)
-        videoControlController = ControlController(player, locker, controlCallback, getViewLayoutControl(videoPlayStyle))
-
+        instanceMediaPlayer(arguments?.getSerializable(EXTRA_PLAYER_TYPE) as? MediaPlayerType)
         locker = LockController(ivPopLock)
+        videoTouchController = TouchController(player, locker, touchCallback, layoutTouchPanel)
+        videoControlController = ControlController(player, locker, controlCallback, playerView?.control)
+
         locker?.addExecute(videoTouchController)
             ?.addExecute(videoControlController)
             ?.addExecute(this)
@@ -140,9 +136,10 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         handBackPressed()
     }
 
-    protected fun setVideoPlayerItems(playList: ArrayList<MediaPlayItem>?, playIndex: Int) {
-        this.videoPlayItems = playList
-        this.videoPlayIndex = playIndex
+    private fun instanceMediaPlayer(mediaPlayerType: MediaPlayerType?) {
+        states = PlayerCallbacks(playerCallback)
+        playerView = MediaViewProvider(view).by(mediaPlayerType)
+        player = MediaPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, intentParser, states)
     }
 
     private fun handBackPressed() {
@@ -164,19 +161,6 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         }
     }
 
-    private fun getViewLayoutControl(viewStyle: MediaPlayerStyle?): View? {
-        return when (viewStyle ?: MediaPlayerStyle.SHOW_LAST_NEXT) {
-            MediaPlayerStyle.SHOW_LAST_NEXT -> {
-                val stub: ViewStub? = view?.findViewById(R.id.viewStub1)
-                stub?.inflate()
-            }
-            MediaPlayerStyle.SHOW_BACKWARD_FORWARD -> {
-                val stub: ViewStub? = view?.findViewById(R.id.viewStub2)
-                stub?.inflate()
-            }
-        }
-    }
-
     private fun getInternalActivity(): FragmentActivity {
         return requireActivity()
     }
@@ -186,7 +170,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         viewModel.clarityArrayChecked.observe(viewLifecycleOwner, Observer<MediaClarity> { mediaClarity ->
             if (null == mediaClarity || !mediaClarity.selectedByUser) return@Observer
             mediaClarity.clarityProgress = player?.getCurrentTime() ?: 0
-            play(PlayFlag.SELF)
+            intentParser?.delegatePlay()
             log("clarityArrayChecked: $mediaClarity")
         })
 
@@ -256,87 +240,6 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         }
     }
 
-    enum class PlayFlag(val value: Int) {
-        NEXT(1),
-        SELF(0),
-        LAST(-1)
-    }
-
-    protected fun play(crease: PlayFlag) : Boolean {
-        val creasedFile = getCreasedFile(crease.value)
-        log("play file: $creasedFile")
-        return if (null != creasedFile) {
-            videoPlayIndex = videoPlayIndex.plus(crease.value)
-            player?.prepare(creasedFile)
-            true
-        } else {
-            states?.onError(MediaError.NO_MORE_FILES)
-            false
-        }
-    }
-
-    private fun getCreasedFile(crease: Int): MediaFileInfo? {
-        if (null == videoPlayItems) {
-            return null
-        }
-        val newIndex = videoPlayIndex + crease
-        if (newIndex < 0) {
-            return null
-        }
-        if (newIndex > videoPlayItems!!.size - 1) {
-            return null
-        }
-        log("ceasedFile index :$newIndex")
-        val playItem = videoPlayItems!![newIndex]
-        val mediaItem = getPlayerMediaItem(playItem)
-        val support = MediaFileUtils.supportFileType(mediaItem.mediaUrl)
-        log("support file :$support")
-        if (!support) {
-            return null
-        }
-        val mediaFileInfo = MediaFileInfo(
-            playItem.mediaId,
-            playItem.mediaName,
-            mediaItem.mediaUrl,
-            mediaItem.mediaHeaders,
-            mediaItem.clarityText
-        )
-        log("MediaFileInfo:$mediaFileInfo")
-        return mediaFileInfo
-    }
-
-    private fun getPlayerMediaItem(playItem: MediaPlayItem): MediaClarity {
-        log("mediaItem: $playItem")
-
-        val clarityConfig = playItem.mediaConfig
-        this.viewModel.clarityArray.value = clarityConfig
-        this.mediaPlayingItem = playItem
-        log("mediaItem-Config: $clarityConfig")
-
-        val clarityConfigItem = getPlayerMediaConfigItem(playItem)
-        this.viewModel.clarityArrayChecked.value = clarityConfigItem
-        this.mediaPlayingItemChild = clarityConfigItem
-        log("mediaItem-Config-Item: $clarityConfigItem")
-        return clarityConfigItem
-    }
-
-    private fun getPlayerMediaConfigItem(playItem: MediaPlayItem): MediaClarity {
-        val checkedMediaClarity = viewModel.clarityArrayChecked.value
-        var index = if (null != checkedMediaClarity
-            && checkedMediaClarity.selectedByUser
-            && checkedMediaClarity.mediaId == playItem.mediaId
-        ) {
-            checkedMediaClarity.clarityIndex
-        } else {
-            playItem.defaultSelected ?: 0
-        }
-        if (index !in 0 until playItem.mediaConfig.size) index = 0
-        val configItem = playItem.mediaConfig[index]
-        configItem.selectedByUser = false
-        configItem.clarityProgress = checkedMediaClarity?.clarityProgress ?: (playItem.defaultProgress ?: 0)
-        return configItem
-    }
-
     private fun checkPermissionSettings(activity: Activity, requestCode: Int) {
         val permission = MediaLightUtils.checkSystemWritePermission(activity)
         if (!permission) {
@@ -395,6 +298,27 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
             }
         }
     }
+
+    //----传入数据解析start----
+    private val dataParserCallback = object : IMediaIntentCallback {
+
+        override fun onReceivePlayFile(mediaFileInfo: MediaFileInfo) {
+            player?.prepare(mediaFileInfo)
+        }
+
+        override fun getLastCheckedPlay(): MediaClarity? {
+            return viewModel.clarityArrayChecked.value
+        }
+
+        override fun onReceivePlaylist(playlist: ArrayList<MediaClarity>?) {
+            viewModel.clarityArray.value = playlist
+        }
+
+        override fun onReceivePlayItem(playItem: MediaClarity?) {
+            viewModel.clarityArrayChecked.value = playItem
+        }
+    }
+    //----end----
 
     //----显示器,播放器,触摸和控制功能回调 start----
     private val playerCallback = object : IPlayerCallback {
@@ -570,11 +494,11 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         }
 
         override fun last(): Boolean {
-            return play(PlayFlag.LAST)
+            return player?.last() == true
         }
 
         override fun next(): Boolean {
-            return play(PlayFlag.NEXT)
+            return player?.next() == true
         }
 
         override fun landscape() {
@@ -656,7 +580,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         videoWidth: Int,
         videoHeight: Int
     ) {
-        val lp = textureView.layoutParams
+        val lp = displayPlaceholder.layoutParams
         val rate = videoWidth.toDouble() / videoHeight.toDouble()
         if (landscape) {
             lp.height = viewWidth
@@ -665,8 +589,8 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
             lp.width = viewWidth
             lp.height = (viewWidth.toFloat() / rate).toInt()
         }
+        displayPlaceholder.layoutParams = lp
         log("viewWidth: $viewWidth viewHeight:$viewHeight videoWidth:$videoWidth videoHeight:$videoHeight  lpW:${lp.width} lpH:${lp.height}")
-        textureView.layoutParams = lp
     }
 
     //---- end ---
