@@ -3,6 +3,7 @@ package intbird.soft.lib.video.player.main.intent
 import android.os.Bundle
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaRate
 import intbird.soft.lib.video.player.main.VideoPlayerFragmentLite
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaFileUtils
@@ -22,13 +23,11 @@ open class MediaIntentParser(
     private var videoPlayIndex: Int = 0
     private var videoAutoPlay: Boolean? = null
 
-    private var playingItem: MediaPlayItem? = null
-    private var playingItemChild: MediaClarity? = null
+    fun isAutoStartPlay(): Boolean  = videoAutoPlay == true
 
-    fun getPlayingItem() = playingItem
-    fun getPlayingItemChild() = playingItemChild
-
-    fun isAutoStartPlay(): Boolean = videoAutoPlay == true
+    fun clearAutoStartPlay() {
+        videoAutoPlay = null
+    }
 
     init {
         setVideoPlayerList(
@@ -49,6 +48,22 @@ open class MediaIntentParser(
         if (autoPlay) play(0)
         log("setVideoPlayerList: playList:$playList playIndex: $playIndex autoPlay: $autoPlay")
         return this
+    }
+
+    override fun delegatePlay(): Boolean {
+        return play(0)
+    }
+
+    override fun delegateLast(): Boolean {
+        return play(-1)
+    }
+
+    override fun delegateNext(): Boolean {
+        return play(1)
+    }
+
+    private fun log(message: String) {
+        MediaLogUtil.log(message)
     }
 
     private fun play(crease: Int): Boolean {
@@ -76,8 +91,8 @@ open class MediaIntentParser(
         }
         log("ceasedFile index :$newIndex")
         val playItem = videoPlayItems!![newIndex]
-        val mediaItem = getPlayerMediaItem(playItem)
-        val support = MediaFileUtils.supportFileType(mediaItem.mediaUrl)
+        val mediaItemWrapper = getPlayerMediaItem(playItem)
+        val support = MediaFileUtils.supportFileType(mediaItemWrapper.mediaClarity.mediaUrl)
         log("support file :$support")
         if (!support) {
             return null
@@ -85,60 +100,77 @@ open class MediaIntentParser(
         val mediaFileInfo = MediaFileInfo(
             playItem.mediaId,
             playItem.mediaName,
-            mediaItem.mediaUrl,
-            mediaItem.mediaHeaders,
-            mediaItem.clarityText
+            mediaItemWrapper.mediaClarity.mediaUrl,
+            mediaItemWrapper.mediaClarity.mediaHeaders,
+
+            mediaItemWrapper.mediaClarity.text,
+            mediaItemWrapper.mediaRate.rate
         )
         log("MediaFileInfo:$mediaFileInfo")
         return mediaFileInfo
     }
 
-    private fun getPlayerMediaItem(playItem: MediaPlayItem): MediaClarity {
+    data class PlayerMediaItemWrapper(var mediaClarity: MediaClarity, var mediaRate: MediaRate)
+
+    var playingProgress: Long? = 0L
+    var playingItem: MediaPlayItem? = null
+    var playingChild: PlayerMediaItemWrapper? = null
+
+    private fun getPlayerMediaItem(playItem: MediaPlayItem): PlayerMediaItemWrapper {
         log("mediaItem: $playItem")
-
         this.playingItem = playItem
-        val clarityConfig = playItem.mediaConfig
-        intentCallback?.onReceivePlaylist(clarityConfig)
+        val clarityConfig = playItem.clarityArray
         log("mediaItem-Config: $clarityConfig")
-
-        val clarityConfigItem = getPlayerMediaConfigItem(playItem)
-        this.playingItemChild = clarityConfigItem
-        intentCallback?.onReceivePlayItem(clarityConfigItem)
-        log("mediaItem-Config-Item: $clarityConfigItem")
-        return clarityConfigItem
+        this.playingChild = PlayerMediaItemWrapper(
+            getPlayerMediaClarityItem(playItem),
+            getPlayerMediaRateItem(playItem)
+        )
+        log("mediaItem-Config-Item: $playingChild")
+        return playingChild!!
     }
 
-    private fun getPlayerMediaConfigItem(playItem: MediaPlayItem): MediaClarity {
-        val checkedMediaClarity = intentCallback?.getLastCheckedPlay()
-        var index = if (null != checkedMediaClarity
-            && checkedMediaClarity.selectedByUser
-            && checkedMediaClarity.mediaId == playItem.mediaId
-        ) {
-            checkedMediaClarity.clarityIndex
+    private fun getPlayerMediaClarityItem(playItem: MediaPlayItem): MediaClarity {
+        var index = getSelectedClarity(playItem)
+        if (index !in 0 until playItem.clarityArray.size) index = 0
+        return playItem.clarityArray[index]
+    }
+
+    private fun getSelectedClarity(playItem: MediaPlayItem): Int {
+        return if (null != this.playingChild) {
+            playItem.clarityArray.indexOf(playingChild?.mediaClarity)
         } else {
-            playItem.defaultSelected ?: 0
+            for (item in playItem.clarityArray) {
+                return if (item.checked) playItem.clarityArray.indexOf(item) else continue
+            };0
         }
-        if (index !in 0 until playItem.mediaConfig.size) index = 0
-        val configItem = playItem.mediaConfig[index]
-        configItem.selectedByUser = false
-        configItem.clarityProgress =
-            checkedMediaClarity?.clarityProgress ?: (playItem.defaultProgress ?: 0)
-        return configItem
     }
 
-    override fun delegatePlay(): Boolean {
-        return play(0)
+    fun playSelectedClarity(progress: Long, mediaClarity: MediaClarity): Boolean {
+        this.playingProgress = progress
+        this.playingChild?.mediaClarity = mediaClarity
+        return delegatePlay()
     }
 
-    override fun delegateLast(): Boolean {
-        return play(-1)
+
+    private fun getPlayerMediaRateItem(playItem: MediaPlayItem): MediaRate {
+        var index = getSelectRate(playItem)
+        if (index !in 0 until playItem.rateArray.size) index = 0
+        return playItem.rateArray[index]
     }
 
-    override fun delegateNext(): Boolean {
-        return play(1)
+    private fun getSelectRate(playItem: MediaPlayItem): Int {
+        return if (null != this.playingChild) {
+            playItem.rateArray.indexOf(playingChild?.mediaRate)
+        } else {
+            for (item in playItem.rateArray) {
+                return if (item.checked) playItem.rateArray.indexOf(item) else continue
+            };0
+        }
     }
 
-    private fun log(message: String) {
-        MediaLogUtil.log(message)
+    fun playSelectedRate(progress: Long, mediaRate: MediaRate): Boolean {
+        this.playingProgress = progress
+        this.playingChild?.mediaRate = mediaRate
+        return delegatePlay()
     }
 }

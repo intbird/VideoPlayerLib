@@ -25,7 +25,10 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS, videoPaths)
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, index)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE, MediaPlayerType.PLAYER_STYLE_1)
+        intentPlayer.putExtra(
+            VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,
+            MediaPlayerType.PLAYER_STYLE_1
+        )
         context.startActivity(intentPlayer)
     }
 
@@ -34,7 +37,10 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS, compatFileUrls(videoPaths))
         intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, index)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,  MediaPlayerType.PLAYER_STYLE_2)
+        intentPlayer.putExtra(
+            VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,
+            MediaPlayerType.PLAYER_STYLE_2
+        )
         context.startActivity(intentPlayer)
     }
 
@@ -53,8 +59,9 @@ class VideoPlayerServiceImpl : IVideoPlayer {
     private fun compatFileUrl(videoPath: String): MediaPlayItem {
         return MediaPlayItem(
             "mediaId", "",
-            arrayListOf(MediaClarity(0, "mediaId", "", videoPath, null)),
-            0, 0
+            arrayListOf(MediaClarity(clarity = "", mediaUrl = videoPath)),
+            arrayListOf(),
+            0
         )
     }
 }

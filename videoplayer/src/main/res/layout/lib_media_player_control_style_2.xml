@@ -178,6 +178,17 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvRates"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/ivDirection"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                tools:text="" />
+
+            <TextView
                 android:id="@+id/tvClarity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -23,13 +23,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import intbird.soft.lib.video.player.R
+import intbird.soft.lib.video.player.api.bean.MediaCheckedData
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaRate
 import intbird.soft.lib.video.player.main.controller.control.ControlController
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.controller.touch.TouchController
 import intbird.soft.lib.video.player.main.controller.touch.call.IVideoTouchCallback
-import intbird.soft.lib.video.player.main.dialog.ClarityDialogFragment
+import intbird.soft.lib.video.player.main.dialog.SingleChooseCallback
+import intbird.soft.lib.video.player.main.dialog.SingleChooseDialogFragment
 import intbird.soft.lib.video.player.main.intent.IMediaIntentCallback
 import intbird.soft.lib.video.player.main.intent.MediaIntentParser
 import intbird.soft.lib.video.player.main.locker.LockController
@@ -167,13 +170,6 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.clarityArrayChecked.observe(viewLifecycleOwner, Observer<MediaClarity> { mediaClarity ->
-            if (null == mediaClarity || !mediaClarity.selectedByUser) return@Observer
-            mediaClarity.clarityProgress = player?.getCurrentTime() ?: 0
-            intentParser?.delegatePlay()
-            log("clarityArrayChecked: $mediaClarity")
-        })
-
         checkPermissionManifest(getInternalActivity(), permissionRequestCode)
         checkPermissionSettings(getInternalActivity(), permissionSettingsRequestCode)
     }
@@ -331,15 +327,21 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
             contentLoading.hide()
             tvVideoName.text = mediaFileInfo.mediaName ?: ""
             videoControlController?.onPrepared(mediaFileInfo)
+        }
 
+        override fun onReady(mediaFileInfo: MediaFileInfo, ready: Boolean) {
+            log("onReady : $ready")
+            if (!ready) return
+            // 自动播放
+            if (intentParser?.isAutoStartPlay() == true) {
+                player?.start()
+                log("auto start")
+            }
             // 继续播放
-            val mediaClarity = viewModel.clarityArrayChecked.value
-            if (null != mediaClarity
-                && mediaClarity.clarityProgress > 0
-                && mediaClarity.mediaId == mediaFileInfo.mediaId
-            ) {
-                player?.seekTo(mediaClarity.clarityProgress, player?.isPlaying()?:false)
-                mediaClarity.clarityProgress = 0
+            val lastProgress = intentParser?.playingProgress ?: 0
+            if (lastProgress > 0) {
+                player?.seekTo(lastProgress, player?.isPlaying() == true)
+                log("goon start: $lastProgress")
             }
         }
 
@@ -470,16 +472,47 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
     }
 
     private val controlCallback = object : IControlCallback {
-        override fun clarity(show: Boolean) {
+        override fun showClarity(show: Boolean) {
             if (show) {
-                ClarityDialogFragment.showDialog(parentFragmentManager)
+                SingleChooseDialogFragment.showDialog(parentFragmentManager,
+                    intentParser?.playingItem?.clarityArray,
+                    object : SingleChooseCallback {
+                        override fun onChooseItem(mediaCheckedData: MediaCheckedData) {
+                            if (mediaCheckedData is MediaClarity) {
+                                intentParser?.playSelectedClarity(
+                                    player?.getCurrentTime() ?: 0,
+                                    mediaCheckedData
+                                )
+                                log("playSelectedClarity: $mediaCheckedData")
+                            }
+                        }
+                    })
             } else {
-                ClarityDialogFragment.dismissDialog(parentFragmentManager)
+                SingleChooseDialogFragment.dismissDialog(parentFragmentManager)
             }
             log("clarity: $show")
         }
 
-
+        override fun showRates(show: Boolean) {
+            if (show) {
+                SingleChooseDialogFragment.showDialog(parentFragmentManager,
+                    intentParser?.playingItem?.rateArray,
+                    object : SingleChooseCallback {
+                        override fun onChooseItem(mediaCheckedData: MediaCheckedData) {
+                            if (mediaCheckedData is MediaRate) {
+                                intentParser?.playSelectedRate(
+                                    player?.getCurrentTime() ?: 0,
+                                    mediaCheckedData
+                                )
+                                log("playSelectedClarity: $mediaCheckedData")
+                            }
+                        }
+                    })
+            } else {
+                SingleChooseDialogFragment.dismissDialog(parentFragmentManager)
+            }
+            log("rate: $show")
+        }
 
         override fun backward(long: Long) {
             val progress = (player?.getCurrentTime() ?: 0) - long

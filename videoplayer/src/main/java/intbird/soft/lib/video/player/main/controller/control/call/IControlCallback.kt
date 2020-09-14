@@ -9,7 +9,8 @@ import intbird.soft.lib.video.player.main.notify.IMediaSeekNotify
 interface IControlCallback :
         IMediaSeekNotify {
 
-    fun clarity(show: Boolean)
+    fun showClarity(show: Boolean)
+    fun showRates(show: Boolean)
 
     fun backward(long: Long)
     fun forward(long: Long)

@@ -12,6 +12,8 @@ interface IPlayerCallback {
 
     fun onPrepared(mediaFileInfo: MediaFileInfo)
 
+    fun onReady(mediaFileInfo: MediaFileInfo, ready: Boolean)
+
     fun onStart()
 
     fun onSeekTo(duration: Long)

@@ -2,6 +2,7 @@ package intbird.soft.lib.video.player.api.state
 
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaRate
 
 /**
  * created by intbird
@@ -12,7 +13,9 @@ interface IVideoPlayerStateInfo {
 
     fun getVideoPlayingItem(): MediaPlayItem?
 
-    fun getVideoPlayingItemChild(): MediaClarity?
+    fun getVideoPlayingItemClarity(): MediaClarity?
+
+    fun getVideoPlayingItemRate(): MediaRate?
 
     fun getCurrentTime(): Long?
 

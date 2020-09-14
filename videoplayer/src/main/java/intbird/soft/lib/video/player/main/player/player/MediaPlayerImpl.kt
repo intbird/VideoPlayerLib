@@ -45,7 +45,6 @@ class MediaPlayerImpl(
         MediaFileInfo()
 
     private var payingStateOnPause = false
-    private var autoStartPlayWhenPrepared = true
 
     init {
         textureView?.surfaceTextureListener = TextureDisplay(this)
@@ -84,7 +83,7 @@ class MediaPlayerImpl(
         if (null != textureView) mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
         mediaPlayer?.setSurface(mediaDisplay)
-        if (autoStartPlayWhenPrepared) start()
+        playerCallback?.onReady(mediaFileInfo, playerEnable)
     }
 
     override fun prepare(mediaFile: MediaFileInfo) {
@@ -94,6 +93,7 @@ class MediaPlayerImpl(
         if (mediaPrepared) {
             mediaPrepared = false
             mediaPlayer?.reset()
+            log("reset")
         }
         try {
             mediaPlayer?.setDataSource(
@@ -112,8 +112,8 @@ class MediaPlayerImpl(
     override fun onPrepared(mp: MediaPlayer?) {
         mediaPrepared = true
         playerCallback?.onPrepared(mediaFileInfo)
-        if (autoStartPlayWhenPrepared) start()
         log("onPrepared")
+        playerCallback?.onReady(mediaFileInfo, playerEnable)
     }
 
     override fun onCompletion(mp: MediaPlayer?) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaRate
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
 import intbird.soft.lib.video.player.api.state.IVideoPlayerController
 import intbird.soft.lib.video.player.api.state.IVideoPlayerStateInfo
@@ -43,7 +44,7 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
     }
 
     //---- 外部控制命令 start ----
-    fun setVideoPlayerList(playList: ArrayList<MediaPlayItem>?, playIndex: Int, autoPlay:Boolean) {
+    fun setVideoPlayerList(playList: ArrayList<MediaPlayItem>?, playIndex: Int, autoPlay: Boolean) {
         if (isFinishing()) return
         intentParser?.setVideoPlayerList(playList, playIndex, autoPlay)
     }
@@ -73,6 +74,10 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
             mediaStateCallback?.onPrepared()
         }
 
+        override fun onReady(mediaFileInfo: MediaFileInfo, ready: Boolean) {
+            //mediaStateCallback?.onReady()
+        }
+
         override fun onStart() {
             mediaStateCallback?.onStart()
         }
@@ -93,7 +98,7 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
             mediaStateCallback?.onStop()
         }
 
-        override fun onError(errorCode:Int, errorMessage: String?) {
+        override fun onError(errorCode: Int, errorMessage: String?) {
             mediaStateCallback?.onError(errorCode, errorMessage)
         }
 
@@ -145,12 +150,17 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
 
         override fun getVideoPlayingItem(): MediaPlayItem? {
             if (isFinishing()) return null
-            return intentParser?.getPlayingItem()
+            return intentParser?.playingItem
         }
 
-        override fun getVideoPlayingItemChild(): MediaClarity? {
+        override fun getVideoPlayingItemClarity(): MediaClarity? {
             if (isFinishing()) return null
-            return intentParser?.getPlayingItemChild()
+            return intentParser?.playingChild?.mediaClarity
+        }
+
+        override fun getVideoPlayingItemRate(): MediaRate? {
+            if (isFinishing()) return null
+            return intentParser?.playingChild?.mediaRate
         }
 
         override fun getCurrentTime(): Long? {
