@@ -194,6 +194,7 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
         super.onDestroy()
         player?.destroy()
         locker?.destroy()
+        intentParser?.onDestroy()
         videoTouchController?.destroy()
         videoControlController?.destroy()
         log("onDestroy")

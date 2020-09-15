@@ -110,11 +110,16 @@ open class MediaIntentParser(
         return mediaFileInfo
     }
 
+    fun onDestroy() {
+    }
+
+
     data class PlayerMediaItemWrapper(var mediaClarity: MediaClarity?, var mediaRate: MediaRate?)
 
     var playingProgress: Long? = 0L
     var playingItem: MediaPlayItem? = null
     var playingChild: PlayerMediaItemWrapper? = null
+
 
     private fun getPlayerMediaItem(playItem: MediaPlayItem): PlayerMediaItemWrapper {
         log("mediaItem: $playItem")
@@ -132,18 +137,22 @@ open class MediaIntentParser(
     private fun getPlayerMediaClarityItem(playItem: MediaPlayItem): MediaClarity? {
         val list = playItem.clarityArray ?: ArrayList()
         val index = getSelectedClarity(list)
-        return if (index in 0 until list.size) {
+        log("get Clarity:$index")
+        val size = list.size
+        return if (index in 0 until size) {
             list[index]
         } else null
     }
 
     private fun getSelectedClarity(list: ArrayList<MediaClarity>): Int {
         return if (null != this.playingChild) {
-            list.indexOf(playingChild?.mediaClarity)
+            val index = list.indexOf(playingChild?.mediaClarity)
+            return if (-1 != index) index else 0
         } else {
             for (item in list) {
-                return if (item.checked) list.indexOf(item) else continue
-            };-1
+                val index = list.indexOf(item)
+                return if (item.checked) index else continue
+            };0
         }
     }
 
@@ -156,18 +165,22 @@ open class MediaIntentParser(
     private fun getPlayerMediaRateItem(playItem: MediaPlayItem): MediaRate? {
         val list = playItem.rateArray ?: ArrayList()
         val index = getSelectRate(list)
-        return if (index in 0 until list.size){
+        val size = list.size
+        log("get Rate:$index")
+        return if (index in 0 until size) {
             list[index]
         } else null
     }
 
     private fun getSelectRate(list: ArrayList<MediaRate>): Int {
         return if (null != this.playingChild) {
-            list.indexOf(playingChild?.mediaRate)
+            val index = list.indexOf(playingChild?.mediaRate)
+            return if (-1 != index) index else 0
         } else {
             for (item in list) {
-                return if (item.checked) list.indexOf(item) else continue
-            };-1
+                val index = list.indexOf(item)
+                return if (item.checked) index else continue
+            };0
         }
     }
 

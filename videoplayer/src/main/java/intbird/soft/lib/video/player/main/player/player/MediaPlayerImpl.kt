@@ -52,6 +52,7 @@ class MediaPlayerImpl(
 
     private fun createMediaPlayer() {
         if (null != mediaPlayer) {
+            mediaPlayer?.setSurface(mediaDisplay)
             return
         }
         mediaPlayer = MediaPlayer()
@@ -73,16 +74,17 @@ class MediaPlayerImpl(
                 playerCallback?.onError(MediaError.PLAYER_ERROR_CALLBACK,"what:$what extra:$extra")
                 true
             }
+            mediaPlayer?.setSurface(mediaDisplay)
         } catch (ignored: Exception) {
             log("init-error: ${ignored.message}")
             playerCallback?.onError(MediaError.PLAYER_INIT_ERROR,ignored.message)
+            prepareReset()
         }
     }
 
     override fun displayStateChange(enableDisplay: Boolean) {
         if (null != textureView) mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
-        mediaPlayer?.setSurface(mediaDisplay)
         playerCallback?.onReady(mediaFileInfo, playerEnable)
     }
 
@@ -90,11 +92,9 @@ class MediaPlayerImpl(
         mediaFileInfo = mediaFile
         playerCallback?.onPrepare(mediaFile)
         createMediaPlayer()
-        if (mediaPrepared) {
-            mediaPrepared = false
-            mediaPlayer?.reset()
-            log("reset")
-        }
+        prepareReset()
+        log("reset")
+
         try {
             mediaPlayer?.setDataSource(
                 context,
@@ -106,6 +106,7 @@ class MediaPlayerImpl(
         } catch (ignored: Exception) {
             log("prepare-error: ${ignored.message}")
             playerCallback?.onError(MediaError.PLAYER_PREPARE_ERROR, ignored.message)
+            prepareReset()
         }
     }
 
@@ -114,6 +115,11 @@ class MediaPlayerImpl(
         playerCallback?.onPrepared(mediaFileInfo)
         log("onPrepared")
         playerCallback?.onReady(mediaFileInfo, playerEnable)
+    }
+
+    private fun prepareReset() {
+        mediaPrepared = false
+        mediaPlayer?.reset()
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
