@@ -1,6 +1,7 @@
 package intbird.soft.lib.video.player.main.dialog
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,24 +9,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.fragment.app.*
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.lib_media_player_clarity.*
-import kotlinx.android.synthetic.main.lib_media_player_clarity_item.view.*
 import intbird.soft.lib.video.player.R
-import intbird.soft.lib.video.player.api.bean.MediaClarity
-import intbird.soft.lib.video.player.main.VideoPlayerFragment
-import intbird.soft.lib.video.player.main.VideoPlayerFragmentLite
+import intbird.soft.lib.video.player.api.bean.MediaCheckedData
+import kotlinx.android.synthetic.main.lib_media_player_dialog_single_choose.*
+import kotlinx.android.synthetic.main.lib_media_player_dialog_single_choose_item.view.*
 
-/**
- * created by intbird
- * on 2020/8/31
- * DingTalk id: intbird
- */
-class ClarityDialogFragment : DialogFragment() {
+class SingleChooseDialogFragment : DialogFragment() {
 
     companion object {
+        const val DATA = "data"
         fun dismissDialog(fragmentManager: FragmentManager) {
             val fragmentTransaction = fragmentManager.beginTransaction()
             val dialog: Fragment? = fragmentManager.findFragmentByTag("dialog")
@@ -35,16 +32,23 @@ class ClarityDialogFragment : DialogFragment() {
             fragmentTransaction.addToBackStack(null)
         }
 
-        fun showDialog(fragmentManager: FragmentManager) {
+        fun showDialog(fragmentManager: FragmentManager, listData: ArrayList<out MediaCheckedData>?, singleChooseCallback: SingleChooseCallback) {
             dismissDialog(fragmentManager)
 
             val fragmentTransaction = fragmentManager.beginTransaction()
-            val dialogFragment = ClarityDialogFragment()
+            val dialogFragment = SingleChooseDialogFragment()
+            val arguments = Bundle()
+            arguments.putSerializable(DATA, listData)
+            dialogFragment.arguments = arguments
             dialogFragment.show(fragmentTransaction, "dialog")
+            dialogFragment.registerCallback(singleChooseCallback)
         }
     }
 
-    private val viewModel: VideoPlayerFragmentLite.SharedViewModel by activityViewModels()
+    private var singleChooseCallback: SingleChooseCallback? = null
+    private fun registerCallback(singleChooseCallback: SingleChooseCallback) {
+        this.singleChooseCallback = singleChooseCallback
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +60,7 @@ class ClarityDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.lib_media_player_clarity, container, false)
+        return inflater.inflate(R.layout.lib_media_player_dialog_single_choose, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,7 +77,7 @@ class ClarityDialogFragment : DialogFragment() {
 
     private fun createRecycleView() {
         val viewManager = LinearLayoutManager(this.context)
-        val viewAdapter = StringArrayAdapter(this, onCreateItem(), selectedItem())
+        val viewAdapter = StringArrayAdapter(this, onCreateItem())
         recycler_view.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -81,30 +85,30 @@ class ClarityDialogFragment : DialogFragment() {
         }
     }
 
-    private fun onCreateItem(): ArrayList<MediaClarity> {
-        return viewModel.clarityArray.value ?: arrayListOf()
+    private fun onCreateItem(): ArrayList<MediaCheckedData> {
+        return arguments?.getSerializable(DATA) as? ArrayList<MediaCheckedData>?: ArrayList()
     }
 
-    private fun selectedItem(): MediaClarity? {
-        return viewModel.clarityArrayChecked.value
-    }
-
-    private fun onChooseItem(mediaClarity: MediaClarity) {
-        mediaClarity.clarityChecked = true
-        mediaClarity.selectedByUser = true
-        viewModel.clarityArrayChecked.value = mediaClarity
+    private fun onChooseItem(mediaCheckedData: MediaCheckedData) {
+        mediaCheckedData.checked = true
+        singleChooseCallback?.onChooseItem(mediaCheckedData)
         dismiss()
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        singleChooseCallback = null
+        super.onDismiss(dialog)
+    }
+
     class StringArrayAdapter(
-        private val fragment: ClarityDialogFragment,
-        private val itemArray: ArrayList<MediaClarity>,
-        private val selected: MediaClarity?
+        private val fragment: SingleChooseDialogFragment,
+        private val itemArray: ArrayList<MediaCheckedData>
     ) :
         RecyclerView.Adapter<StringArrayAdapter.ViewHolder>() {
 
         class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
+        private val singleChooseColor = Color.parseColor("#FFAC33")
         private var singleValueIndexes = arrayListOf<Int>()
 
         override fun onCreateViewHolder(
@@ -112,21 +116,21 @@ class ClarityDialogFragment : DialogFragment() {
             viewType: Int
         ): ViewHolder {
             val holdView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.lib_media_player_clarity_item, parent, false)
+                .inflate(R.layout.lib_media_player_dialog_single_choose_item, parent, false)
             return ViewHolder(holdView)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val adapterItem = itemArray[position]
-            holder.view.textView.text = adapterItem.clarityText
+            holder.view.textView.text = adapterItem.text
             holder.view.textView.setTextColor(
-                if (adapterItem.clarityChecked || (position == selected?.clarityIndex)) {
+                if (adapterItem.checked) {
                     singleValueIndexes.add(position)
-                    Color.parseColor("#FFAC33")
+                    singleChooseColor
                 } else Color.WHITE
             )
 
-            if(!TextUtils.isEmpty(adapterItem.clarityText)) {
+            if (!TextUtils.isEmpty(adapterItem.text)) {
                 holder.view.textView.setOnClickListener {
                     clearChecked()
                     fragment.onChooseItem(adapterItem)
@@ -138,7 +142,7 @@ class ClarityDialogFragment : DialogFragment() {
 
         private fun clearChecked() {
             for (value in singleValueIndexes) {
-                itemArray[value].clarityChecked = false
+                itemArray[value].checked = false
             }
             singleValueIndexes.clear()
         }

@@ -1,6 +1,5 @@
 package intbird.soft.lib.video.player.main.player.player;
 
-import android.content.Context
 import android.net.Uri
 import android.view.TextureView
 import android.view.View
@@ -9,7 +8,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.hls.HlsManifest
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -55,7 +53,7 @@ class ExoPlayerImpl(
             val hlsMediaSource =
                 HlsMediaSource.Factory(dataSourceFactory)
                     .setAllowChunklessPreparation(true)
-                    .createMediaSource(Uri.parse(mediaFileInfo.mediaPath))
+                    .createMediaSource(Uri.parse(mediaFileInfo.mediaUrl))
 
             // Prepare the player with the media source.
             player.prepare(hlsMediaSource)
@@ -90,6 +88,14 @@ class ExoPlayerImpl(
     }
 
     override fun pause() {
+    }
+
+    override fun last(): Boolean {
+        return false
+    }
+
+    override fun next(): Boolean {
+        return false
     }
 
     override fun stop() {

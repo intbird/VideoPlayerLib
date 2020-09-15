@@ -51,8 +51,8 @@ open class VideoPlayerActivity : AppCompatActivity() {
             intent.getIntExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, 0)
         )
         args.putSerializable(
-            VideoPlayerFragmentLite.EXTRA_PLAYER_STYLE,
-            intent.getSerializableExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_STYLE)
+            VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,
+            intent.getSerializableExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE)
         )
         fragment.arguments = args
     }

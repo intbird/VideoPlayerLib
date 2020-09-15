@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaRate
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
 import intbird.soft.lib.video.player.api.state.IVideoPlayerController
 import intbird.soft.lib.video.player.api.state.IVideoPlayerStateInfo
-import intbird.soft.lib.video.player.api.style.MediaPlayerStyle
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.state.IPlayerExecute
+import intbird.soft.lib.video.player.main.view.MediaPlayerType
 
 /**
  * created by intbird
@@ -25,9 +26,10 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
         fun newInstance(
             playList: ArrayList<MediaPlayItem>?,
             playIndex: Int,
-            playerStyle: MediaPlayerStyle
+            playerStyle: MediaPlayerType,
+            autoPlay: Boolean
         ): VideoPlayerFragment {
-            return VideoPlayerFragmentLite.newInstance(playList, playIndex, playerStyle)
+            return VideoPlayerFragmentLite.newInstance(playList, playIndex, playerStyle, autoPlay)
         }
     }
 
@@ -42,17 +44,9 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
     }
 
     //---- 外部控制命令 start ----
-    fun setVideoPlayerList(
-        playList: ArrayList<MediaPlayItem>?,
-        playIndex: Int,
-        autoPlay: Boolean = false
-    ) {
+    fun setVideoPlayerList(playList: ArrayList<MediaPlayItem>?, playIndex: Int, autoPlay: Boolean) {
         if (isFinishing()) return
-        setVideoPlayerItems(playList, playIndex)
-        if (autoPlay) {
-            play(PlayFlag.SELF)
-        }
-        log("setVideoPlayerList: playList:$playList playIndex: $playIndex autoPlay: $autoPlay")
+        intentParser?.setVideoPlayerList(playList, playIndex, autoPlay)
     }
 
     var mediaStateCallback: IVideoPlayerCallback? = null
@@ -80,6 +74,10 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
             mediaStateCallback?.onPrepared()
         }
 
+        override fun onReady(mediaFileInfo: MediaFileInfo, ready: Boolean) {
+            //mediaStateCallback?.onReady()
+        }
+
         override fun onStart() {
             mediaStateCallback?.onStart()
         }
@@ -100,7 +98,7 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
             mediaStateCallback?.onStop()
         }
 
-        override fun onError(errorCode:Int, errorMessage: String?) {
+        override fun onError(errorCode: Int, errorMessage: String?) {
             mediaStateCallback?.onError(errorCode, errorMessage)
         }
 
@@ -139,12 +137,12 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
 
         override fun last() {
             if (isFinishing()) return
-            play(PlayFlag.LAST)
+            player?.last()
         }
 
         override fun next() {
             if (isFinishing()) return
-            play(PlayFlag.NEXT)
+            player?.next()
         }
     }
 
@@ -152,12 +150,17 @@ class VideoPlayerFragment : VideoPlayerFragmentLite(), IPlayerExecute {
 
         override fun getVideoPlayingItem(): MediaPlayItem? {
             if (isFinishing()) return null
-            return mediaPlayingItem
+            return intentParser?.playingItem
         }
 
-        override fun getVideoPlayingItemChild(): MediaClarity? {
+        override fun getVideoPlayingItemClarity(): MediaClarity? {
             if (isFinishing()) return null
-            return mediaPlayingItemChild
+            return intentParser?.playingChild?.mediaClarity
+        }
+
+        override fun getVideoPlayingItemRate(): MediaRate? {
+            if (isFinishing()) return null
+            return intentParser?.playingChild?.mediaRate
         }
 
         override fun getCurrentTime(): Long? {

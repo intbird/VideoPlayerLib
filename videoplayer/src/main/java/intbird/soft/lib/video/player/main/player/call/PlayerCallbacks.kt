@@ -39,6 +39,12 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
         }
     }
 
+    override fun onReady(mediaFileInfo: MediaFileInfo, ready: Boolean) {
+        for (callback in callbacks) {
+            callback.onReady(mediaFileInfo, ready)
+        }
+    }
+
     override fun onStart() {
         for (callback in callbacks) {
             callback.onStart()

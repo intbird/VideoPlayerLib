@@ -23,14 +23,14 @@ buildscript {
         // in the individual module build.gradle files
     }
 
-//    configurations.all {
-//        resolutionStrategy {
-//            // don't cache dynamic versions at all
-//            cacheDynamicVersionsFor 0, 'seconds'
-//            // don't cache changing modules at all
-//            cacheChangingModulesFor 0, 'seconds'
-//        }
-//    }
+    configurations.all {
+        resolutionStrategy {
+            // don't cache dynamic versions at all
+            cacheDynamicVersionsFor 0, 'seconds'
+            // don't cache changing modules at all
+            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
 }
 
 allprojects {
@@ -63,5 +63,5 @@ ext {
     resourcePrefix = 'lib_media_player'
     groupId = "intbird.soft.lib"
     versionCode = 1
-    versionName = "1.1.1"
+    versionName = "1.1.1-SNAPSHOT"
 }

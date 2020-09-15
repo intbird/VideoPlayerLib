@@ -8,15 +8,16 @@ package intbird.soft.lib.video.player.main.player.mode
 class MediaFileInfo(
     var mediaId: String = "",
     var mediaName: String? = "",
-    var mediaPath: String = "",
+    var mediaUrl: String? = "",
     val mediaHeaders: Map<String, String>? = null,
 
     var clarity: String? = "",
+    var rate: Float? = 0f,
+
     var width: Int = 0,
     var height: Int = 0
 ) {
-
     override fun toString(): String {
-        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaPath='$mediaPath', mediaHeaders=$mediaHeaders, clarity=$clarity, width=$width, height=$height)"
+        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaPath='$mediaUrl', mediaHeaders=$mediaHeaders, clarity=$clarity, rate=$rate, width=$width, height=$height)"
     }
 }

@@ -1,7 +1,7 @@
 package intbird.soft.lib.video.player.api.error
 
 /**
- * created by Bird
+ * created by intbird
  * on 2020/9/8
  * DingTalk id: intbird
  */

@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.layo
 import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.llCenterControl
 import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.rlBottomControl2
 import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvClarity
+import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvRates
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.locker.call.ILockCallback
@@ -96,6 +97,7 @@ open class ControlController(
     init {
         viewImpl?.setOnTouchListener { _, _ -> if(controlControllerEnable) toggleVisible(); false }
         viewImpl?.tvClarity?.setOnClickListener { toggleCover(1, true) }
+        viewImpl?.tvRates?.setOnClickListener { toggleCover(2, true) }
         viewImpl?.seekBarProgress?.setOnSeekBarChangeListener(onSeekBarChangeListener)
         viewImpl?.ivSeekBackward?.setOnClickListener { iControlCallback?.backward(seekToInterval) }
         viewImpl?.ivSeekBackwardCenter?.setOnClickListener { iControlCallback?.backward(seekToInterval) }
@@ -275,8 +277,11 @@ open class ControlController(
     private fun toggleCover(coverType: Int, showCover: Boolean) {
         toggleVisible(!showCover)
 
-        if (coverType == -1 || coverType == 1) {
-            iControlCallback?.clarity(showCover)
+        if (coverType == 0 || coverType == 1) {
+            iControlCallback?.showClarity(showCover)
+        }
+        if (coverType == 0 || coverType == 2) {
+            iControlCallback?.showRates(showCover)
         }
     }
 

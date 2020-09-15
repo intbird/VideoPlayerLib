@@ -7,21 +7,38 @@ import kotlinx.android.parcel.Parcelize
 data class MediaPlayItem(
     val mediaId: String = "",
     var mediaName: String? = "",
-    var mediaConfig: ArrayList<MediaClarity>,
 
-    val defaultSelected: Int? = 0,
+    var clarityArray: ArrayList<MediaClarity>,
+    var rateArray: ArrayList<MediaRate>,
+
     var defaultProgress: Long? = 0
 ) : Parcelable
 
 @Parcelize
 data class MediaClarity(
-    val clarityIndex: Int,
-    val mediaId: String,
-    val clarityText: String,
+    val clarity: String,
     val mediaUrl: String,
-    val mediaHeaders: Map<String, String>? = null,
+    val mediaHeaders: Map<String, String>? = null
+) : MediaCheckedData(text = clarity),
+    Parcelable {
+    fun checked(): MediaClarity {
+        this.checked = true
+        return this
+    }
+}
 
-    var clarityChecked: Boolean = false,
-    var clarityProgress: Long = 0,
-    var selectedByUser: Boolean = false
-) : Parcelable
+@Parcelize
+data class MediaRate(
+    val rate: Float
+) : MediaCheckedData(text = rate.toString()),
+    Parcelable {
+    fun checked(): MediaRate {
+        this.checked = true
+        return this
+    }
+}
+
+sealed class MediaCheckedData(
+    val text: String = "",
+    open var checked: Boolean = false
+)

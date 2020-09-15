@@ -19,6 +19,10 @@ interface IPlayer {
 
     fun pause()
 
+    fun last():Boolean
+
+    fun next():Boolean
+
     fun stop()
 
     fun destroy()
