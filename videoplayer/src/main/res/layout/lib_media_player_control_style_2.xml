@@ -136,9 +136,9 @@
                     android:id="@+id/ivLast"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
-                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSides"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:padding="5dp"
+                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSidesLarge"
                     android:src="@drawable/icon_video_player_last" />
 
                 <ImageView
@@ -170,7 +170,7 @@
                     android:id="@+id/ivNext"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
-                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSides"
+                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSidesLarge"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:padding="5dp"
                     android:src="@drawable/icon_video_player_next" />

@@ -4,7 +4,7 @@
     <dimen name="lib_media_playerPlayFileNameWidthLarge">280dp</dimen>
 
     <dimen name="lib_media_playerPlayButtonMarinSides">10dp</dimen>
-    <dimen name="lib_media_playerPlayButtonMarinSidesLarge">49dp</dimen>
+    <dimen name="lib_media_playerPlayButtonMarinSidesLarge">30dp</dimen>
 
     <dimen name="lib_media_playerClarityRightMargin">0dp</dimen>
     <dimen name="lib_media_playerClarityRightMarginLarge">30dp</dimen>

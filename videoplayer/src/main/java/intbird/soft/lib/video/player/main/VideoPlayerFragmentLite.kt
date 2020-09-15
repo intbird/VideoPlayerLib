@@ -88,9 +88,6 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
 
     class SharedViewModel : ViewModel() {
         val landscape = MutableLiveData<Boolean>()
-
-        val clarityArray = MutableLiveData<ArrayList<MediaClarity>>()
-        val clarityArrayChecked = MutableLiveData<MediaClarity>()
     }
 
     private val permissionRequestCode = 10
@@ -301,18 +298,6 @@ open class VideoPlayerFragmentLite : Fragment(), ILockExecute {
 
         override fun onReceivePlayFile(mediaFileInfo: MediaFileInfo) {
             player?.prepare(mediaFileInfo)
-        }
-
-        override fun getLastCheckedPlay(): MediaClarity? {
-            return viewModel.clarityArrayChecked.value
-        }
-
-        override fun onReceivePlaylist(playlist: ArrayList<MediaClarity>?) {
-            viewModel.clarityArray.value = playlist
-        }
-
-        override fun onReceivePlayItem(playItem: MediaClarity?) {
-            viewModel.clarityArrayChecked.value = playItem
         }
     }
     //----end----
