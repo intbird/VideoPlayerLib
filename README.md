@@ -72,7 +72,7 @@ Release
 --------
 see [change log](CHANGELOG.md) has release history.
 
-newest $versionName is v1.1.1
+newest $versionName is v1.1.2-SNAPSHOT
 
 ```
 dependencies {

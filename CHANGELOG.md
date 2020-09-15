@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+## Version 1.1.2-SNAPSHOT
+_2020-09-05_
+ *  Mdf: add IntentParser
+ *  Fix: fix bugs  
+
 ## Version 1.1.1
 _2020-09-08_
  *  Add: fragment?.getVideoPlayerStateInfo() to get the paying info
