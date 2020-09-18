@@ -35,37 +35,49 @@ dependencies {
 
 #### 3.add method in your code where you need to play video.
 ```
-        val itemTestIndex = 4
-    
-        val itemTestUrl1 = "file:///sdcard/videos/test1.mp4"
-        val itemTestUrl2 = "file:///sdcard/videos/test2.mp4"
-        val itemTestUrl3 = "file:///sdcard/videos/test3.mp4"
-        val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
-        val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
-...
+         // suppport file type
+        enum class MediaFileType(val type: String) {
+            FILE("file:///"),
+            HTTP("http://"),
+            HTTPS("https://")
+        }
+        
+        val itemTestUrl1 = "file:///sdcard/videos/Instagram_0312_10_19_20.mp4"
+        val itemTestUrl2 = "https://intbird.s3.ap-northeast-2.amazonaws.com/h264_baseline.m3u8"
 
-       // use as a fragment
-       // fragment?.getVideoPlayerController()
-       // fragment?.getVideoPlayerStateInfo()
-       // fragment?.setPlayerStateCallback(callback) 
-       add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_LAST_NEXT)}
-       add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerStyle.SHOW_BACKWARD_FORWARD)}
-       remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
+         // use as a fragment
+        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) }
+        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2) }
+        remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
-       last.setOnClickListener { fragment?.getVideoPlayerController()?.last() }
-       pause.setOnClickListener { fragment?.getVideoPlayerController()?.pause() }
-       next.setOnClickListener { fragment?.getVideoPlayerController()?.next() }
-       info.setOnClickListener { stateText.text = "info:${fragment?.getVideoPlayerStateInfo()?.getCurrentTime()}" }
+        reset.setOnClickListener {
+            videoPlayerFragment?.setVideoPlayerList(itemTestArray3, itemTestIndex,true)
+        }
+        mdf1.setOnClickListener {
+            val playingItem = videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItem() ?: return@setOnClickListener
+            playingItem.mediaName = "modify media title"
+            videoPlayerFragment?.setVideoPlayerItem(playingItem)
+        }
+        mdf2.setOnClickListener {
+            val playingItemInfo = videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemInfo() ?: return@setOnClickListener
+            playingItemInfo.mediaRate = MediaRate(2.0f)
+            videoPlayerFragment?.setVideoPlayerItemInfo(playingItemInfo)
+        }
 
-       // full screen :  MediaPlayerStyle.HIDE_LAST_NEXT
-       fullScreen1.setOnClickListener {
-           ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayListOf(itemTest1, itemTest2, itemTest3, itemTest4, itemTest5), itemTestIndex)
-       }
+        last.setOnClickListener { videoPlayerFragment?.getVideoPlayerController()?.last() }
+        pause.setOnClickListener { videoPlayerFragment?.getVideoPlayerController()?.pause() }
+        next.setOnClickListener { videoPlayerFragment?.getVideoPlayerController()?.next() }
+        info.setOnClickListener { stateText.text = "info:${videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemInfo()}" }
 
-       // full screen :  MediaPlayerStyle.HIDE_BACKWARD_FORWARD
-       fullScreen2.setOnClickListener {
-           ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, arrayOf(itemTestUrl1, itemTestUrl2, itemTestUrl3, itemTestUrl4, itemTestUrl5), itemTestIndex)
-       }
+        // full screen activity
+        fullScreen1.setOnClickListener {
+            ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, itemTestArrayModel, itemTestIndex, autoPlay = true)
+        }
+
+        // full screen activity
+        fullScreen2.setOnClickListener {
+            ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, itemTestArrayString, itemTestIndex,autoPlay = true)
+        }
 ```
 
 Release

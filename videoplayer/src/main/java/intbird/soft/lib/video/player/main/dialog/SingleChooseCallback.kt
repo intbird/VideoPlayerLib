@@ -9,5 +9,5 @@ import intbird.soft.lib.video.player.api.bean.MediaCheckedData
  */
 
 interface SingleChooseCallback {
-    fun onChooseItem(mediaCheckedData: MediaCheckedData)
+    fun onChooseItem(index: Int, mediaCheckedData: MediaCheckedData)
 }

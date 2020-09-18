@@ -3,7 +3,9 @@ Change Log
 
 ## Version 1.1.2-SNAPSHOT
 _2020-09-05_
- *  Mdf: add IntentParser
+ *  New: add getVideoPlayingItemInfo() & setVideoPlayerItemInfo() & getVideoPlayingItem() &  setVideoPlayerItem()
+ *  Mdf: add IntentParser & MediaPlayItemInfo
+ *  Fix: start from progress 0 when choose other media url on the same mediaId
  *  Fix: fix bugs  
 
 ## Version 1.1.1

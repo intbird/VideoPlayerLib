@@ -19,28 +19,31 @@ class VideoPlayerServiceImpl : IVideoPlayer {
     override fun startActivity(
         context: Context?,
         videoPaths: ArrayList<MediaPlayItem>?,
-        index: Int
+        index: Int,
+        autoPlay: Boolean
     ) {
         if (null == context) return
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS, videoPaths)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, index)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_URLS, videoPaths)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, index)
         intentPlayer.putExtra(
-            VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,
+            VideoPlayerFragment.EXTRA_PLAYER_TYPE,
             MediaPlayerType.PLAYER_STYLE_1
         )
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY, autoPlay)
         context.startActivity(intentPlayer)
     }
 
-    override fun startActivity(context: Context?, videoPaths: Array<String>?, index: Int) {
+    override fun startActivity(context: Context?, videoPaths: Array<String>?, index: Int, autoPlay: Boolean) {
         if (null == context) return
         val intentPlayer = Intent(context, VideoPlayerActivity::class.java)
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS, compatFileUrls(videoPaths))
-        intentPlayer.putExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, index)
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_URLS, compatFileUrls(videoPaths))
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, index)
         intentPlayer.putExtra(
-            VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,
+            VideoPlayerFragment.EXTRA_PLAYER_TYPE,
             MediaPlayerType.PLAYER_STYLE_2
         )
+        intentPlayer.putExtra(VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY, autoPlay)
         context.startActivity(intentPlayer)
     }
 
@@ -60,6 +63,7 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         return MediaPlayItem(
             "mediaId", "",
             arrayListOf(MediaClarity(clarity = "", mediaUrl = videoPath)),
+            arrayListOf(),
             arrayListOf(),
             0
         )

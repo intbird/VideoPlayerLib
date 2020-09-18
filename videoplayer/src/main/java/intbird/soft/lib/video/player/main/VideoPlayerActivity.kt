@@ -22,37 +22,37 @@ open class VideoPlayerActivity : AppCompatActivity() {
         addVideoPlayer(R.id.fragment_player)
     }
 
-    private var videoPlayerFragmentLite: VideoPlayerFragmentLite? = null
+    private var videoPlayerFragment: VideoPlayerFragment? = null
 
-    fun getVideoPlayer(): VideoPlayerFragmentLite? {
-        return videoPlayerFragmentLite
+    fun getVideoPlayer(): VideoPlayerFragment? {
+        return videoPlayerFragment
     }
 
     private fun addVideoPlayer(rid: Int) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val fragment = VideoPlayerFragmentLite()
+        val fragment = VideoPlayerFragment()
         setFragmentArgs(fragment)
         fragmentTransaction.add(rid, fragment)
         fragmentTransaction.commit()
-        this.videoPlayerFragmentLite = fragment
+        this.videoPlayerFragment = fragment
     }
 
     private fun setFragmentArgs(fragment: Fragment) {
         var args = fragment.arguments
         if (null == args) args = Bundle()
         args.putParcelableArrayList(
-            VideoPlayerFragmentLite.EXTRA_FILE_URLS,
-            intent.getParcelableArrayListExtra(VideoPlayerFragmentLite.EXTRA_FILE_URLS)
+            VideoPlayerFragment.EXTRA_FILE_URLS,
+            intent.getParcelableArrayListExtra(VideoPlayerFragment.EXTRA_FILE_URLS)
         )
         args.putInt(
-            VideoPlayerFragmentLite.EXTRA_FILE_INDEX,
-            intent.getIntExtra(VideoPlayerFragmentLite.EXTRA_FILE_INDEX, 0)
+            VideoPlayerFragment.EXTRA_FILE_INDEX,
+            intent.getIntExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, 0)
         )
         args.putSerializable(
-            VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE,
-            intent.getSerializableExtra(VideoPlayerFragmentLite.EXTRA_PLAYER_TYPE)
+            VideoPlayerFragment.EXTRA_PLAYER_TYPE,
+            intent.getSerializableExtra(VideoPlayerFragment.EXTRA_PLAYER_TYPE)
         )
         fragment.arguments = args
     }

@@ -13,27 +13,29 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
 
     init {
         for (playerCallback in callbackVars) {
-            if (null != playerCallback) callbacks.add(playerCallback)
+            if (playerCallback != null) {
+                callbacks.add(playerCallback)
+            }
         }
     }
 
-    fun addCallback(iPlayerCallback: IPlayerCallback?): PlayerCallbacks {
-        if (null != iPlayerCallback) callbacks.add(iPlayerCallback)
+    fun addCallback(iPlayerCallback: IPlayerCallback): PlayerCallbacks {
+        callbacks.add(iPlayerCallback)
         return this
     }
 
-    fun removeCallback(iPlayerCallback: IPlayerCallback?): PlayerCallbacks {
-        if (null != iPlayerCallback) callbacks.remove(iPlayerCallback)
+    fun removeCallback(iPlayerCallback: IPlayerCallback): PlayerCallbacks {
+        callbacks.remove(iPlayerCallback)
         return this
     }
 
-    override fun onPrepare(mediaFileInfo: MediaFileInfo) {
+    override fun onPrepare(mediaFileInfo: MediaFileInfo?) {
         for (callback in callbacks) {
             callback.onPrepare(mediaFileInfo)
         }
     }
 
-    override fun onPrepared(mediaFileInfo: MediaFileInfo) {
+    override fun onPrepared(mediaFileInfo: MediaFileInfo?) {
         for (callback in callbacks) {
             callback.onPrepared(mediaFileInfo)
         }
@@ -63,7 +65,7 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
         }
     }
 
-    override fun onCompletion(mediaFileInfo: MediaFileInfo) {
+    override fun onCompletion(mediaFileInfo: MediaFileInfo?) {
         for (callback in callbacks) {
             callback.onCompletion(mediaFileInfo)
         }
@@ -75,13 +77,13 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
         }
     }
 
-    override fun onError(errorCode: Int, errorMessage: String?) {
+    override fun onError(errorCode:Int, errorMessage: String?) {
         for (callback in callbacks) {
             callback.onError(errorCode, errorMessage)
         }
     }
 
-    override fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo) {
+    override fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo?) {
         for (callback in callbacks) {
             callback.onVideoSizeChanged(mediaFileInfo)
         }
@@ -98,5 +100,4 @@ class PlayerCallbacks(vararg callbackVars: IPlayerCallback?) : IPlayerCallback {
             callback.onBuffEnded()
         }
     }
-
 }

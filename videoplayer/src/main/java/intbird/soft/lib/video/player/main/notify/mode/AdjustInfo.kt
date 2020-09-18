@@ -53,4 +53,8 @@ class AdjustInfo {
         progress = MediaTimeUtil.adjustValueBoundF((currentValue + increaseRatio * maxValue), maxValue, minValue)
         progressUI = MediaTimeUtil.adjustValueBoundF((currentValueUI + (increaseRatio * maxValueUI)), maxValueUI.toFloat(), minValueUI.toFloat()).toInt()
     }
+
+    fun getUIRate(): Double {
+        return progressUI.toDouble() / maxValueUI.toDouble()
+    }
 }

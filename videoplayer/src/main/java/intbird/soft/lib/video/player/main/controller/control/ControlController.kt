@@ -8,11 +8,20 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import intbird.soft.lib.video.player.R
+import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
+import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
+import intbird.soft.lib.video.player.main.locker.call.ILockCallback
+import intbird.soft.lib.video.player.main.notify.ILandscapeExecute
+import intbird.soft.lib.video.player.main.notify.ILockExecute
+import intbird.soft.lib.video.player.main.player.IPlayer
+import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
+import intbird.soft.lib.video.player.utils.MediaTimeUtil
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivDirection
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivPlay
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivLocker
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivLast
+import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivLocker
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivNext
+import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivPlay
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.layoutBottomPanel
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.seekBarProgress
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.tvVideoCurTime
@@ -27,15 +36,8 @@ import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.layo
 import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.llCenterControl
 import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.rlBottomControl2
 import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvClarity
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvRates
-import intbird.soft.lib.video.player.R
-import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
-import intbird.soft.lib.video.player.main.locker.call.ILockCallback
-import intbird.soft.lib.video.player.main.notify.ILandscapeExecute
-import intbird.soft.lib.video.player.main.notify.ILockExecute
-import intbird.soft.lib.video.player.main.player.IPlayer
-import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
-import intbird.soft.lib.video.player.utils.MediaTimeUtil
+import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvClarityPortrait
+import kotlinx.android.synthetic.main.lib_media_player_control_title.view.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -96,15 +98,17 @@ open class ControlController(
 
     init {
         viewImpl?.setOnTouchListener { _, _ -> if(controlControllerEnable) toggleVisible(); false }
-        viewImpl?.tvClarity?.setOnClickListener { toggleCover(1, true) }
-        viewImpl?.tvRates?.setOnClickListener { toggleCover(2, true) }
+        viewImpl?.tvRates?.setOnClickListener { showSingleDialog(SingleChooseType.RATES, true) ;}
+        viewImpl?.ivTimedText?.setOnClickListener { showSingleDialog(SingleChooseType.TEXT, true) ; }
+        viewImpl?.tvClarity?.setOnClickListener { showSingleDialog(SingleChooseType.CLARITY, true) ; }
+        viewImpl?.tvClarityPortrait?.setOnClickListener { showSingleDialog(SingleChooseType.CLARITY, true) ; }
         viewImpl?.seekBarProgress?.setOnSeekBarChangeListener(onSeekBarChangeListener)
-        viewImpl?.ivSeekBackward?.setOnClickListener { iControlCallback?.backward(seekToInterval) }
-        viewImpl?.ivSeekBackwardCenter?.setOnClickListener { iControlCallback?.backward(seekToInterval) }
-        viewImpl?.ivSeekForward?.setOnClickListener { iControlCallback?.forward(seekToInterval) }
-        viewImpl?.ivSeekForwardCenter?.setOnClickListener { iControlCallback?.forward(seekToInterval) }
-        viewImpl?.ivLast?.setOnClickListener { iControlCallback?.last() }
-        viewImpl?.ivNext?.setOnClickListener { iControlCallback?.next() }
+        viewImpl?.ivSeekBackward?.setOnClickListener { iControlCallback?.backward(seekToInterval);}
+        viewImpl?.ivSeekBackwardCenter?.setOnClickListener { iControlCallback?.backward(seekToInterval); }
+        viewImpl?.ivSeekForward?.setOnClickListener { iControlCallback?.forward(seekToInterval); }
+        viewImpl?.ivSeekForwardCenter?.setOnClickListener { iControlCallback?.forward(seekToInterval);}
+        viewImpl?.ivLast?.setOnClickListener { iControlCallback?.last(); }
+        viewImpl?.ivNext?.setOnClickListener { iControlCallback?.next(); }
 
         toggleLock(false)
         togglePlay(false)
@@ -130,9 +134,14 @@ open class ControlController(
         toggleDirection(false)
     }
 
-    fun onPrepared(mediaFileInfo: MediaFileInfo) {
-        viewImpl?.findViewById<TextView>(R.id.tvVideoName)?.text = mediaFileInfo.mediaName ?: ""
-        viewImpl?.tvClarity?.text = mediaFileInfo.clarity ?: ""
+    fun onReceived(mediaFileInfo: MediaFileInfo?) {
+        viewImpl?.tvRates?.text = mediaFileInfo?.speedRate?: ""
+        viewImpl?.tvVideoName?.text = mediaFileInfo?.mediaName ?: ""
+        viewImpl?.tvClarity?.text = mediaFileInfo?.clarity ?: ""
+        viewImpl?.tvClarityPortrait?.text = mediaFileInfo?.clarity ?: ""
+    }
+
+    fun onPrepared(mediaFileInfo: MediaFileInfo?) {
         updateSeekProgressUI()
     }
 
@@ -161,7 +170,7 @@ open class ControlController(
     }
 
     private fun updateCompleteUI() {
-        toggleCover(0, false)
+        showSingleDialog(SingleChooseType.NONE, false)
         toggleVisible(true)
         togglePlay(false)
         toggleLock(false)
@@ -171,13 +180,12 @@ open class ControlController(
     }
 
     private fun updateSeekProgressUI() {
-        if (null != player) {
-            viewImpl?.seekBarProgress?.progress = mediaCurrentTime.toInt()
-            viewImpl?.seekBarProgress?.max = mediaTotalTime.toInt()
+        if (null == player) return
+        viewImpl?.seekBarProgress?.progress = mediaCurrentTime.toInt()
+        viewImpl?.seekBarProgress?.max = mediaTotalTime.toInt()
 
-            viewImpl?.tvVideoCurTime?.text = MediaTimeUtil.formatTime(mediaCurrentTime)
-            viewImpl?.tvVideoTotalTime?.text = MediaTimeUtil.formatTime(mediaTotalTime)
-        }
+        viewImpl?.tvVideoCurTime?.text = MediaTimeUtil.formatTime(mediaCurrentTime)
+        viewImpl?.tvVideoTotalTime?.text = MediaTimeUtil.formatTime(mediaTotalTime)
     }
 
     private fun togglePlay(play: Boolean) {
@@ -222,12 +230,16 @@ open class ControlController(
             viewImpl?.rlBottomControl2?.visibility = View.VISIBLE
             viewImpl?.llCenterControl?.visibility = View.GONE
             viewImpl?.ivDirectionPortrait?.visibility = View.GONE
-            viewImpl?.findViewById<TextView>(R.id.tvVideoName)?.visibility = View.VISIBLE
+            viewImpl?.tvClarityPortrait?.visibility = View.GONE
+            viewImpl?.tvVideoName?.visibility = View.VISIBLE
+            viewImpl?.linearTitleRightMore?.visibility = View.VISIBLE
         } else {
             viewImpl?.rlBottomControl2?.visibility = View.GONE
             viewImpl?.llCenterControl?.visibility = View.VISIBLE
             viewImpl?.ivDirectionPortrait?.visibility = View.VISIBLE
-            viewImpl?.findViewById<TextView>(R.id.tvVideoName)?.visibility = View.GONE
+            viewImpl?.tvClarityPortrait?.visibility = View.VISIBLE
+            viewImpl?.tvVideoName?.visibility = View.GONE
+            viewImpl?.linearTitleRightMore?.visibility = View.GONE
         }
     }
 
@@ -235,16 +247,6 @@ open class ControlController(
         val titleTextLp = viewImpl?.findViewById<TextView>(R.id.tvVideoName)?.layoutParams as? LinearLayout.LayoutParams
         titleTextLp?.weight =
             getDimens(if (landscape) R.dimen.lib_media_playerPlayFileNameWidthLarge else R.dimen.lib_media_playerPlayFileNameWidth)
-
-        val playButtonMarginSidesLp = (viewImpl?.ivPlay?.layoutParams as? LinearLayout.LayoutParams)
-        val playButtonSideMargin =
-            getDimens(if (landscape) R.dimen.lib_media_playerPlayButtonMarinSidesLarge else R.dimen.lib_media_playerPlayButtonMarinSides)
-        playButtonMarginSidesLp?.setMargins(
-            playButtonSideMargin.toInt(),
-            0,
-            playButtonSideMargin.toInt(),
-            0
-        )
 
         val clarityRightMarginLp = viewImpl?.tvClarity?.layoutParams as? RelativeLayout.LayoutParams
         val clarityRightMargin =
@@ -274,14 +276,26 @@ open class ControlController(
         }
     }
 
-    private fun toggleCover(coverType: Int, showCover: Boolean) {
-        toggleVisible(!showCover)
+    private fun showSingleDialog(singleChooseType: SingleChooseType, show: Boolean) {
+        toggleVisible(!show)
+        iControlCallback?.showDialog(singleChooseType, show)
+    }
 
-        if (coverType == 0 || coverType == 1) {
-            iControlCallback?.showClarity(showCover)
-        }
-        if (coverType == 0 || coverType == 2) {
-            iControlCallback?.showRates(showCover)
+    fun resultSingleDialog(singleChooseType: SingleChooseType, show: Boolean?=false) {
+        val visible = if (show == true) View.VISIBLE else View.GONE
+        when (singleChooseType) {
+            SingleChooseType.NONE -> {
+
+            }
+            SingleChooseType.TEXT -> {
+                viewImpl?.ivTimedText?.visibility = visible
+            }
+            SingleChooseType.RATES -> {
+                viewImpl?.tvRates?.visibility = visible
+            }
+            SingleChooseType.CLARITY -> {
+                viewImpl?.tvClarity?.visibility = visible
+            }
         }
     }
 

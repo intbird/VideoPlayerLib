@@ -1,5 +1,6 @@
 package intbird.soft.lib.video.player.main.controller.control.call
 
+import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
 import intbird.soft.lib.video.player.main.notify.IMediaSeekNotify
 /**
  * created by intbird
@@ -9,8 +10,7 @@ import intbird.soft.lib.video.player.main.notify.IMediaSeekNotify
 interface IControlCallback :
         IMediaSeekNotify {
 
-    fun showClarity(show: Boolean)
-    fun showRates(show: Boolean)
+    fun showDialog(dialogType: SingleChooseType, show: Boolean)
 
     fun backward(long: Long)
     fun forward(long: Long)

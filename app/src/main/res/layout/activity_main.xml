@@ -20,14 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add1" />
+            android:text="add style1" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/add2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add2" />
+            android:text="add style2" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/remove"
@@ -35,6 +35,33 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Remove" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="reset all" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/mdf1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="mdf all" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/mdf2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="mdf one" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -71,21 +98,29 @@
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/fullScreen1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fffaaa"
-        android:gravity="center"
-        android:text="full Screen Style1" />
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/fullScreen2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#aaafff"
-        android:gravity="center"
-        android:text="full Screen Style2" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fullScreen1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#fffaaa"
+            android:gravity="center"
+            android:text="full Screen Style1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fullScreen2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#aaafff"
+            android:gravity="center"
+            android:text="full Screen Style2" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/stateText"

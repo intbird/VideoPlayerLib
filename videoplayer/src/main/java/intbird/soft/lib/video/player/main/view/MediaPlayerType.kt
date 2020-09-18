@@ -24,5 +24,11 @@ enum class MediaPlayerType(
         R.id.textureView,
         R.layout.lib_media_player_control_style_2,
         R.id.mediaRootControl
+    ),
+    PLAYER_STYLE_3(
+        R.layout.lib_media_player_diaplay_texture,
+        R.id.textureView,
+        R.layout.lib_media_player_control_style_2,
+        R.id.mediaRootControl
     )
 }

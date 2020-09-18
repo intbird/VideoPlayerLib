@@ -3,21 +3,31 @@ package intbird.soft.lib.video.player.api.bean
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * created by intbird
+ * on 2020/9/8
+ * DingTalk id: intbird
+ */
 @Parcelize
-data class MediaPlayItem(
+open class MediaPlayItem(
     val mediaId: String = "",
     var mediaName: String? = "",
 
-    var clarityArray: ArrayList<MediaClarity>,
-    var rateArray: ArrayList<MediaRate>,
+    var clarityArray: ArrayList<MediaClarity>? = null,
+    var rateArray: ArrayList<MediaRate>? = null,
+    var textArray: ArrayList<MediaText>? = null,
 
     var defaultProgress: Long? = 0
-) : Parcelable
+) : Parcelable {
+    override fun toString(): String {
+        return "MediaPlayItem(mediaId='$mediaId', mediaName=$mediaName, clarityArray=$clarityArray, rateArray=$rateArray, textArray=$textArray, defaultProgress=$defaultProgress)"
+    }
+}
 
 @Parcelize
 data class MediaClarity(
-    val clarity: String,
-    val mediaUrl: String,
+    val clarity: String?,
+    val mediaUrl: String?,
     val mediaHeaders: Map<String, String>? = null
 ) : MediaCheckedData(text = clarity),
     Parcelable {
@@ -38,7 +48,26 @@ data class MediaRate(
     }
 }
 
+@Parcelize
+data class MediaCaption(
+    val displayName: String
+) : MediaCheckedData(text = displayName),
+    Parcelable
+
+
+@Parcelize
+data class MediaText(
+    val name: String,
+    val path: String = ""
+) : MediaCheckedData(text = name),
+    Parcelable {
+    fun checked(): MediaText {
+        this.checked = true
+        return this
+    }
+}
+
 sealed class MediaCheckedData(
-    val text: String = "",
+    val text: String? = "",
     open var checked: Boolean = false
 )

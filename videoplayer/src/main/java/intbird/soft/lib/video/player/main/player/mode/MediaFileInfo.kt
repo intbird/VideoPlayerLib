@@ -6,18 +6,19 @@ package intbird.soft.lib.video.player.main.player.mode
  * DingTalk id: intbird
  */
 class MediaFileInfo(
-    var mediaId: String = "",
+    var mediaId: String? = "",
     var mediaName: String? = "",
     var mediaUrl: String? = "",
     val mediaHeaders: Map<String, String>? = null,
 
     var clarity: String? = "",
-    var rate: Float? = 0f,
+    var speedRate: String? = "",
+    var timeText: String? = "",
 
     var width: Int = 0,
     var height: Int = 0
 ) {
     override fun toString(): String {
-        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaPath='$mediaUrl', mediaHeaders=$mediaHeaders, clarity=$clarity, rate=$rate, width=$width, height=$height)"
+        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaUrl=$mediaUrl, mediaHeaders=$mediaHeaders, clarity=$clarity, speedRate=$speedRate, timeText=$timeText, width=$width, height=$height)"
     }
 }

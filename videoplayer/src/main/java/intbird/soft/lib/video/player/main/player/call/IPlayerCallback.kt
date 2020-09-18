@@ -8,9 +8,9 @@ import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
  * DingTalk id: intbird
  */
 interface IPlayerCallback {
-    fun onPrepare(mediaFileInfo: MediaFileInfo)
+    fun onPrepare(mediaFileInfo: MediaFileInfo?)
 
-    fun onPrepared(mediaFileInfo: MediaFileInfo)
+    fun onPrepared(mediaFileInfo: MediaFileInfo?)
 
     fun onReady(mediaFileInfo: MediaFileInfo, ready: Boolean)
 
@@ -20,13 +20,13 @@ interface IPlayerCallback {
 
     fun onPause()
 
-    fun onCompletion(mediaFileInfo: MediaFileInfo)
+    fun onCompletion(mediaFileInfo: MediaFileInfo?)
 
     fun onStop()
 
-    fun onError(errorCode: Int, errorMessage: String? = "")
+    fun onError(errorCode:Int, errorMessage: String?)
 
-    fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo)
+    fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo?)
 
     fun onBuffStart()
 

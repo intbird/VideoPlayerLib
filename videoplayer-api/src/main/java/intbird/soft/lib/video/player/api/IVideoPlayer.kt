@@ -13,12 +13,14 @@ interface IVideoPlayer {
     fun startActivity(
         context: Context?,
         videoPaths: ArrayList<MediaPlayItem>?,
-        index: Int
+        index: Int,
+        autoPlay: Boolean
     )
 
     fun startActivity(
         context: Context?,
         videoPaths: Array<String>?,
-        index: Int
+        index: Int,
+        autoPlay: Boolean
     )
 }

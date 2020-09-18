@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -19,10 +20,17 @@ import intbird.soft.lib.video.player.api.bean.MediaCheckedData
 import kotlinx.android.synthetic.main.lib_media_player_dialog_single_choose.*
 import kotlinx.android.synthetic.main.lib_media_player_dialog_single_choose_item.view.*
 
+/**
+ * created by Bird
+ * on 2020/9/11
+ * DingTalk id: intbird
+ */
+
 class SingleChooseDialogFragment : DialogFragment() {
 
     companion object {
         const val DATA = "data"
+        const val HEIGHT = "height"
         fun dismissDialog(fragmentManager: FragmentManager) {
             val fragmentTransaction = fragmentManager.beginTransaction()
             val dialog: Fragment? = fragmentManager.findFragmentByTag("dialog")
@@ -32,20 +40,21 @@ class SingleChooseDialogFragment : DialogFragment() {
             fragmentTransaction.addToBackStack(null)
         }
 
-        fun showDialog(fragmentManager: FragmentManager, listData: ArrayList<out MediaCheckedData>?, singleChooseCallback: SingleChooseCallback) {
+        fun showDialog(fragmentManager: FragmentManager, listData: ArrayList<out MediaCheckedData>?, singleChooseCallback: SingleChooseCallback, height:Int? = 0) {
             dismissDialog(fragmentManager)
 
             val fragmentTransaction = fragmentManager.beginTransaction()
             val dialogFragment = SingleChooseDialogFragment()
             val arguments = Bundle()
             arguments.putSerializable(DATA, listData)
+            arguments.putInt(HEIGHT, height?:0)
             dialogFragment.arguments = arguments
             dialogFragment.show(fragmentTransaction, "dialog")
             dialogFragment.registerCallback(singleChooseCallback)
         }
     }
 
-    private var singleChooseCallback: SingleChooseCallback? = null
+    private var singleChooseCallback:SingleChooseCallback? = null
     private fun registerCallback(singleChooseCallback: SingleChooseCallback) {
         this.singleChooseCallback = singleChooseCallback
     }
@@ -65,8 +74,21 @@ class SingleChooseDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        resetViewHeight(layoutPlayerCover)
         flLeft.setOnClickListener { dismiss() }
-        createRecycleView()
+    }
+
+    private fun resetViewHeight(view: View) {
+        view.post {
+            val height = arguments?.getInt(HEIGHT)?:0
+            if (height > 0) {
+                val lp = view.layoutParams; lp?.height = height
+                if (null != lp) view.layoutParams = lp
+                view.requestLayout()
+
+                createRecycleView()
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -82,6 +104,7 @@ class SingleChooseDialogFragment : DialogFragment() {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
+            background = ContextCompat.getDrawable(context, R.color.lib_media_player_control_panel_alpha)
         }
     }
 
@@ -89,9 +112,9 @@ class SingleChooseDialogFragment : DialogFragment() {
         return arguments?.getSerializable(DATA) as? ArrayList<MediaCheckedData>?: ArrayList()
     }
 
-    private fun onChooseItem(mediaCheckedData: MediaCheckedData) {
+    private fun onChooseItem(index:Int, mediaCheckedData: MediaCheckedData) {
         mediaCheckedData.checked = true
-        singleChooseCallback?.onChooseItem(mediaCheckedData)
+        singleChooseCallback?.onChooseItem(index, mediaCheckedData)
         dismiss()
     }
 
@@ -133,7 +156,7 @@ class SingleChooseDialogFragment : DialogFragment() {
             if (!TextUtils.isEmpty(adapterItem.text)) {
                 holder.view.textView.setOnClickListener {
                     clearChecked()
-                    fragment.onChooseItem(adapterItem)
+                    fragment.onChooseItem(position, adapterItem)
                 }
             }
         }

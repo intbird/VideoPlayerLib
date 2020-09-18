@@ -5,6 +5,7 @@
 
     <dimen name="lib_media_playerPlayButtonMarinSides">10dp</dimen>
     <dimen name="lib_media_playerPlayButtonMarinSidesLarge">30dp</dimen>
+    <dimen name="lib_media_playerPlayButtonMarinSidesLargeAverage">30dp</dimen>
 
     <dimen name="lib_media_playerClarityRightMargin">0dp</dimen>
     <dimen name="lib_media_playerClarityRightMarginLarge">30dp</dimen>

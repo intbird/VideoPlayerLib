@@ -7,12 +7,12 @@ import android.os.Build
 import android.view.Surface
 import android.view.TextureView
 import intbird.soft.lib.video.player.api.error.MediaError
-import intbird.soft.lib.video.player.main.intent.MediaIntentDelegate
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
 import intbird.soft.lib.video.player.main.player.display.IDisplay
 import intbird.soft.lib.video.player.main.player.display.TextureDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
+import intbird.soft.lib.video.player.main.player.player.delegate.PlayerDelegate
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
 
@@ -26,7 +26,7 @@ import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
 class MediaPlayerImpl(
     private val context: Context,
     private val textureView: TextureView?,
-    private val playerDelegate: MediaIntentDelegate?,
+    private val playerDelegate: PlayerDelegate?,
     private val playerCallback: PlayerCallbacks?
 ) :
     IPlayer, IDisplay,
@@ -85,6 +85,7 @@ class MediaPlayerImpl(
     override fun displayStateChange(enableDisplay: Boolean) {
         if (null != textureView) mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
+        log("displayStateChange $mediaPrepared $playerEnable")
         playerCallback?.onReady(mediaFileInfo, playerEnable)
     }
 
@@ -92,6 +93,7 @@ class MediaPlayerImpl(
         mediaFileInfo = mediaFile
         playerCallback?.onPrepare(mediaFile)
         createMediaPlayer()
+
         prepareReset()
         log("reset")
 

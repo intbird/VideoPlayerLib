@@ -100,6 +100,16 @@
                 android:textColor="#FFFFFF"
                 android:textSize="12dp" />
 
+            <TextView
+                android:id="@+id/tvClarityPortrait"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="360P" />
+
             <ImageView
                 android:id="@+id/ivDirectionPortrait"
                 android:layout_width="44dp"
@@ -136,15 +146,16 @@
                     android:id="@+id/ivLast"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
+                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSidesLargeAverage"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:padding="5dp"
-                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSidesLarge"
-                    android:src="@drawable/icon_video_player_last" />
+                    android:src="@drawable/icon_video_player_last"/>
 
                 <ImageView
                     android:id="@+id/ivSeekBackward"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
+                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSidesLargeAverage"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:padding="5dp"
                     android:src="@drawable/icon_video_player_seek_backing" />
@@ -153,8 +164,6 @@
                     android:id="@+id/ivPlay"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
-                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSides"
-                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSides"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:src="@drawable/icon_video_player_play" />
 
@@ -162,6 +171,7 @@
                     android:id="@+id/ivSeekForward"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
+                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSidesLargeAverage"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:padding="5dp"
                     android:src="@drawable/icon_video_player_seek_going" />
@@ -170,34 +180,23 @@
                     android:id="@+id/ivNext"
                     android:layout_width="46dp"
                     android:layout_height="46dp"
-                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSidesLarge"
+                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSides"
                     android:background="@drawable/lib_media_player_play_button_ripple"
                     android:padding="5dp"
                     android:src="@drawable/icon_video_player_next" />
-
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvRates"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/ivDirection"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                tools:text="" />
 
             <TextView
                 android:id="@+id/tvClarity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@+id/ivDirection"
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                tools:text="" />
+                tools:text="360P" />
 
             <ImageView
                 android:id="@+id/ivDirection"

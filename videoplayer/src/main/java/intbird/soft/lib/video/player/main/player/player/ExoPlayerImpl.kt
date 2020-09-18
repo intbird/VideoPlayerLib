@@ -1,8 +1,8 @@
 package intbird.soft.lib.video.player.main.player.player;
 
+import android.content.Context
 import android.net.Uri
 import android.view.TextureView
-import android.view.View
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.Timeline
@@ -13,8 +13,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
-import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.display.IDisplay
+import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 
 /**
  * created by intbird
@@ -24,14 +24,13 @@ import intbird.soft.lib.video.player.main.player.display.IDisplay
  * viewImpl: 暂时没时间view接口,直接用view实现
  */
 class ExoPlayerImpl(
-    private val playerView: TextureView,
+    private val context: Context,
+    private val playerView: TextureView?,
     private val playerCallback: IPlayerCallback?
 ) : IPlayer, IDisplay {
-    private val context = playerView.context
     private var player = SimpleExoPlayer.Builder(context).build()
 
     init {
-        playerView.visibility = View.VISIBLE
         displayStateChange(true)
     }
 
