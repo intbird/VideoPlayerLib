@@ -1,6 +1,7 @@
 package intbird.soft.lib.video.player.main.player.intent.parser
 
 import android.text.TextUtils
+import androidx.annotation.NonNull
 import intbird.soft.lib.video.player.api.bean.*
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 
@@ -132,5 +133,37 @@ class MediaItemInfoParer {
 
     private fun log(message: String) {
         MediaLogUtil.log("intents: $message")
+    }
+
+    private fun getSelectedItem(arrayList: ArrayList<out MediaCheckedData>?, value: MediaCheckedData, id:String): MediaCheckedData? {
+        val nonNullArrayList = arrayList ?: ArrayList()
+        val index = getSelectedItemIndex(nonNullArrayList, value, id)
+        val size = nonNullArrayList.size
+        return if (index in 0 until size) nonNullArrayList[index] else null
+    }
+
+    private fun getSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>, value : MediaCheckedData, id:String): Int {
+        val lastIndex = getLastSelectedItemIndex(listData, value, id)
+        if (lastIndex != -1) return lastIndex
+        val checkedIndex = getCheckSelectedItemIndex(listData)
+        if (lastIndex != -1) return checkedIndex
+        return 0
+    }
+
+    private fun getLastSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>, value : MediaCheckedData, id:String): Int {
+        if (null != this.playingItemInfo
+            && TextUtils.equals(this.playingItemInfo?.mediaId, id)
+        ) {
+            return listData.indexOf(value)
+        }
+        return -1
+    }
+
+    private fun getCheckSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>): Int {
+        for (item in listData) {
+            val index = listData.indexOf(item)
+            return if (item.checked) index else continue
+        }
+        return -1
     }
 }

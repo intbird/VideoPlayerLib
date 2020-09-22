@@ -1,11 +1,11 @@
 package intbird.soft.lib.video.player.main.player.intent
 
 import android.os.Bundle
-import android.text.TextUtils
 import intbird.soft.lib.video.player.api.bean.*
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
 import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
 import intbird.soft.lib.video.player.main.dialog.type.SingleChooseTypeCallback
+import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
 import intbird.soft.lib.video.player.main.player.intent.parser.MediaItemInfoParer
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.player.delegate.PlayerDelegate
@@ -32,14 +32,11 @@ class MediaIntentHelper(
     private var videoPlayIndex: Int = 0
     private var videoAutoPlay: Boolean? = null
 
-    private var lastPlayingId: String? = ""
-    private var lastPlayingIdProgress: Long? = 0L
-
-    val getMediaPlayerType get() = arguments?.getSerializable(VideoPlayerFragment.EXTRA_PLAYER_TYPE) as? MediaPlayerType
+    val mediaPlayerType get() = arguments?.getSerializable(VideoPlayerFragment.EXTRA_PLAYER_TYPE) as? MediaPlayerType
     val isAutoStartPlay get() = (videoAutoPlay == true)
-    val lastPlayingProgress get() = lastPlayingIdProgress
 
     private var mediaItemParser = MediaItemInfoParer()
+    private var mediaItemRecord = MediaItemInfoRecord()
 
     init {
         setVideoPlayerList(
@@ -64,47 +61,40 @@ class MediaIntentHelper(
 
     fun setVideoPlayerItem(mediaPlayItem: MediaPlayItem?, autoPlay: Boolean) {
         reloadPlayer(autoPlay, mediaPlayItem)
-        log("setVideoPlayerItem-fileInfo:$mediaPlayItem")
     }
 
     fun setVideoPlayerItemInfo(mediaPlayItemInfo: MediaPlayItemInfo?, autoPlay: Boolean) {
         reloadPlayer(autoPlay, mediaPlayItemInfo)
-        log("setVideoPlayerItem-fileInfo:$mediaPlayItemInfo")
-    }
-
-    override fun delegatePlay(): Boolean {
-        return reloadPlayer(true, 0)
-    }
-
-    override fun delegateLast(): Boolean {
-        return reloadPlayer(true, -1)
-    }
-
-    override fun delegateNext(): Boolean {
-        return reloadPlayer(true, 1)
     }
 
     private fun reloadPlayer(autoPlay: Boolean, mediaPlayItem: MediaPlayItem?): Boolean {
         val fileInfo = parserPlayMediaItemInfo(mediaPlayItem)
-        lastPlayingId = mediaPlayItem?.mediaId
-        lastPlayingIdProgress = intentHelperCall?.getVideoCurrentTime()
+        mediaItemRecord.save(
+            mediaPlayItem?.mediaId,
+            MediaRecordData(intentHelperCall?.getVideoCurrentTime())
+        )
         intentHelperCall?.onReceivePlayFile(autoPlay, fileInfo)
         return null != fileInfo
     }
 
     private fun reloadPlayer(autoPlay: Boolean, mediaPlayItemInfo: MediaPlayItemInfo?): Boolean {
         val fileInfo = parserPlayMediaItemInfo(mediaPlayItemInfo)
-        lastPlayingId = mediaPlayItemInfo?.mediaId
-        lastPlayingIdProgress = intentHelperCall?.getVideoCurrentTime()
+        mediaItemRecord.save(
+            mediaPlayItemInfo?.mediaId,
+            MediaRecordData(intentHelperCall?.getVideoCurrentTime())
+        )
         intentHelperCall?.onReceivePlayFile(autoPlay, fileInfo)
         return null != fileInfo
     }
 
     private fun reloadPlayer(autoPlay: Boolean, crease: Int): Boolean {
         val creasedFile = getCreasedFile(crease)
-        log("play file: $creasedFile")
         return if (null != creasedFile) {
             videoPlayIndex = videoPlayIndex.plus(crease)
+            mediaItemRecord.save(
+                creasedFile.mediaId,
+                MediaRecordData(intentHelperCall?.getVideoCurrentTime())
+            )
             intentHelperCall?.onReceivePlayFile(autoPlay, creasedFile)
             true
         } else {
@@ -127,12 +117,6 @@ class MediaIntentHelper(
         val playItem = videoPlayItems!![newIndex]
         log("ceasedFile playItem :$playItem")
         val fileInfo = parserPlayMediaItemInfo(playItem)
-
-        if(null != lastPlayingId
-            && !TextUtils.equals(playItem.mediaId, lastPlayingId)) {
-            lastPlayingId = playItem.mediaId
-            lastPlayingIdProgress = playItem.defaultProgress
-        }
         log("ceasedFile fileInfo :$fileInfo")
         return fileInfo
     }
@@ -153,39 +137,42 @@ class MediaIntentHelper(
             mediaItemParser.playingItemInfo?.mediaClarity?.mediaHeaders,
 
             mediaItemParser.playingItemInfo?.mediaClarity?.text,
-            mediaItemParser.playingItemInfo?.mediaRate?.rate?.toString(),
+            mediaItemParser.playingItemInfo?.mediaRate?.rate,
             mediaItemParser.playingItemInfo?.mediaText?.path
         )
         log("MediaFileInfo fileInfo: $fileInfo")
         return if (!support) null else fileInfo
     }
 
+    fun onDestroy() {
+    }
+
     private fun log(message: String) {
         MediaLogUtil.log("intent parser: $message")
     }
 
-    fun onDestroy() {
+
+    fun getLastPlayingProgress(mediaId: String?): Long? {
+        return mediaItemRecord.get(mediaId)?.lastProgress
     }
 
     val playingItem get() = mediaItemParser.playingItem
     val playingItemInfo get() = mediaItemParser.playingItemInfo
-    var singleChooseCallback = object : SingleChooseTypeCallback {
 
-        override fun onCreateItem(type: SingleChooseType): ArrayList<out MediaCheckedData>? {
-            return onCreateItemData(type)
-        }
 
-        override fun onChooseItem(
-            type: SingleChooseType,
-            index: Int,
-            mediaCheckedData: MediaCheckedData,
-            play: Boolean
-        ) {
-            onChooseItemPlay(type, index, mediaCheckedData, play)
-        }
+    override fun delegatePlay(): Boolean {
+        return reloadPlayer(true, 0)
     }
 
-    fun onCreateItemData(type: SingleChooseType): ArrayList<out MediaCheckedData>? {
+    override fun delegateLast(): Boolean {
+        return reloadPlayer(true, -1)
+    }
+
+    override fun delegateNext(): Boolean {
+        return reloadPlayer(true, 1)
+    }
+
+    fun delegateCreateSingleChooseData(type: SingleChooseType): ArrayList<out MediaCheckedData>? {
         return when (type) {
             SingleChooseType.NONE -> {
                 arrayListOf()
@@ -202,11 +189,10 @@ class MediaIntentHelper(
         }
     }
 
-    fun onChooseItemPlay(
+    fun delegateSelectedSingleChooseData(
         type: SingleChooseType,
         index: Int,
-        mediaCheckedData: MediaCheckedData,
-        play: Boolean
+        mediaCheckedData: MediaCheckedData
     ) {
         if (mediaCheckedData is MediaClarity) {
             mediaItemParser.changeSelectedClarity(mediaCheckedData)
@@ -217,7 +203,6 @@ class MediaIntentHelper(
         if (mediaCheckedData is MediaText) {
             mediaItemParser.changeSelectedText(mediaCheckedData)
         }
-        lastPlayingIdProgress = intentHelperCall?.getVideoCurrentTime()
-        reloadPlayer(play, 0)
+        reloadPlayer(false, 0)
     }
 }

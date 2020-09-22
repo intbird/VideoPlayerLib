@@ -38,6 +38,9 @@ class ExoPlayerImpl(
         if (enableDisplay) player.setVideoTextureView(playerView)
     }
 
+    override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
+    }
+
     /**
      * https://exoplayer.dev/hls.html
      */

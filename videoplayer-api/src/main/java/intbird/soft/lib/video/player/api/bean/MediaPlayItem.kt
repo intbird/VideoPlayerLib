@@ -39,21 +39,15 @@ data class MediaClarity(
 
 @Parcelize
 data class MediaRate(
+    val name: String,
     val rate: Float
-) : MediaCheckedData(text = rate.toString()),
+) : MediaCheckedData(text = name),
     Parcelable {
     fun checked(): MediaRate {
         this.checked = true
         return this
     }
 }
-
-@Parcelize
-data class MediaCaption(
-    val displayName: String
-) : MediaCheckedData(text = displayName),
-    Parcelable
-
 
 @Parcelize
 data class MediaText(

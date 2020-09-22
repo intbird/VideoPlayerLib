@@ -7,6 +7,7 @@ import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
 import intbird.soft.lib.video.player.api.bean.MediaRate
 import intbird.soft.lib.video.player.api.bean.MediaText
+import intbird.soft.lib.video.player.api.const.MediaTextConfig
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
 import java.util.concurrent.TimeUnit
@@ -34,14 +35,14 @@ object MainActivityData {
             MediaClarity("4K", itemTestUrl1)
         ),
         arrayListOf(
-            MediaRate(0.5f).checked(),
-            MediaRate(1.0f),
-            MediaRate(1.5f),
-            MediaRate(2.0f)
+            MediaRate("0.5",0.5f).checked(),
+            MediaRate("normal",1.0f),
+            MediaRate("1.5",1.5f),
+            MediaRate("2",2.0f)
         ),
         arrayListOf(
-            MediaText("关闭").checked(),
-            MediaText("中文", itemTestSrt1),
+            MediaText("关闭(显示关闭)", MediaTextConfig.SHOW_ICON),
+            MediaText("中文", itemTestSrt1).checked(),
             MediaText("英文", itemTestSrt1)
         ),
         TimeUnit.SECONDS.toMillis(1)
@@ -55,13 +56,13 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl2),
             MediaClarity("4K", itemTestUrl2)
         ), arrayListOf(
-            MediaRate(0.5f),
-            MediaRate(1.0f).checked(),
-            MediaRate(1.5f),
-            MediaRate(2.0f)
+            MediaRate("0.5",0.5f).checked(),
+            MediaRate("normal",1.0f),
+            MediaRate("1.5",1.5f),
+            MediaRate("2",2.0f)
         ), arrayListOf(
-            MediaText("关闭").checked(),
-            MediaText("中文", itemTestSrt1),
+            MediaText("关闭(隐藏关闭)", MediaTextConfig.HIDE_ICON),
+            MediaText("中文", itemTestSrt1).checked(),
             MediaText("英文", itemTestSrt1)
         ), TimeUnit.SECONDS.toMillis(10)
     )
@@ -74,9 +75,10 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl3),
             MediaClarity("4K", itemTestUrl3)
         ), arrayListOf(
-            MediaRate(1.0f),
-            MediaRate(1.5f),
-            MediaRate(2.0f).checked()
+            MediaRate("0.5",0.5f).checked(),
+            MediaRate("normal",1.0f),
+            MediaRate("1.5",1.5f),
+            MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭").checked(),
             MediaText("中文", itemTestSrt1),
@@ -92,9 +94,10 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl1),
             MediaClarity("4K", itemTestUrl2)
         ), arrayListOf(
-            MediaRate(1.0f),
-            MediaRate(1.5f),
-            MediaRate(2.0f)
+            MediaRate("0.5",0.5f).checked(),
+            MediaRate("normal",1.0f),
+            MediaRate("1.5",1.5f),
+            MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭").checked(),
             MediaText("中文", itemTestSrt1),
@@ -111,9 +114,10 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl5),
             MediaClarity("4K", itemTestUrl5)
         ), arrayListOf(
-            MediaRate(1.0f),
-            MediaRate(1.5f),
-            MediaRate(2.0f)
+            MediaRate("0.5",0.5f).checked(),
+            MediaRate("normal",1.0f),
+            MediaRate("1.5",1.5f),
+            MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭").checked(),
             MediaText("中文", itemTestSrt1),

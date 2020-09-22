@@ -34,12 +34,12 @@ class MainActivity : AppCompatActivity() {
         }
         mdf1.setOnClickListener {
             val playingItem = videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItem() ?: return@setOnClickListener
-            playingItem.mediaName = "modify media title"
+            playingItem.mediaName = "new media title"
             videoPlayerFragment?.setVideoPlayerItem(playingItem)
         }
         mdf2.setOnClickListener {
             val playingItemInfo = videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemInfo() ?: return@setOnClickListener
-            playingItemInfo.mediaRate = MediaRate(2.0f)
+            playingItemInfo.mediaRate = MediaRate("2x", 2.0f)
             videoPlayerFragment?.setVideoPlayerItemInfo(playingItemInfo)
         }
 

@@ -12,7 +12,7 @@ class MediaFileInfo(
     val mediaHeaders: Map<String, String>? = null,
 
     var clarity: String? = "",
-    var speedRate: String? = "",
+    var speedRate: Float? = 0f,
     var timeText: String? = "",
 
     var width: Int = 0,

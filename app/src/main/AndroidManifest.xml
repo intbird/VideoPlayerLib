@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
             android:launchMode="singleTask"
+            android:theme="@style/lib_media_playerNoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize|locale">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

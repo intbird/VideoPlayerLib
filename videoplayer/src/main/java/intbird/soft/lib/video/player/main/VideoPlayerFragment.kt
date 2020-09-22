@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.TextUtils
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
@@ -126,7 +125,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         intentHelper = MediaIntentHelper(arguments, intentCallback)
-        instanceMediaPlayer(intentHelper?.getMediaPlayerType)
+        instanceMediaPlayer(intentHelper?.mediaPlayerType)
 
         locker = LockController(ivPopLock)
         videoTouchController = TouchController(player, locker, touchCallback, layoutTouchPanel)
@@ -314,13 +313,11 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         }
 
         override fun onReceivePlayFile(autoPlay: Boolean, mediaFileInfo: MediaFileInfo?) {
-            if (autoPlay && null != mediaFileInfo) {
-                player?.prepare(mediaFileInfo)
-            }
-            videoControlController?.onReceived(mediaFileInfo)
-            videoControlController?.resultSingleDialog(SingleChooseType.CLARITY, !TextUtils.isEmpty(mediaFileInfo?.clarity))
-            videoControlController?.resultSingleDialog(SingleChooseType.RATES, (mediaFileInfo?.speedRate?:0) != 0)
-            videoControlController?.resultSingleDialog(SingleChooseType.TEXT, !TextUtils.isEmpty(mediaFileInfo?.timeText))
+            if (null == mediaFileInfo) return
+            if (autoPlay) player?.prepare(mediaFileInfo)
+
+            player?.onParamsChange(mediaFileInfo)
+            videoControlController?.onParamsChange(mediaFileInfo)
             log("onReceivePlayFile: $mediaFileInfo")
         }
     }
@@ -346,7 +343,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
                 player?.start()
             }
             // continue play
-            val lastProgress = intentHelper?.lastPlayingProgress ?: 0
+            val lastProgress = intentHelper?.getLastPlayingProgress(mediaFileInfo.mediaId) ?: 0
             if (ready && (lastProgress > 0)) {
                 player?.seekTo(lastProgress, player?.isPlaying() == true)
                 log("go on play: $lastProgress")
@@ -483,10 +480,10 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         override fun showDialog(dialogType: SingleChooseType, show: Boolean) {
             if (show) {
                 SingleChooseDialogFragment.showDialog(parentFragmentManager,
-                    intentHelper?.singleChooseCallback?.onCreateItem(dialogType),
+                    intentHelper?.delegateCreateSingleChooseData(dialogType),
                     object : SingleChooseCallback {
                         override fun onChooseItem(index: Int, mediaCheckedData: MediaCheckedData) {
-                            intentHelper?.singleChooseCallback?.onChooseItem(dialogType, index, mediaCheckedData, play = true)
+                            intentHelper?.delegateSelectedSingleChooseData(dialogType, index, mediaCheckedData)
                         }
                     }, view?.height)
             } else {

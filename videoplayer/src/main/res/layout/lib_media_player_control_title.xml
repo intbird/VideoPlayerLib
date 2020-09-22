@@ -17,7 +17,8 @@
 
     <TextView
         android:id="@+id/tvVideoName"
-        android:layout_width="188dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:ellipsize="middle"
         android:gravity="start|center"
@@ -29,12 +30,12 @@
 
     <LinearLayout
         android:id="@+id/linearTitleRightMore"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginEnd="16dp"
-        android:layout_weight="1"
         android:gravity="right|center"
+        tools:visibility="visible"
         tools:ignore="RtlHardcoded">
 
         <androidx.appcompat.widget.AppCompatImageView

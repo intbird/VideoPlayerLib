@@ -2,6 +2,7 @@ package intbird.soft.lib.video.player.main.player.player;
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import android.net.Uri
 import android.os.Build
 import android.view.Surface
@@ -52,7 +53,6 @@ class MediaPlayerImpl(
 
     private fun createMediaPlayer() {
         if (null != mediaPlayer) {
-            mediaPlayer?.setSurface(mediaDisplay)
             return
         }
         mediaPlayer = MediaPlayer()
@@ -74,7 +74,6 @@ class MediaPlayerImpl(
                 playerCallback?.onError(MediaError.PLAYER_ERROR_CALLBACK,"what:$what extra:$extra")
                 true
             }
-            mediaPlayer?.setSurface(mediaDisplay)
         } catch (ignored: Exception) {
             log("init-error: ${ignored.message}")
             playerCallback?.onError(MediaError.PLAYER_INIT_ERROR,ignored.message)
@@ -85,8 +84,29 @@ class MediaPlayerImpl(
     override fun displayStateChange(enableDisplay: Boolean) {
         if (null != textureView) mediaDisplay = Surface(textureView.surfaceTexture)
         createMediaPlayer()
+        mediaPlayer?.setSurface(mediaDisplay)
         log("displayStateChange $mediaPrepared $playerEnable")
         playerCallback?.onReady(mediaFileInfo, playerEnable)
+    }
+
+    /**
+     * params有空做下调整,和file分开或者将url,progres等一些信息进行完全挂载
+     * 如: onReady() 进行的一些逻辑需要的参数等
+     */
+    override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
+        if (!playerEnable) return
+        changeRate(mediaFileInfo)
+    }
+
+    private fun changeRate(mediaFileInfo: MediaFileInfo?) {
+        if (null ==  mediaFileInfo) return
+        // rate
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val mediaRate = mediaFileInfo.speedRate
+            if(null != mediaRate && mediaRate > 0) {
+                mediaPlayer?.playbackParams = PlaybackParams().setSpeed(mediaRate)
+            }
+        }
     }
 
     override fun prepare(mediaFile: MediaFileInfo) {
@@ -105,6 +125,7 @@ class MediaPlayerImpl(
             )
             log("prepare")
             mediaPlayer?.prepareAsync()
+
         } catch (ignored: Exception) {
             log("prepare-error: ${ignored.message}")
             playerCallback?.onError(MediaError.PLAYER_PREPARE_ERROR, ignored.message)
@@ -117,6 +138,7 @@ class MediaPlayerImpl(
         playerCallback?.onPrepared(mediaFileInfo)
         log("onPrepared")
         playerCallback?.onReady(mediaFileInfo, playerEnable)
+        changeRate(mediaFileInfo)
     }
 
     private fun prepareReset() {

@@ -3,18 +3,22 @@ package intbird.soft.lib.video.player.main.controller.control
 
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import intbird.soft.lib.video.player.R
+import intbird.soft.lib.video.player.api.const.ConstConfigs
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
 import intbird.soft.lib.video.player.main.locker.call.ILockCallback
 import intbird.soft.lib.video.player.main.notify.ILandscapeExecute
 import intbird.soft.lib.video.player.main.notify.ILockExecute
 import intbird.soft.lib.video.player.main.player.IPlayer
+import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaTimeUtil
 import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivDirection
@@ -52,7 +56,7 @@ open class ControlController(
     private val lockCallback: ILockCallback?,
     private val iControlCallback: IControlCallback?,
     private val viewImpl: View?
-) : ILockExecute, ILandscapeExecute {
+) : ILockExecute, ILandscapeExecute, IParamsChange {
     private var handler = Handler(Looper.getMainLooper())
     private val progressInterval = 1000L
     private val dismissInterval = 3000L
@@ -134,11 +138,15 @@ open class ControlController(
         toggleDirection(false)
     }
 
-    fun onReceived(mediaFileInfo: MediaFileInfo?) {
-        viewImpl?.tvRates?.text = mediaFileInfo?.speedRate?: ""
+    override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
+        viewImpl?.tvRates?.text = ConstConfigs.getText(mediaFileInfo?.speedRate)
         viewImpl?.tvVideoName?.text = mediaFileInfo?.mediaName ?: ""
         viewImpl?.tvClarity?.text = mediaFileInfo?.clarity ?: ""
         viewImpl?.tvClarityPortrait?.text = mediaFileInfo?.clarity ?: ""
+
+        resultSingleDialog(SingleChooseType.CLARITY, !TextUtils.isEmpty(mediaFileInfo?.clarity))
+        resultSingleDialog(SingleChooseType.RATES, (mediaFileInfo?.speedRate?:0) != 0)
+        resultSingleDialog(SingleChooseType.TEXT, ConstConfigs.isVisible(mediaFileInfo?.timeText))
     }
 
     fun onPrepared(mediaFileInfo: MediaFileInfo?) {
@@ -224,7 +232,6 @@ open class ControlController(
 
     private fun toggleDirection(landscape: Boolean) {
         toggleDirectionView(landscape)
-        toggleLandscapeLayout(landscape)
 
         if (landscape) {
             viewImpl?.rlBottomControl2?.visibility = View.VISIBLE
@@ -232,26 +239,13 @@ open class ControlController(
             viewImpl?.ivDirectionPortrait?.visibility = View.GONE
             viewImpl?.tvClarityPortrait?.visibility = View.GONE
             viewImpl?.tvVideoName?.visibility = View.VISIBLE
-            viewImpl?.linearTitleRightMore?.visibility = View.VISIBLE
         } else {
             viewImpl?.rlBottomControl2?.visibility = View.GONE
             viewImpl?.llCenterControl?.visibility = View.VISIBLE
             viewImpl?.ivDirectionPortrait?.visibility = View.VISIBLE
             viewImpl?.tvClarityPortrait?.visibility = View.VISIBLE
-            viewImpl?.tvVideoName?.visibility = View.GONE
-            viewImpl?.linearTitleRightMore?.visibility = View.GONE
+            viewImpl?.tvVideoName?.visibility = View.INVISIBLE
         }
-    }
-
-    private fun toggleLandscapeLayout(landscape: Boolean) {
-        val titleTextLp = viewImpl?.findViewById<TextView>(R.id.tvVideoName)?.layoutParams as? LinearLayout.LayoutParams
-        titleTextLp?.weight =
-            getDimens(if (landscape) R.dimen.lib_media_playerPlayFileNameWidthLarge else R.dimen.lib_media_playerPlayFileNameWidth)
-
-        val clarityRightMarginLp = viewImpl?.tvClarity?.layoutParams as? RelativeLayout.LayoutParams
-        val clarityRightMargin =
-            getDimens(if (landscape) R.dimen.lib_media_playerClarityRightMarginLarge else R.dimen.lib_media_playerPlayButtonMarinSides)
-        clarityRightMarginLp?.setMargins(0, 0, clarityRightMargin.toInt(), 0)
     }
 
     private fun getDimens(rid: Int): Float {
@@ -281,20 +275,21 @@ open class ControlController(
         iControlCallback?.showDialog(singleChooseType, show)
     }
 
-    fun resultSingleDialog(singleChooseType: SingleChooseType, show: Boolean?=false) {
-        val visible = if (show == true) View.VISIBLE else View.GONE
+    private fun resultSingleDialog(singleChooseType: SingleChooseType, show: Boolean?=false) {
         when (singleChooseType) {
             SingleChooseType.NONE -> {
-
             }
             SingleChooseType.TEXT -> {
-                viewImpl?.ivTimedText?.visibility = visible
+                viewImpl?.ivTimedText?.visibility =
+                    if (show == true) View.VISIBLE else View.INVISIBLE
             }
             SingleChooseType.RATES -> {
-                viewImpl?.tvRates?.visibility = visible
+                viewImpl?.tvRates?.visibility =
+                    if (show == true) View.VISIBLE else View.INVISIBLE
             }
             SingleChooseType.CLARITY -> {
-                viewImpl?.tvClarity?.visibility = visible
+                viewImpl?.tvClarity?.visibility =
+                    if (show == true) View.VISIBLE else View.GONE
             }
         }
     }
