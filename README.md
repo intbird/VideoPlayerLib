@@ -10,6 +10,8 @@ my blog: [https://blog.csdn.net/intbird/article/details/105970536](https://blog.
 #### play, pause, last, next... & resolution, subtitle, speed...
 ![image](screenshoots/00.png)
 
+![image](screenshoots/0.png)
+
 ### touch
 #### progress, volume, brightness, doubleTap...
 ![image](screenshoots/01.png)
