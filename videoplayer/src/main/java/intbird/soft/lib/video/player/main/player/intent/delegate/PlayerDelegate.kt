@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.player.player.delegate
+package intbird.soft.lib.video.player.main.player.intent.delegate
 
 /**
  * created by intbird

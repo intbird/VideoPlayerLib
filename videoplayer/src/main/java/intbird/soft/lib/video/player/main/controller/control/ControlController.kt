@@ -4,12 +4,8 @@ package intbird.soft.lib.video.player.main.controller.control
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.SeekBar
-import android.widget.TextView
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.api.const.ConstConfigs
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
@@ -146,7 +142,7 @@ open class ControlController(
 
         resultSingleDialog(SingleChooseType.CLARITY, !TextUtils.isEmpty(mediaFileInfo?.clarity))
         resultSingleDialog(SingleChooseType.RATES, (mediaFileInfo?.speedRate?:0) != 0)
-        resultSingleDialog(SingleChooseType.TEXT, ConstConfigs.isVisible(mediaFileInfo?.timeText))
+        resultSingleDialog(SingleChooseType.TEXT, ConstConfigs.isVisible(mediaFileInfo?.timedPath))
     }
 
     fun onPrepared(mediaFileInfo: MediaFileInfo?) {

@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.player.display
+package intbird.soft.lib.video.player.main.player.display.surface
 
 /**
  * created by intbird

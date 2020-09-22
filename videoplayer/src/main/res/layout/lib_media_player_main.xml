@@ -22,6 +22,9 @@
 
     <include layout="@layout/lib_media_player_control_pop" />
 
+
+    <include layout="@layout/lib_media_player_display_timed"/>
+
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/contentLoading"
         style="?android:attr/progressBarStyle"

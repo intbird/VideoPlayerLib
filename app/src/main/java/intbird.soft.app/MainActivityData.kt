@@ -23,27 +23,28 @@ object MainActivityData {
         "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
     val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
 
-    val itemTestSrt1 = "file:///sdcard/videos/Instagram_0312_10_19_20.srt"
+    val itemTestSrt1 =  "file:///sdcard/videos/srt1.srt"
+    val itemTestSrt2 =  "https://sub.vanlong.stream/subdata/Undekhi.Season.1.Complete.srt"
 
     var itemTest1 = MediaPlayItem(
         "1", "fileName1",
         arrayListOf(
             MediaClarity("360P", itemTestUrl1),
-            MediaClarity("720P", itemTestUrl1),
+            MediaClarity("720P", itemTestUrl1).checked(),
             MediaClarity("1080P", itemTestUrl1),
-            MediaClarity("2K", itemTestUrl1).checked(),
+            MediaClarity("2K", itemTestUrl1),
             MediaClarity("4K", itemTestUrl1)
         ),
         arrayListOf(
-            MediaRate("0.5",0.5f).checked(),
-            MediaRate("normal",1.0f),
+            MediaRate("0.5",0.5f),
+            MediaRate("normal",1.0f).checked(),
             MediaRate("1.5",1.5f),
             MediaRate("2",2.0f)
         ),
         arrayListOf(
             MediaText("关闭(显示关闭)", MediaTextConfig.SHOW_ICON),
             MediaText("中文", itemTestSrt1).checked(),
-            MediaText("英文", itemTestSrt1)
+            MediaText("英文", itemTestSrt2)
         ),
         TimeUnit.SECONDS.toMillis(1)
     )
@@ -63,7 +64,7 @@ object MainActivityData {
         ), arrayListOf(
             MediaText("关闭(隐藏关闭)", MediaTextConfig.HIDE_ICON),
             MediaText("中文", itemTestSrt1).checked(),
-            MediaText("英文", itemTestSrt1)
+            MediaText("英文", itemTestSrt2)
         ), TimeUnit.SECONDS.toMillis(10)
     )
     var itemTest3 = MediaPlayItem(

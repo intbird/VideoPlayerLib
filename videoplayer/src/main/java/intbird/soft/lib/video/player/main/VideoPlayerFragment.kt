@@ -55,6 +55,7 @@ import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaScreenUtils
 import kotlinx.android.synthetic.main.lib_media_player_control_pop.*
 import kotlinx.android.synthetic.main.lib_media_player_control_title.*
+import kotlinx.android.synthetic.main.lib_media_player_display_timed.*
 import kotlinx.android.synthetic.main.lib_media_player_main.*
 import kotlinx.android.synthetic.main.lib_media_player_touch.*
 import kotlin.properties.Delegates
@@ -93,7 +94,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     private val permissionSettingsRequestCode = 11
     private var sdcardPermissionsGrand by Delegates.observable(false) { _, _, newValue ->
         if (newValue) {
-            intentHelper?.delegatePlay()
+            intentHelper?.startPlayVideoPlayer()
         }
         log("sdcardPermissionsGrand: $newValue")
     }
@@ -101,9 +102,9 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     private var intentHelper: MediaIntentHelper? = null
     private var playingMediaInfo = MediaFileInfo()
 
-    private var player: IPlayer? = null
+    private var playerCall: PlayerCallbacks? = null
     private var playerView: MediaViewInfo<out View, out View>? = null
-    private var playerStates:PlayerCallbacks? = null
+    private var player: IPlayer? = null
 
     private var locker: LockController? = null
     private var videoTouchController: TouchController? = null
@@ -142,14 +143,14 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     private fun instanceMediaPlayer(mediaPlayerType: MediaPlayerType?) {
         when(mediaPlayerType) {
             MediaPlayerType.PLAYER_STYLE_1, MediaPlayerType.PLAYER_STYLE_2 -> {
-                playerStates = PlayerCallbacks(playerCallback, videoPlayerCallback)
+                playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
-                player = MediaPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, intentHelper, playerStates)
+                player = MediaPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, subtitleText, intentHelper, playerCall)
             }
             MediaPlayerType.PLAYER_STYLE_3 -> {
-                playerStates = PlayerCallbacks(playerCallback, videoPlayerCallback)
+                playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
-                player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, playerStates)
+                player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, playerCall)
             }
         }
     }
@@ -312,11 +313,13 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
             return player?.getCurrentTime()
         }
 
-        override fun onReceivePlayFile(autoPlay: Boolean, mediaFileInfo: MediaFileInfo?) {
+        override fun onReceivePlayFile(reload: Boolean, mediaFileInfo: MediaFileInfo?) {
             if (null == mediaFileInfo) return
-            if (autoPlay) player?.prepare(mediaFileInfo)
-
-            player?.onParamsChange(mediaFileInfo)
+            if (reload) {
+                player?.prepare(mediaFileInfo)
+            } else {
+                player?.onParamsChange(mediaFileInfo)
+            }
             videoControlController?.onParamsChange(mediaFileInfo)
             log("onReceivePlayFile: $mediaFileInfo")
         }
@@ -642,7 +645,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
 
     override fun setVideoPlayerList(playList: ArrayList<MediaPlayItem>?, playIndex: Int, autoPlay: Boolean) {
         if (isFinishing()) return
-        intentHelper?.setVideoPlayerList(playList, playIndex, autoPlay)
+        intentHelper?.startPlayVideoPlayer(playList, playIndex, autoPlay)
     }
 
     override fun setVideoPlayerItem(mediaPlayItem: MediaPlayItem?, autoPlay: Boolean) {

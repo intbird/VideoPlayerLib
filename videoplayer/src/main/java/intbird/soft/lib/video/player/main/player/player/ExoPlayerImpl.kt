@@ -13,7 +13,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
-import intbird.soft.lib.video.player.main.player.display.IDisplay
+import intbird.soft.lib.video.player.main.player.display.surface.IDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 
 /**

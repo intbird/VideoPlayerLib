@@ -5,15 +5,19 @@ import android.media.MediaPlayer
 import android.media.PlaybackParams
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
 import android.view.Surface
 import android.view.TextureView
+import android.widget.TextView
 import intbird.soft.lib.video.player.api.error.MediaError
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
-import intbird.soft.lib.video.player.main.player.display.IDisplay
-import intbird.soft.lib.video.player.main.player.display.TextureDisplay
+import intbird.soft.lib.video.player.main.player.display.subtitle.ISubtitle
+import intbird.soft.lib.video.player.main.player.display.subtitle.MediaPlayerSubtitle
+import intbird.soft.lib.video.player.main.player.display.surface.IDisplay
+import intbird.soft.lib.video.player.main.player.display.surface.TextureDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
-import intbird.soft.lib.video.player.main.player.player.delegate.PlayerDelegate
+import intbird.soft.lib.video.player.main.player.intent.delegate.PlayerDelegate
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
 
@@ -26,7 +30,8 @@ import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
  */
 class MediaPlayerImpl(
     private val context: Context,
-    private val textureView: TextureView?,
+    private val display: TextureView?,
+    private val subtitle: TextView,
     private val playerDelegate: PlayerDelegate?,
     private val playerCallback: PlayerCallbacks?
 ) :
@@ -36,6 +41,7 @@ class MediaPlayerImpl(
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaDisplay: Surface? = null
+    private var mediaSubtitle: MediaPlayerSubtitle? = null
     private var mediaPrepared = false
     private var mediaCompleted = false
 
@@ -48,7 +54,8 @@ class MediaPlayerImpl(
     private var payingStateOnPause = false
 
     init {
-        textureView?.surfaceTextureListener = TextureDisplay(this)
+        display?.surfaceTextureListener = TextureDisplay(this)
+        mediaSubtitle = MediaPlayerSubtitle(context, subtitle)
     }
 
     private fun createMediaPlayer() {
@@ -74,6 +81,7 @@ class MediaPlayerImpl(
                 playerCallback?.onError(MediaError.PLAYER_ERROR_CALLBACK,"what:$what extra:$extra")
                 true
             }
+            mediaSubtitle?.attachMediaPlayer(mediaPlayer)
         } catch (ignored: Exception) {
             log("init-error: ${ignored.message}")
             playerCallback?.onError(MediaError.PLAYER_INIT_ERROR,ignored.message)
@@ -82,7 +90,7 @@ class MediaPlayerImpl(
     }
 
     override fun displayStateChange(enableDisplay: Boolean) {
-        if (null != textureView) mediaDisplay = Surface(textureView.surfaceTexture)
+        if (null != display) mediaDisplay = Surface(display.surfaceTexture)
         createMediaPlayer()
         mediaPlayer?.setSurface(mediaDisplay)
         log("displayStateChange $mediaPrepared $playerEnable")
@@ -95,18 +103,18 @@ class MediaPlayerImpl(
      */
     override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
         if (!playerEnable) return
-        changeRate(mediaFileInfo)
-    }
-
-    private fun changeRate(mediaFileInfo: MediaFileInfo?) {
         if (null ==  mediaFileInfo) return
+
         // rate
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val mediaRate = mediaFileInfo.speedRate
-            if(null != mediaRate && mediaRate > 0) {
+        val mediaRate = mediaFileInfo.speedRate
+        if(null != mediaRate && mediaRate > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 mediaPlayer?.playbackParams = PlaybackParams().setSpeed(mediaRate)
             }
         }
+
+        //subtitle
+        mediaSubtitle?.onReceiveSubtitle(mediaFileInfo.timedPath)
     }
 
     override fun prepare(mediaFile: MediaFileInfo) {
@@ -138,7 +146,7 @@ class MediaPlayerImpl(
         playerCallback?.onPrepared(mediaFileInfo)
         log("onPrepared")
         playerCallback?.onReady(mediaFileInfo, playerEnable)
-        changeRate(mediaFileInfo)
+        onParamsChange(mediaFileInfo)
     }
 
     private fun prepareReset() {

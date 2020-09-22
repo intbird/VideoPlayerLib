@@ -22,136 +22,46 @@ class MediaItemInfoParer {
         playingItemInfo = MediaPlayItemInfo(
             playingItem?.mediaId,
             playingItem?.mediaName,
-            getPlayerMediaClarityItem(playItem),
-            getPlayerMediaRateItem(playItem),
-            getPlayerMediaTextItem(playItem)
+            getSelectedItem(playItem.mediaId, playItem.clarityArray, playingItemInfo?.mediaClarity) as? MediaClarity,
+            getSelectedItem(playItem.mediaId, playItem.rateArray, playingItemInfo?.mediaRate) as? MediaRate,
+            getSelectedItem(playItem.mediaId, playItem.textArray, playingItemInfo?.mediaText) as? MediaText
         )
         return playingItemInfo
     }
 
-    fun parserPlayItemInfo(mediaPlayItemInfo: MediaPlayItemInfo?): MediaPlayItemInfo? {
-        if (null == mediaPlayItemInfo) return null
-        playingItemInfo = mediaPlayItemInfo
-        return playingItemInfo
-    }
-
-    fun changeSelectedClarity(mediaClarity: MediaClarity) {
-        this.playingItemInfo?.mediaClarity = mediaClarity
-    }
-
-    fun changeSelectedRate(mediaRate: MediaRate) {
-        this.playingItemInfo?.mediaRate = mediaRate
-    }
-
-    fun changeSelectedText(mediaText: MediaText?) {
-        this.playingItemInfo?.mediaText = mediaText
-    }
-
-    private fun getPlayerMediaClarityItem(playItem: MediaPlayItem): MediaClarity? {
-        val list = playItem.clarityArray ?: ArrayList()
-        val index = getSelectedClarity(playItem.mediaId, list)
-        log("get Clarity:$index")
-        val size = list.size
-        return if (index in 0 until size) {
-            list[index]
-        } else null
-    }
-
-    private fun getSelectedClarity(mediaId: String?, list: ArrayList<MediaClarity>): Int {
-        return if (null != this.playingItemInfo
-            && null != playingItemInfo?.mediaClarity
-            && TextUtils.equals(
-                this.playingItemInfo?.mediaId,
-                mediaId
-            )
-        ) {
-            val index = list.indexOf(playingItemInfo!!.mediaClarity)
-            return if (-1 != index) index else 0
-        } else {
-            for (item in list) {
-                val index = list.indexOf(item)
-                return if (item.checked) index else continue
-            };0
+    fun changeSelectedData(mediaCheckedData: MediaCheckedData) {
+        if (mediaCheckedData is MediaClarity) {
+            this.playingItemInfo?.mediaClarity = mediaCheckedData
+        }
+        if (mediaCheckedData is MediaRate) {
+            this.playingItemInfo?.mediaRate =  mediaCheckedData
+        }
+        if (mediaCheckedData is MediaText) {
+            this.playingItemInfo?.mediaText = mediaCheckedData
         }
     }
 
-    private fun getPlayerMediaRateItem(playItem: MediaPlayItem): MediaRate? {
-        val list = playItem.rateArray ?: ArrayList()
-        val index = getSelectRate(playItem.mediaId, list)
-        val size = list.size
-        log("get Rate:$index")
-        return if (index in 0 until size) {
-            list[index]
-        } else null
-    }
-
-    private fun getSelectRate(mediaId: String?, list: ArrayList<MediaRate>): Int {
-        return if (null != this.playingItemInfo
-            && null != playingItemInfo?.mediaRate
-            && TextUtils.equals(
-                this.playingItemInfo?.mediaId,
-                mediaId
-            )
-        ) {
-            val index = list.indexOf(playingItemInfo!!.mediaRate)
-            return if (-1 != index) index else 0
-        } else {
-            for (item in list) {
-                val index = list.indexOf(item)
-                return if (item.checked) index else continue
-            };0
-        }
-    }
-
-    private fun getPlayerMediaTextItem(playItem: MediaPlayItem): MediaText? {
-        val list = playItem.textArray ?: ArrayList()
-        val index = getSelectText(playItem.mediaId, list)
-        val size = list.size
-        log("get Text:$index")
-        return if (index in 0 until size) {
-            list[index]
-        } else null
-    }
-
-    private fun getSelectText(mediaId: String?, list: ArrayList<MediaText>): Int {
-        return if (null != this.playingItemInfo
-            && null != playingItemInfo?.mediaText
-            && TextUtils.equals(
-                this.playingItemInfo?.mediaId,
-                mediaId
-            )
-        ) {
-            val index = list.indexOf(playingItemInfo!!.mediaText)
-            return if (-1 != index) index else 0
-        } else {
-            for (item in list) {
-                val index = list.indexOf(item)
-                return if (item.checked) index else continue
-            };0
-        }
-    }
-
-    private fun log(message: String) {
-        MediaLogUtil.log("intents: $message")
-    }
-
-    private fun getSelectedItem(arrayList: ArrayList<out MediaCheckedData>?, value: MediaCheckedData, id:String): MediaCheckedData? {
+    private fun getSelectedItem( id:String, arrayList: ArrayList<out MediaCheckedData>?, value: MediaCheckedData?): MediaCheckedData? {
         val nonNullArrayList = arrayList ?: ArrayList()
         val index = getSelectedItemIndex(nonNullArrayList, value, id)
+        log("getSelectedItem:$index")
         val size = nonNullArrayList.size
         return if (index in 0 until size) nonNullArrayList[index] else null
     }
 
-    private fun getSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>, value : MediaCheckedData, id:String): Int {
+    private fun getSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>, value: MediaCheckedData?, id:String): Int {
         val lastIndex = getLastSelectedItemIndex(listData, value, id)
+        log("getLastSelectedItemIndex:$lastIndex")
         if (lastIndex != -1) return lastIndex
         val checkedIndex = getCheckSelectedItemIndex(listData)
-        if (lastIndex != -1) return checkedIndex
+        log("getCheckSelectedItemIndex:$checkedIndex")
+        if (checkedIndex != -1) return checkedIndex
         return 0
     }
 
-    private fun getLastSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>, value : MediaCheckedData, id:String): Int {
+    private fun getLastSelectedItemIndex(@NonNull listData: ArrayList<out MediaCheckedData>, value: MediaCheckedData?, id:String): Int {
         if (null != this.playingItemInfo
+            && null != value
             && TextUtils.equals(this.playingItemInfo?.mediaId, id)
         ) {
             return listData.indexOf(value)
@@ -165,5 +75,9 @@ class MediaItemInfoParer {
             return if (item.checked) index else continue
         }
         return -1
+    }
+
+    private fun log(message: String) {
+        MediaLogUtil.log("intents: $message")
     }
 }

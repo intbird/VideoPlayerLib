@@ -1,14 +1,14 @@
 package intbird.soft.lib.video.player.main.player.intent
 
 import android.os.Bundle
-import intbird.soft.lib.video.player.api.bean.*
+import intbird.soft.lib.video.player.api.bean.MediaCheckedData
+import intbird.soft.lib.video.player.api.bean.MediaPlayItem
+import intbird.soft.lib.video.player.api.bean.MediaPlayItemInfo
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
 import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
-import intbird.soft.lib.video.player.main.dialog.type.SingleChooseTypeCallback
-import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
+import intbird.soft.lib.video.player.main.player.intent.delegate.PlayerDelegate
 import intbird.soft.lib.video.player.main.player.intent.parser.MediaItemInfoParer
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
-import intbird.soft.lib.video.player.main.player.player.delegate.PlayerDelegate
 import intbird.soft.lib.video.player.main.view.MediaPlayerType
 import intbird.soft.lib.video.player.utils.MediaFileUtils
 import intbird.soft.lib.video.player.utils.MediaLogUtil
@@ -25,7 +25,7 @@ class MediaIntentHelper(
 
     interface MediaIntentHelperCall {
         fun getVideoCurrentTime(): Long?
-        fun onReceivePlayFile(autoPlay: Boolean, mediaFileInfo: MediaFileInfo?)
+        fun onReceivePlayFile(reload: Boolean, mediaFileInfo: MediaFileInfo?)
     }
 
     private var videoPlayItems: ArrayList<MediaPlayItem>? = null
@@ -38,15 +38,15 @@ class MediaIntentHelper(
     private var mediaItemParser = MediaItemInfoParer()
     private var mediaItemRecord = MediaItemInfoRecord()
 
-    init {
-        setVideoPlayerList(
+    fun startPlayVideoPlayer() {
+        startPlayVideoPlayer(
             arguments?.getParcelableArrayList<MediaPlayItem>(VideoPlayerFragment.EXTRA_FILE_URLS),
             arguments?.getInt(VideoPlayerFragment.EXTRA_FILE_INDEX) ?: 0,
             arguments?.getBoolean(VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY) ?: true
         )
     }
 
-    fun setVideoPlayerList(
+    fun startPlayVideoPlayer(
         playList: ArrayList<MediaPlayItem>?,
         playIndex: Int,
         autoPlay: Boolean
@@ -55,7 +55,7 @@ class MediaIntentHelper(
         videoPlayIndex = playIndex
         videoAutoPlay = autoPlay
         reloadPlayer(autoPlay, 0)
-        log("setVideoPlayerList: playList:$playList playIndex: $playIndex autoPlay: $autoPlay")
+        log("startPlayVideoPlayer: playList:$playList playIndex: $playIndex autoPlay: $autoPlay")
         return this
     }
 
@@ -67,27 +67,27 @@ class MediaIntentHelper(
         reloadPlayer(autoPlay, mediaPlayItemInfo)
     }
 
-    private fun reloadPlayer(autoPlay: Boolean, mediaPlayItem: MediaPlayItem?): Boolean {
+    private fun reloadPlayer(reload: Boolean, mediaPlayItem: MediaPlayItem?): Boolean {
         val fileInfo = parserPlayMediaItemInfo(mediaPlayItem)
         mediaItemRecord.save(
             mediaPlayItem?.mediaId,
             MediaRecordData(intentHelperCall?.getVideoCurrentTime())
         )
-        intentHelperCall?.onReceivePlayFile(autoPlay, fileInfo)
+        intentHelperCall?.onReceivePlayFile(reload, fileInfo)
         return null != fileInfo
     }
 
-    private fun reloadPlayer(autoPlay: Boolean, mediaPlayItemInfo: MediaPlayItemInfo?): Boolean {
+    private fun reloadPlayer(reload: Boolean, mediaPlayItemInfo: MediaPlayItemInfo?): Boolean {
         val fileInfo = parserPlayMediaItemInfo(mediaPlayItemInfo)
         mediaItemRecord.save(
             mediaPlayItemInfo?.mediaId,
             MediaRecordData(intentHelperCall?.getVideoCurrentTime())
         )
-        intentHelperCall?.onReceivePlayFile(autoPlay, fileInfo)
+        intentHelperCall?.onReceivePlayFile(reload, fileInfo)
         return null != fileInfo
     }
 
-    private fun reloadPlayer(autoPlay: Boolean, crease: Int): Boolean {
+    private fun reloadPlayer(reload: Boolean, crease: Int): Boolean {
         val creasedFile = getCreasedFile(crease)
         return if (null != creasedFile) {
             videoPlayIndex = videoPlayIndex.plus(crease)
@@ -95,7 +95,7 @@ class MediaIntentHelper(
                 creasedFile.mediaId,
                 MediaRecordData(intentHelperCall?.getVideoCurrentTime())
             )
-            intentHelperCall?.onReceivePlayFile(autoPlay, creasedFile)
+            intentHelperCall?.onReceivePlayFile(reload, creasedFile)
             true
         } else {
             false
@@ -194,15 +194,7 @@ class MediaIntentHelper(
         index: Int,
         mediaCheckedData: MediaCheckedData
     ) {
-        if (mediaCheckedData is MediaClarity) {
-            mediaItemParser.changeSelectedClarity(mediaCheckedData)
-        }
-        if (mediaCheckedData is MediaRate) {
-            mediaItemParser.changeSelectedRate(mediaCheckedData)
-        }
-        if (mediaCheckedData is MediaText) {
-            mediaItemParser.changeSelectedText(mediaCheckedData)
-        }
+        mediaItemParser.changeSelectedData(mediaCheckedData)
         reloadPlayer(false, 0)
     }
 }
