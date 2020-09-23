@@ -19,7 +19,7 @@ class MediaItemInfoRecord {
     fun get(mediaId: String?): MediaRecordData? {
         return if (null != mediaId
             && null != lastMediaId
-            && !TextUtils.equals(mediaId, lastMediaId)
+            && TextUtils.equals(mediaId, lastMediaId)
         ) {
             lastMediaIdData
         } else null

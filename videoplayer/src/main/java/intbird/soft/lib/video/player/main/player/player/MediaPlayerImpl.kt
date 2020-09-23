@@ -157,6 +157,8 @@ class MediaPlayerImpl(
             mediaCompleted = true
             mediaPlayer?.seekTo(getTotalTime().toInt())
             playerCallback?.onCompletion(mediaFileInfo)
+        } else {
+            playerCallback?.onCompletion(mediaFileInfo)
         }
         log("onCompletion: $mediaCompleted")
     }

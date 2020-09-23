@@ -195,6 +195,11 @@ class MediaIntentHelper(
         mediaCheckedData: MediaCheckedData
     ) {
         mediaItemParser.changeSelectedData(mediaCheckedData)
-        reloadPlayer(false, 0)
+
+        if(type == SingleChooseType.CLARITY) {
+            reloadPlayer(true, 0)
+        } else {
+            reloadPlayer(false, 0)
+        }
     }
 }
