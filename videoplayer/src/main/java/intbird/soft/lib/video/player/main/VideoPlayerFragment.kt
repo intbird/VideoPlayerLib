@@ -77,16 +77,26 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         var EXTRA_FILE_INDEX = "videoIndex"
         var EXTRA_PLAYER_AUTO_PLAY = "videoAutoPlay"
 
-        fun newInstance(playList: ArrayList<MediaPlayItem>?, playIndex: Int, playerType: MediaPlayerType, autoPlay:Boolean): VideoPlayerFragment {
+        fun newInstance(playList: ArrayList<MediaPlayItem>?,
+                        playIndex: Int = 0,
+                        playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_2,
+                        autoPlay:Boolean = true): VideoPlayerFragment {
             val fragment = VideoPlayerFragment()
-            var args = fragment.arguments
-            if (null == args) args = Bundle()
+            fragment.arguments = addToBundle(fragment.arguments, playList, playIndex, playerType, autoPlay)
+            return fragment
+        }
+
+        private fun addToBundle(extra:Bundle?,
+                      playList: ArrayList<MediaPlayItem>?,
+                      playIndex: Int = 0,
+                      playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_2,
+                      autoPlay:Boolean = true): Bundle {
+            val args = extra ?: Bundle()
             args.putParcelableArrayList(EXTRA_FILE_URLS, playList)
             args.putInt(EXTRA_FILE_INDEX, playIndex)
             args.putSerializable(EXTRA_PLAYER_TYPE, playerType)
             args.putBoolean(EXTRA_PLAYER_AUTO_PLAY, autoPlay)
-            fragment.arguments = args
-            return fragment
+            return args
         }
     }
 

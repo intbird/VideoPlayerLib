@@ -3,7 +3,6 @@ package intbird.soft.lib.video.player.main
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import intbird.soft.lib.video.player.R
 
 /**
@@ -11,50 +10,34 @@ import intbird.soft.lib.video.player.R
  * on 2020/5/1
  * DingTalk id: intbird
  *
- * 时间有限
  */
 open class VideoPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.lib_media_player_activity)
-
         addVideoPlayer(R.id.fragment_player)
     }
 
-    private var videoPlayerFragment: VideoPlayerFragment? = null
-
-    fun getVideoPlayer(): VideoPlayerFragment? {
-        return videoPlayerFragment
-    }
+    open var videoPlayer: VideoPlayerFragment? = null
 
     private fun addVideoPlayer(rid: Int) {
+        removeAudioPlayer(rid)
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
         val fragment = VideoPlayerFragment()
-        setFragmentArgs(fragment)
+        fragment.arguments = intent.extras
         fragmentTransaction.add(rid, fragment)
         fragmentTransaction.commit()
-        this.videoPlayerFragment = fragment
+        this.videoPlayer = fragment
     }
 
-    private fun setFragmentArgs(fragment: Fragment) {
-        var args = fragment.arguments
-        if (null == args) args = Bundle()
-        args.putParcelableArrayList(
-            VideoPlayerFragment.EXTRA_FILE_URLS,
-            intent.getParcelableArrayListExtra(VideoPlayerFragment.EXTRA_FILE_URLS)
-        )
-        args.putInt(
-            VideoPlayerFragment.EXTRA_FILE_INDEX,
-            intent.getIntExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, 0)
-        )
-        args.putSerializable(
-            VideoPlayerFragment.EXTRA_PLAYER_TYPE,
-            intent.getSerializableExtra(VideoPlayerFragment.EXTRA_PLAYER_TYPE)
-        )
-        fragment.arguments = args
+    private fun removeAudioPlayer(rid: Int) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentManager.findFragmentById(rid)?.let { fragmentTransaction.remove(it) }
+        fragmentTransaction.commit()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -80,6 +63,26 @@ open class VideoPlayerActivity : AppCompatActivity() {
         actionBar?.show()
     }
 
+//    private fun setFragmentArgs(fragment: Fragment) {
+//        var args = fragment.arguments
+//        if (null == args) args = Bundle()
+//        args.putParcelableArrayList(
+//            VideoPlayerFragment.EXTRA_FILE_URLS,
+//            intent.getParcelableArrayListExtra(VideoPlayerFragment.EXTRA_FILE_URLS)
+//        )
+//        args.putInt(
+//            VideoPlayerFragment.EXTRA_FILE_INDEX,
+//            intent.getIntExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, 0)
+//        )
+//        args.putSerializable(
+//            VideoPlayerFragment.EXTRA_PLAYER_TYPE,
+//            intent.getSerializableExtra(VideoPlayerFragment.EXTRA_PLAYER_TYPE)
+//        )
+//        args.putSerializable(
+//            VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY,
+//            intent.getSerializableExtra(VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY)
+//        )
+//    }
 
 //    override fun onConfigurationChanged(newConfig: Configuration) {
 //        super.onConfigurationChanged(newConfig)

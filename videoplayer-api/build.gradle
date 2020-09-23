@@ -6,21 +6,21 @@ apply plugin: 'publish-maven'
 
 publishConfig {
     artifactId = 'video-player-api'
-    groupId = rootProject.groupId
-    version = rootProject.versionName
+    groupId = versions.flavors_versions.groupId
+    version = versions.flavors_versions.versionName
 
-    snapshot = rootProject.versionName.endsWith("SNAPSHOT")
+    snapshot = versions.flavors_versions.versionName.endsWith("SNAPSHOT")
 }
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+    compileSdkVersion versions.build_versions.compileSdkVersion
+    buildToolsVersion versions.build_versions.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
+        minSdkVersion versions.build_versions.minSdkVersion
+        targetSdkVersion versions.build_versions.targetSdkVersion
+        versionCode versions.build_versions.versionCode
+        versionName versions.build_versions.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -37,9 +37,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation deps.kotlin.stdlib
+    implementation deps.androidx.appcompat
+    implementation deps.androidx.core_ktx
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

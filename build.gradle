@@ -1,24 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-buildscript {
-    ext {
-        build_gradle = '3.6.3'
-        kotlin_version = '1.3.71'
-        publish_version = '1.0.0'
-    }
-    repositories {
-        jcenter()
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url "https://intbird.ml/maven/snapshots/" }
-        maven { url "https://intbird.ml/maven/releases/" }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$build_gradle"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath("intbird.soft.gradle:publish-maven:$publish_version") {
-            changing = true
-        }
 
+buildscript {
+    apply from: 'versions.gradle'
+    repos(repositories)
+
+    dependencies {
+        classpath deps.kotlin.gradle_plugin
+        classpath deps.android.gradle_plugin
+        classpath deps.intbird.maven_publish
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -34,12 +24,8 @@ buildscript {
 }
 
 allprojects {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url "https://intbird.ml/maven/snapshots/" }
-        maven { url "https://intbird.ml/maven/releases/" }
-    }
+    repos(repositories)
+
     configurations.all {
         resolutionStrategy {
             // don't cache dynamic versions at all
@@ -52,16 +38,4 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    minSdkVersion = 17
-    targetSdkVersion = 28
-    compileSdkVersion = 28
-    buildToolsVersion = '29.0.3'
-
-    resourcePrefix = 'lib_media_player'
-    groupId = "intbird.soft.lib"
-    versionCode = 1
-    versionName = "1.1.2-SNAPSHOT"
 }

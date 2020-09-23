@@ -5,14 +5,12 @@ import android.media.MediaPlayer
 import android.media.PlaybackParams
 import android.net.Uri
 import android.os.Build
-import android.text.TextUtils
 import android.view.Surface
 import android.view.TextureView
 import android.widget.TextView
 import intbird.soft.lib.video.player.api.error.MediaError
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
-import intbird.soft.lib.video.player.main.player.display.subtitle.ISubtitle
 import intbird.soft.lib.video.player.main.player.display.subtitle.MediaPlayerSubtitle
 import intbird.soft.lib.video.player.main.player.display.surface.IDisplay
 import intbird.soft.lib.video.player.main.player.display.surface.TextureDisplay

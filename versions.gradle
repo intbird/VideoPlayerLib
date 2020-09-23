@@ -1,0 +1,62 @@
+static def projectRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.maven { url 'https://maven.aliyun.com/repository/google' }
+    handler.maven { url "https://intbird.ml/maven/snapshots/" }
+    handler.maven { url "https://intbird.ml/maven/releases/" }
+}
+
+ext.repos = this.&projectRepos
+
+def flavors_versions = [:]
+flavors_versions.resourcePrefix = 'lib_media_player'
+flavors_versions.groupId = "intbird.soft.lib"
+flavors_versions.versionCode = 1
+flavors_versions.versionName = "1.1.2-SNAPSHOT"
+
+def build_versions = [:]
+build_versions.minSdkVersion = 17
+build_versions.targetSdkVersion = 28
+build_versions.compileSdkVersion = 28
+build_versions.buildToolsVersion = '29.0.3'
+
+def versions = [:]
+versions.flavors_versions = flavors_versions
+versions.build_versions = build_versions
+
+versions.gradle_version = '3.6.3'
+versions.kotlin_version = '1.3.71'
+versions.publish_version = '1.0.0'
+ext.versions = versions
+
+
+def kotlin = [:]; def android = [:]; def androidx = [:]; def google = [:]; def kpat = [:];
+def intbird = [:];
+
+android.gradle_plugin = "com.android.tools.build:gradle:$versions.gradle_version"
+kotlin.gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin_version"
+intbird.maven_publish = "intbird.soft.gradle:publish-maven:$versions.publish_version"
+
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin_version"
+androidx.appcompat = 'androidx.appcompat:appcompat:1.2.0'
+androidx.core_ktx = 'androidx.core:core-ktx:1.3.1'
+androidx.constraintlayout = 'androidx.constraintlayout:constraintlayout:1.1.3'
+androidx.fragment = 'androidx.fragment:fragment:1.2.5'
+androidx.fragment_ktx = 'androidx.fragment:fragment-ktx:1.2.5'
+androidx.recyclerview = 'androidx.recyclerview:recyclerview:1.1.0'
+google.exoplayer = 'com.google.android.exoplayer:exoplayer:2.11.7'
+
+kpat.auto_service = 'com.google.auto.service:auto-service:1.0-rc6'
+kpat.auto_service_anotations = 'com.google.auto.service:auto-service-annotations:1.0-rc6'
+
+intbird.maven_publish = "intbird.soft.gradle:publish-maven:$versions.publish_version"
+intbird.service_loader = 'intbird.soft.lib:service-loader:1.0.0'
+
+def dependence = [:]
+dependence.kotlin = kotlin
+dependence.android = android
+dependence.google = google
+dependence.kpat = kpat
+dependence.androidx = androidx
+dependence.intbird = intbird
+ext.deps = dependence

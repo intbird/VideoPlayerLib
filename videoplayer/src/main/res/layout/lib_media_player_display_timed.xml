@@ -14,6 +14,5 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        android:text="Subtitle TextView"
         tools:text="Subtitle TextView" />
 </FrameLayout>

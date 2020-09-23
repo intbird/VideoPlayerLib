@@ -18,8 +18,8 @@
     <TextView
         android:id="@+id/tvVideoName"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:ellipsize="middle"
         android:gravity="start|center"
         android:lines="2"
@@ -35,15 +35,16 @@
         android:layout_gravity="center"
         android:layout_marginEnd="16dp"
         android:gravity="right|center"
-        tools:visibility="visible"
-        tools:ignore="RtlHardcoded">
+        tools:ignore="RtlHardcoded"
+        tools:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivTimedText"
             android:layout_width="32dp"
             android:layout_height="30dp"
             android:layout_marginEnd="17dp"
-            android:background="@drawable/icon_video_player_timed_text" />
+            android:background="@drawable/icon_video_player_timed_text"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvRates"
@@ -54,7 +55,8 @@
             android:gravity="center"
             android:paddingTop="1dp"
             android:textColor="@android:color/white"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 </LinearLayout>

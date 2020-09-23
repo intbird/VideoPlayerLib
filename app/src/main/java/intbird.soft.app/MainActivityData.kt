@@ -19,8 +19,7 @@ object MainActivityData {
     val itemTestUrl1 = "https://intbird.s3.ap-northeast-2.amazonaws.com/Instagram.mp4"
     val itemTestUrl2 = "file:///sdcard/videos/My_Feed_on_Vimeo_0323_14_40_13.mp4"
     val itemTestUrl3 = "file:///sdcard/videos/tiktok_0409_10_55_07.mp4"
-    val itemTestUrl4 =
-        "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
+    val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
     val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
 
     val itemTestSrt1 =  "file:///sdcard/videos/srt1.srt"
