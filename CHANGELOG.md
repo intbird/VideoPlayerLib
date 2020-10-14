@@ -4,7 +4,8 @@ Change Log
 ## Version 1.1.2-SNAPSHOT
 _2020-09-05_
  *  New: add getVideoPlayingItemInfo() & setVideoPlayerItemInfo() & getVideoPlayingItem() &  setVideoPlayerItem()
- *  Mdf: add IntentParser & MediaPlayItemInfo & TimedText(bug: can not auto disappear)
+ *  Mdf: add IntentParser & MediaPlayItemInfo & TimedText
+ *  Mdf: auto change the screen orientation
  *  Fix: start from progress 0 when choose other media url on the same mediaId
  *  Fix: fix bugs  
 

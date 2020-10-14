@@ -14,6 +14,9 @@ import intbird.soft.lib.video.player.utils.MediaLogUtil
  * created by intbird
  * on 2020/8/20
  * DingTalk id: intbird
+ *
+ *
+ * i find this repo: https://github.com/averyzhong/SubtitleForAndroid
  */
 class MediaPlayerSubtitle(val context: Context, val subtitleView: TextView) : ISubtitle {
 

@@ -28,6 +28,7 @@ import intbird.soft.lib.video.player.api.bean.MediaPlayItemInfo
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
 import intbird.soft.lib.video.player.api.state.IVideoPlayerController
 import intbird.soft.lib.video.player.api.state.IVideoPlayerStateInfo
+import intbird.soft.lib.video.player.main.user.AudioFocusChangeManager
 import intbird.soft.lib.video.player.main.controller.control.ControlController
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.controller.touch.TouchController
@@ -47,6 +48,7 @@ import intbird.soft.lib.video.player.main.player.intent.MediaIntentHelper
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
 import intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
+import intbird.soft.lib.video.player.main.user.SensorOrientationManager
 import intbird.soft.lib.video.player.main.view.MediaPlayerType
 import intbird.soft.lib.video.player.main.view.MediaViewInfo
 import intbird.soft.lib.video.player.main.view.MediaViewProvider
@@ -125,6 +127,9 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     }
     private val viewModel: SharedViewModel by activityViewModels()
 
+    private var playerAudioChangeManager: AudioFocusChangeManager ?= null
+    private var playerSensorOrientationManager: SensorOrientationManager? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -148,6 +153,8 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         executeLock(false)
 
         handBackPressed()
+        playerAudioChangeManager = AudioFocusChangeManager(getInternalActivity(), player)
+        playerSensorOrientationManager = SensorOrientationManager(getInternalActivity(), player)
     }
 
     private fun instanceMediaPlayer(mediaPlayerType: MediaPlayerType?) {
@@ -175,7 +182,6 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         })
 
         ivBack?.setOnClickListener {
-            log("ivBack ${resources.configuration.orientation}  ${getInternalActivity().requestedOrientation}")
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getInternalActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             } else {
@@ -198,12 +204,16 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     override fun onResume() {
         super.onResume()
         player?.resume()
+        playerAudioChangeManager?.requestAudioFocus()
+        playerSensorOrientationManager?.requestSensor()
         log("onResume")
     }
 
     override fun onPause() {
         super.onPause()
         player?.pause()
+        playerAudioChangeManager?.abandonAudioFocus()
+        playerSensorOrientationManager?.abandonSensor()
         log("onPause")
     }
 
@@ -235,6 +245,8 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
                 Settings.System.ACCELEROMETER_ROTATION,
                 if (lock) 0 else 1
             )
+        // 禁用感应器
+        playerSensorOrientationManager?.enableOrientationEvent(!lock)
     }
 
     private fun lockScreenOrientation(activity: Activity, lock: Boolean) {
@@ -563,6 +575,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         log("onConfigurationChanged: orientation: ${newConfig.orientation}")
+        playerSensorOrientationManager?.enableOrientationEvent(false)
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewModel.landscape.value = true
             setFitToFillAspectRatio(true)
