@@ -27,7 +27,7 @@ How to Use it
 repositories {
     google()
     jcenter()
-    maven { url "https://intbird.ml/maven/releases/" }
+    maven { url "https://intbird.net/maven/releases/" }
 ```
 
 

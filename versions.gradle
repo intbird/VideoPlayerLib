@@ -2,8 +2,8 @@ static def projectRepos(RepositoryHandler handler) {
     handler.google()
     handler.jcenter()
     handler.maven { url 'https://maven.aliyun.com/repository/google' }
-    handler.maven { url "https://intbird.ml/maven/snapshots/" }
-    handler.maven { url "https://intbird.ml/maven/releases/" }
+    handler.maven { url "https://intbird.net/maven/snapshots/" }
+    handler.maven { url "https://intbird.net/maven/releases/" }
 }
 
 ext.repos = this.&projectRepos
