@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
+import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,7 +30,6 @@ import intbird.soft.lib.video.player.api.bean.MediaPlayItemInfo
 import intbird.soft.lib.video.player.api.state.IVideoPlayerCallback
 import intbird.soft.lib.video.player.api.state.IVideoPlayerController
 import intbird.soft.lib.video.player.api.state.IVideoPlayerStateInfo
-import intbird.soft.lib.video.player.main.user.AudioFocusChangeManager
 import intbird.soft.lib.video.player.main.controller.control.ControlController
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.controller.touch.TouchController
@@ -49,6 +49,8 @@ import intbird.soft.lib.video.player.main.player.intent.MediaIntentHelper
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
 import intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
+import intbird.soft.lib.video.player.main.player.player.WebViewPlayerImpl
+import intbird.soft.lib.video.player.main.user.AudioFocusChangeManager
 import intbird.soft.lib.video.player.main.user.SensorOrientationManager
 import intbird.soft.lib.video.player.main.view.MediaPlayerType
 import intbird.soft.lib.video.player.main.view.MediaViewInfo
@@ -56,8 +58,8 @@ import intbird.soft.lib.video.player.main.view.MediaViewProvider
 import intbird.soft.lib.video.player.utils.MediaLightUtils
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaScreenUtils
-import kotlinx.android.synthetic.main.lib_media_player_control_pop_locker.*
 import kotlinx.android.synthetic.main.lib_media_player_control_comp_title.*
+import kotlinx.android.synthetic.main.lib_media_player_control_pop_locker.*
 import kotlinx.android.synthetic.main.lib_media_player_extend_timed_text.*
 import kotlinx.android.synthetic.main.lib_media_player_main.*
 import kotlinx.android.synthetic.main.lib_media_player_touch.*
@@ -168,7 +170,13 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
             MediaPlayerType.PLAYER_STYLE_3 -> {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
-                player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? PlayerView, playerCall)
+                player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? PlayerView, intentHelper,  playerCall)
+                //also giving list: intentHelper.registerItemChanged() { player?.onAddMediaItems()}
+            }
+            MediaPlayerType.PLAYER_STYLE_4 -> {
+                playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
+                playerView = MediaViewProvider(view).by(mediaPlayerType)
+                player = WebViewPlayerImpl(getInternalActivity(), playerView?.display as? WebView, playerCall)
             }
         }
     }

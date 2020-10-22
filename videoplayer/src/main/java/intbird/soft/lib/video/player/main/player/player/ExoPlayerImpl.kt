@@ -10,6 +10,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import intbird.soft.lib.video.player.api.error.MediaError
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
+import intbird.soft.lib.video.player.main.player.intent.delegate.PlayerDelegate
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 
@@ -23,6 +24,7 @@ import intbird.soft.lib.video.player.utils.MediaLogUtil
 class ExoPlayerImpl(
     private val context: Context,
     private val playerView: PlayerView?,
+    private val playerDelegate: PlayerDelegate?,
     private val playerCallback: IPlayerCallback?
 ) : IPlayer {
     private var player = SimpleExoPlayer.Builder(context).build()
@@ -30,31 +32,6 @@ class ExoPlayerImpl(
 
     init {
         playerView?.player = player
-    }
-
-    override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
-        if (null == mediaFileInfo) return
-        mediaFileInfo.speedRate?.run {  player.setPlaybackParameters(PlaybackParameters(this)) }
-    }
-
-    override fun prepare(mediaFileInfo: MediaFileInfo) {
-        if (TextUtils.isEmpty(mediaFileInfo.mediaUrl)) {
-            playerCallback?.onError(MediaError.PLAYER_EXO_EMPTY, "empty url")
-            return
-        }
-        this.mediaFileInfo = mediaFileInfo
-        prepareMediaResource(mediaFileInfo.mediaUrl ?: "")
-    }
-
-    private fun prepareMediaResource(uri: String) {
-        val mediaItem: MediaItem = MediaItem.Builder()
-            .setUri(uri)
-            .build()
-        player?.setMediaItem(mediaItem)
-        player?.playWhenReady = true
-        player?.addListener(playerStateListener)
-        player?.addAnalyticsListener(playerAnalyticsListener)
-        player?.prepare()
     }
 
     private val playerStateListener = object : Player.EventListener {
@@ -75,16 +52,15 @@ class ExoPlayerImpl(
         override fun onPlaybackStateChanged(state: Int) {
             super.onPlaybackStateChanged(state)
             log("onPlaybackStateChanged $state")
-            // Player.STATE_IDLE, Player.STATE_BUFFERING, Player.STATE_READY, Player.STATE_ENDED
             when (state) {
                 Player.STATE_IDLE -> {
                     playerCallback?.onReady(mediaFileInfo!!, false)
                 }
-                Player.STATE_READY -> {
-                    playerCallback?.onReady(mediaFileInfo!!, true)
-                }
                 Player.STATE_BUFFERING -> {
                     playerCallback?.onBuffStart()
+                }
+                Player.STATE_READY -> {
+                    playerCallback?.onBuffEnded()
                 }
                 Player.STATE_ENDED -> {
                     playerCallback?.onCompletion(mediaFileInfo)
@@ -105,6 +81,9 @@ class ExoPlayerImpl(
         }
     }
 
+    /**
+     * https://codelabs.developers.google.com/codelabs/exoplayer-intro/#5  #Go deeper
+     */
     private val playerAnalyticsListener = object : AnalyticsListener {
 
         override fun onRenderedFirstFrame(
@@ -132,12 +111,40 @@ class ExoPlayerImpl(
         }
     }
 
+    override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
+        if (null == mediaFileInfo) return
+        mediaFileInfo.speedRate?.run { player.setPlaybackParameters(PlaybackParameters(this)) }
+    }
+
+    override fun prepare(mediaFileInfo: MediaFileInfo) {
+        if (TextUtils.isEmpty(mediaFileInfo.mediaUrl)) {
+            playerCallback?.onError(MediaError.PLAYER_EXO_EMPTY, "empty url")
+            return
+        }
+        this.mediaFileInfo = mediaFileInfo
+        prepareMediaResource(mediaFileInfo.mediaUrl ?: "", mediaFileInfo.mediaHeaders)
+    }
+
+    private fun prepareMediaResource(uri: String?, headers: Map<String, String>?) {
+        val mediaItem: MediaItem = MediaItem.Builder()
+            .setUri(uri)
+            .setDrmLicenseRequestHeaders(headers)
+            .build()
+        player?.setMediaItem(mediaItem)
+        player?.playWhenReady = true
+        player?.addListener(playerStateListener)
+        player?.addAnalyticsListener(playerAnalyticsListener)
+        player?.prepare()
+    }
+
     override fun start() {
         player.playWhenReady = true
     }
 
     override fun seekTo(duration: Long, autoPlay: Boolean) {
+        log("seekTo:$duration")
         player.seekTo(duration)
+        player.playWhenReady = autoPlay
     }
 
     override fun resume() {
@@ -149,11 +156,11 @@ class ExoPlayerImpl(
     }
 
     override fun last(): Boolean {
-        return false
+        return playerDelegate?.delegateLast() == true
     }
 
     override fun next(): Boolean {
-        return false
+        return playerDelegate?.delegateNext() == true
     }
 
     override fun stop() {
@@ -161,6 +168,8 @@ class ExoPlayerImpl(
     }
 
     override fun destroy() {
+        player.removeAnalyticsListener(playerAnalyticsListener)
+        player.removeListener(playerStateListener)
         player.release()
     }
 

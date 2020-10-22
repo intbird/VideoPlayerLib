@@ -2,6 +2,7 @@ package intbird.soft.lib.video.player.main.player;
 
 import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
 import intbird.soft.lib.video.player.main.player.intent.call.IParamsStateInfo
+import intbird.soft.lib.video.player.main.player.intent.call.IPayloadPlaylist
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 
 /**
@@ -9,7 +10,7 @@ import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
  * on 2020/5/1
  * DingTalk id: intbird
  */
-interface IPlayer : IParamsStateInfo, IParamsChange {
+interface IPlayer : IParamsStateInfo, IParamsChange, IPayloadPlaylist {
 
     fun prepare(mediaFileInfo: MediaFileInfo)
 

@@ -30,5 +30,11 @@ enum class MediaPlayerType(
         R.id.exoplayerview,
         R.layout.lib_media_player_control_style_3,
         R.id.mediaRootControl
+    ),
+    PLAYER_STYLE_4(
+        R.layout.lib_media_player_diaplay_webview,
+        R.id.webview,
+        R.layout.lib_media_player_control_style_4,
+        R.id.mediaRootControl
     )
 }

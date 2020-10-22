@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) }
         add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2) }
         add3.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_3) }
-        add4.setOnClickListener { Toast.makeText(this,"webview player is developing", Toast.LENGTH_SHORT).show()}
+        add4.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_4) }
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
         reset.setOnClickListener {
