@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.exoplayer2.ui.PlayerView
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.api.bean.MediaCheckedData
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
@@ -55,9 +56,9 @@ import intbird.soft.lib.video.player.main.view.MediaViewProvider
 import intbird.soft.lib.video.player.utils.MediaLightUtils
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaScreenUtils
-import kotlinx.android.synthetic.main.lib_media_player_control_pop.*
-import kotlinx.android.synthetic.main.lib_media_player_control_title.*
-import kotlinx.android.synthetic.main.lib_media_player_display_timed.*
+import kotlinx.android.synthetic.main.lib_media_player_control_pop_locker.*
+import kotlinx.android.synthetic.main.lib_media_player_control_comp_title.*
+import kotlinx.android.synthetic.main.lib_media_player_extend_timed_text.*
 import kotlinx.android.synthetic.main.lib_media_player_main.*
 import kotlinx.android.synthetic.main.lib_media_player_touch.*
 import kotlin.properties.Delegates
@@ -167,7 +168,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
             MediaPlayerType.PLAYER_STYLE_3 -> {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
-                player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, playerCall)
+                player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? PlayerView, playerCall)
             }
         }
     }

@@ -17,27 +17,11 @@ import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaTimeUtil
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivDirection
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivLast
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivLocker
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivNext
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.ivPlay
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.layoutBottomPanel
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.seekBarProgress
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.tvVideoCurTime
-import kotlinx.android.synthetic.main.lib_media_player_control_style_1.view.tvVideoTotalTime
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.ivDirectionPortrait
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.ivPlayCenter
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.ivSeekBackward
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.ivSeekBackwardCenter
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.ivSeekForward
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.ivSeekForwardCenter
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.layoutCenterPanel
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.llCenterControl
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.rlBottomControl2
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvClarity
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.tvClarityPortrait
-import kotlinx.android.synthetic.main.lib_media_player_control_title.view.*
+import kotlinx.android.synthetic.main.lib_media_player_control_comp_bottom_2.view.*
+import kotlinx.android.synthetic.main.lib_media_player_control_comp_center.view.*
+import kotlinx.android.synthetic.main.lib_media_player_control_comp_progress.view.*
+import kotlinx.android.synthetic.main.lib_media_player_control_comp_title.view.*
+import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -107,7 +91,9 @@ open class ControlController(
         viewImpl?.ivSeekBackwardCenter?.setOnClickListener { iControlCallback?.backward(seekToInterval); }
         viewImpl?.ivSeekForward?.setOnClickListener { iControlCallback?.forward(seekToInterval); }
         viewImpl?.ivSeekForwardCenter?.setOnClickListener { iControlCallback?.forward(seekToInterval);}
+        viewImpl?.ivLastCenter?.setOnClickListener { iControlCallback?.last(); }
         viewImpl?.ivLast?.setOnClickListener { iControlCallback?.last(); }
+        viewImpl?.ivNextCenter?.setOnClickListener { iControlCallback?.next(); }
         viewImpl?.ivNext?.setOnClickListener { iControlCallback?.next(); }
 
         toggleLock(false)
@@ -230,13 +216,13 @@ open class ControlController(
         toggleDirectionView(landscape)
 
         if (landscape) {
-            viewImpl?.rlBottomControl2?.visibility = View.VISIBLE
+            viewImpl?.rlBottomControlHidden?.visibility = View.VISIBLE
             viewImpl?.llCenterControl?.visibility = View.GONE
             viewImpl?.ivDirectionPortrait?.visibility = View.GONE
             viewImpl?.tvClarityPortrait?.visibility = View.GONE
             viewImpl?.tvVideoName?.visibility = View.VISIBLE
         } else {
-            viewImpl?.rlBottomControl2?.visibility = View.GONE
+            viewImpl?.rlBottomControlHidden?.visibility = View.GONE
             viewImpl?.llCenterControl?.visibility = View.VISIBLE
             viewImpl?.ivDirectionPortrait?.visibility = View.VISIBLE
             viewImpl?.tvClarityPortrait?.visibility = View.VISIBLE

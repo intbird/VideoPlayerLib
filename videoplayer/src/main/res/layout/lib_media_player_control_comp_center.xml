@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutCenterPanel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/llCenterControl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/ivLastCenter"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/lib_media_player_play_button_ripple"
+            android:padding="5dp"
+            android:src="@drawable/icon_video_player_last" />
+
+        <ImageView
+            android:id="@+id/ivSeekBackwardCenter"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/lib_media_player_play_button_ripple"
+            android:padding="5dp"
+            android:src="@drawable/icon_video_player_seek_backing"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/ivPlayCenter"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/lib_media_player_play_button_ripple"
+            android:src="@drawable/icon_video_player_play" />
+
+        <ImageView
+            android:id="@+id/ivSeekForwardCenter"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/lib_media_player_play_button_ripple"
+            android:padding="5dp"
+            android:src="@drawable/icon_video_player_seek_going"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ivNextCenter"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/lib_media_player_play_button_ripple"
+            android:padding="5dp"
+            android:src="@drawable/icon_video_player_next" />
+    </LinearLayout>
+</LinearLayout>

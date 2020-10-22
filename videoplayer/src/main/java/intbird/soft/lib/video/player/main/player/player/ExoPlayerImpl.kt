@@ -1,20 +1,17 @@
 package intbird.soft.lib.video.player.main.player.player;
 
 import android.content.Context
-import android.net.Uri
-import android.view.TextureView
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.Timeline
+import android.text.TextUtils
+import android.view.Surface
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.source.hls.HlsManifest
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.ui.PlayerView
+import intbird.soft.lib.video.player.api.error.MediaError
 import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
-import intbird.soft.lib.video.player.main.player.display.surface.IDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
+import intbird.soft.lib.video.player.utils.MediaLogUtil
 
 /**
  * created by intbird
@@ -25,61 +22,118 @@ import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
  */
 class ExoPlayerImpl(
     private val context: Context,
-    private val playerView: TextureView?,
+    private val playerView: PlayerView?,
     private val playerCallback: IPlayerCallback?
-) : IPlayer, IDisplay {
+) : IPlayer {
     private var player = SimpleExoPlayer.Builder(context).build()
+    private var mediaFileInfo: MediaFileInfo? = null
 
     init {
-        displayStateChange(true)
-    }
-
-    override fun displayStateChange(enableDisplay: Boolean) {
-        if (enableDisplay) player.setVideoTextureView(playerView)
+        playerView?.player = player
     }
 
     override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
+        if (null == mediaFileInfo) return
+        mediaFileInfo.speedRate?.run {  player.setPlaybackParameters(PlaybackParameters(this)) }
     }
 
-    /**
-     * https://exoplayer.dev/hls.html
-     */
     override fun prepare(mediaFileInfo: MediaFileInfo) {
-        try {
-            // Create a data source factory.
-            val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(
-                context,
-                Util.getUserAgent(context, "")
-            )
-            // Create a HLS media source pointing to a playlist uri.
-            val hlsMediaSource =
-                HlsMediaSource.Factory(dataSourceFactory)
-                    .setAllowChunklessPreparation(true)
-                    .createMediaSource(Uri.parse(mediaFileInfo.mediaUrl))
+        if (TextUtils.isEmpty(mediaFileInfo.mediaUrl)) {
+            playerCallback?.onError(MediaError.PLAYER_EXO_EMPTY, "empty url")
+            return
+        }
+        this.mediaFileInfo = mediaFileInfo
+        prepareMediaResource(mediaFileInfo.mediaUrl ?: "")
+    }
 
-            // Prepare the player with the media source.
-            player.prepare(hlsMediaSource)
+    private fun prepareMediaResource(uri: String) {
+        val mediaItem: MediaItem = MediaItem.Builder()
+            .setUri(uri)
+            .build()
+        player?.setMediaItem(mediaItem)
+        player?.playWhenReady = true
+        player?.addListener(playerStateListener)
+        player?.addAnalyticsListener(playerAnalyticsListener)
+        player?.prepare()
+    }
 
-            player.playWhenReady = true
-            player.addListener(object : Player.EventListener {
-                override fun onLoadingChanged(isLoading: Boolean) {
+    private val playerStateListener = object : Player.EventListener {
+        override fun onLoadingChanged(isLoading: Boolean) {
+            if (isLoading) playerCallback?.onBuffStart() else playerCallback?.onBuffEnded()
+        }
+
+        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+            log("onTimelineChanged ${timeline.periodCount}")
+            val manifest = player?.currentManifest
+            if (manifest != null) {
+                val hlsManifest = manifest as? HlsManifest
+                // Do something with the manifest.
+            }
+        }
+
+
+        override fun onPlaybackStateChanged(state: Int) {
+            super.onPlaybackStateChanged(state)
+            log("onPlaybackStateChanged $state")
+            // Player.STATE_IDLE, Player.STATE_BUFFERING, Player.STATE_READY, Player.STATE_ENDED
+            when (state) {
+                Player.STATE_IDLE -> {
+                    playerCallback?.onReady(mediaFileInfo!!, false)
                 }
-
-                override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-                    val manifest = player.currentManifest
-                    if (manifest != null) {
-                        val hlsManifest = manifest as HlsManifest
-                        // Do something with the manifest.
-                    }
+                Player.STATE_READY -> {
+                    playerCallback?.onReady(mediaFileInfo!!, true)
                 }
-            })
+                Player.STATE_BUFFERING -> {
+                    playerCallback?.onBuffStart()
+                }
+                Player.STATE_ENDED -> {
+                    playerCallback?.onCompletion(mediaFileInfo)
+                }
+            }
+        }
 
-        } catch (e: Exception) {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            super.onIsPlayingChanged(isPlaying)
+            log("onIsPlayingChanged $isPlaying")
+            if (isPlaying) playerCallback?.onStart() else playerCallback?.onPause()
+        }
+
+        override fun onPlayerError(error: ExoPlaybackException) {
+            super.onPlayerError(error)
+            log("onPlayerError $error")
+            playerCallback?.onError(MediaError.PLAYER_EXO_ERROR, error.message)
+        }
+    }
+
+    private val playerAnalyticsListener = object : AnalyticsListener {
+
+        override fun onRenderedFirstFrame(
+            eventTime: AnalyticsListener.EventTime,
+            surface: Surface?
+        ) {
+            super.onRenderedFirstFrame(eventTime, surface)
+        }
+
+        override fun onDroppedVideoFrames(
+            eventTime: AnalyticsListener.EventTime,
+            droppedFrames: Int,
+            elapsedMs: Long
+        ) {
+            super.onDroppedVideoFrames(eventTime, droppedFrames, elapsedMs)
+        }
+
+        override fun onAudioUnderrun(
+            eventTime: AnalyticsListener.EventTime,
+            bufferSize: Int,
+            bufferSizeMs: Long,
+            elapsedSinceLastFeedMs: Long
+        ) {
+            super.onAudioUnderrun(eventTime, bufferSize, bufferSizeMs, elapsedSinceLastFeedMs)
         }
     }
 
     override fun start() {
-        player.playbackState
+        player.playWhenReady = true
     }
 
     override fun seekTo(duration: Long, autoPlay: Boolean) {
@@ -87,9 +141,11 @@ class ExoPlayerImpl(
     }
 
     override fun resume() {
+        player.playWhenReady = true
     }
 
     override fun pause() {
+        player.playWhenReady = false
     }
 
     override fun last(): Boolean {
@@ -118,5 +174,9 @@ class ExoPlayerImpl(
 
     override fun getTotalTime(): Long {
         return player.totalBufferedDuration
+    }
+
+    private fun log(message: String) {
+        MediaLogUtil.log("ExoplayerImpl: $message")
     }
 }
