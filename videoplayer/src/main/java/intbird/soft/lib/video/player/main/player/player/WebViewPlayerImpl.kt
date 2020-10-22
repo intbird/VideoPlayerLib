@@ -80,6 +80,8 @@ class WebViewPlayerImpl(
     }
 
     override fun destroy() {
+        webView?.removeAllViews()
+        webView?.destroy()
     }
 
     override fun isPlaying(): Boolean {
