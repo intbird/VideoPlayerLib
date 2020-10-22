@@ -15,5 +15,9 @@ object MediaError {
     const val PLAYER_ERROR_CALLBACK = 12
 
 
+    const val PLAYER_EXO_EMPTY = 31
+    const val PLAYER_EXO_ERROR = 32
+
+
 }
  

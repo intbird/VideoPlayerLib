@@ -3,6 +3,8 @@ LibVideoPlayer
 
 This repo is for VideoPlayer
 
+my website: [https://intbird.net](https://intbird.net)  
+
 my blog: [https://blog.csdn.net/intbird/article/details/105970536](https://blog.csdn.net/intbird/article/details/105970536)
 
 # Overview  
@@ -41,40 +43,40 @@ dependencies {
 
 
 #### 3.add method in your code where you need to play video.
+
+1. support
 ```
-         // suppport file type
-        enum class MediaFileType(val type: String) {
-            FILE("file:///"),
-            HTTP("http://"),
-            HTTPS("https://")
-        }
+        intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
+
+        intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
+
+        intbird.soft.lib.video.player.main.player.player.WebViewPlayerImpl
+
+```
+
+2. useage
+```
         
         val itemTestUrl1 = "file:///sdcard/videos/Instagram_0312_10_19_20.mp4"
         val itemTestUrl2 = "https://intbird.s3.ap-northeast-2.amazonaws.com/h264_baseline.m3u8"
 
+
          // use as a fragment
-        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) }
-        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2) }
+        add1.setOnClickListener { 
+            addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) 
+        }
+        
+        add2.setOnClickListener { 
+            addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2)
+        }
+
+        add3.setOnClickListener { 
+            addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_3)
+        }
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
-        reset.setOnClickListener {
-            videoPlayerFragment?.setVideoPlayerList(itemTestArray3, itemTestIndex,true)
-        }
-        mdf1.setOnClickListener {
-            val playingItem = videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItem() ?: return@setOnClickListener
-            playingItem.mediaName = "modify media title"
-            videoPlayerFragment?.setVideoPlayerItem(playingItem)
-        }
-        mdf2.setOnClickListener {
-            val playingItemInfo = videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemInfo() ?: return@setOnClickListener
-            playingItemInfo.mediaRate = MediaRate(2.0f)
-            videoPlayerFragment?.setVideoPlayerItemInfo(playingItemInfo)
-        }
 
-        last.setOnClickListener { videoPlayerFragment?.getVideoPlayerController()?.last() }
-        pause.setOnClickListener { videoPlayerFragment?.getVideoPlayerController()?.pause() }
-        next.setOnClickListener { videoPlayerFragment?.getVideoPlayerController()?.next() }
-        info.setOnClickListener { stateText.text = "info:${videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemInfo()}" }
+       
 
         // full screen activity
         fullScreen1.setOnClickListener {
@@ -86,6 +88,26 @@ dependencies {
             ServicesLoader.load(IVideoPlayer::class.java)?.startActivity(this, itemTestArrayString, itemTestIndex,autoPlay = true)
         }
 ```
+
+3. control
+```
+        reset.setOnClickListener {
+            videoPlayerFragment?.setVideoPlayerList(itemTestArray3, itemTestIndex,true)
+        }
+        last.setOnClickListener {
+             videoPlayerFragment?.getVideoPlayerController()?.last() 
+        }
+        pause.setOnClickListener { 
+            videoPlayerFragment?.getVideoPlayerController()?.pause()
+        }
+        next.setOnClickListener { 
+            videoPlayerFragment?.getVideoPlayerController()?.next() 
+        }
+        info.setOnClickListener { 
+            stateText.text = "info:${ videoPlayerFragment?.getVideoPlayerStateInfo()?.getVideoPlayingItemInfo()}" }
+
+```
+
 
 Release
 --------

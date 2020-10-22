@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import intbird.soft.app.MainActivityData.itemTestArrayModel
 import intbird.soft.app.MainActivityData.itemTestArray3
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         // use as a fragment
         add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) }
         add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2) }
+        add3.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_3) }
+        add4.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_4) }
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
         reset.setOnClickListener {

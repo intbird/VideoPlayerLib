@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:background="#000000">
 
-    <include layout="@layout/lib_media_player_control_title" />
+    <include layout="@layout/lib_media_player_control_comp_title" />
 
     <LinearLayout
         android:id="@+id/layoutBottomPanel"
@@ -16,108 +16,8 @@
         android:background="@color/lib_media_player_control_panel_alpha"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp">
+        <include layout="@layout/lib_media_player_control_comp_progress" />
 
-            <TextView
-                android:id="@+id/tvVideoCurTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center"
-                android:gravity="left"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:text="00:00"
-                android:textColor="#FFFFFF"
-                android:textSize="12dp" />
-
-            <androidx.appcompat.widget.AppCompatSeekBar
-                android:id="@+id/seekBarProgress"
-                style="@style/lib_media_playerAdjustSeekBar"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                tools:progress="50" />
-
-            <TextView
-                android:id="@+id/tvVideoTotalTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:text="00:00"
-                android:textColor="#FFFFFF"
-                android:textSize="12dp" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/rlBottomControl1"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:paddingBottom="6dp">
-
-            <ImageView
-                android:id="@+id/ivLocker"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:padding="10dp"
-                android:src="@drawable/icon_video_player_unlock" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/ivLast"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:layout_marginStart="@dimen/lib_media_playerPlayButtonMarinSides"
-                    android:background="@drawable/lib_media_player_play_button_ripple"
-                    android:padding="5dp"
-                    android:src="@drawable/icon_video_player_last" />
-
-                <ImageButton
-                    android:id="@+id/ivPlay"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:background="@drawable/lib_media_player_play_button_ripple"
-                    android:src="@drawable/icon_video_player_play" />
-
-                <ImageView
-                    android:id="@+id/ivNext"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:layout_marginEnd="@dimen/lib_media_playerPlayButtonMarinSides"
-                    android:background="@drawable/lib_media_player_play_button_ripple"
-                    android:padding="5dp"
-                    android:src="@drawable/icon_video_player_next" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/ivDirection"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:padding="10dp"
-                android:src="@drawable/icon_video_player_zoom_out" />
-        </RelativeLayout>
+        <include layout="@layout/lib_media_player_control_comp_bottom_1" />
     </LinearLayout>
 </RelativeLayout>

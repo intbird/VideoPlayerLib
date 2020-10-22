@@ -39,9 +39,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="360P"
-                tools:visibility="visible" />
+                tools:text="360P" />
 
             <ImageView
                 android:id="@+id/ivDirectionPortrait"
@@ -52,6 +50,5 @@
         </LinearLayout>
 
         <include layout="@layout/lib_media_player_control_comp_bottom_2" />
-
     </LinearLayout>
 </RelativeLayout>

@@ -20,10 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include layout="@layout/lib_media_player_control_pop" />
+    <include layout="@layout/lib_media_player_control_pop_locker" />
 
 
-    <include layout="@layout/lib_media_player_display_timed"/>
+    <include layout="@layout/lib_media_player_extend_timed_text"/>
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/contentLoading"
