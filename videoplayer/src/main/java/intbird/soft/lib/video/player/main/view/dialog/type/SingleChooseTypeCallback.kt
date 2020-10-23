@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.dialog.type
+package intbird.soft.lib.video.player.main.view.dialog.type
 
 import intbird.soft.lib.video.player.api.bean.MediaCheckedData
 

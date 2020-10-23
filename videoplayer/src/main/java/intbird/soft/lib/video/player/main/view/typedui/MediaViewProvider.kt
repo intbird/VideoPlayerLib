@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.view
+package intbird.soft.lib.video.player.main.view.typedui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +19,7 @@ data class MediaViewInfo<Display, Control>(
 class MediaViewProvider(private val view: View?) {
 
     fun by(mediaType: MediaPlayerType?): MediaViewInfo<out View, out View> {
-        val mediaPlayerType = mediaType?:MediaPlayerType.PLAYER_STYLE_1
+        val mediaPlayerType = mediaType?: MediaPlayerType.PLAYER_STYLE_1
         addViewParent(view, mediaPlayerType)
         return MediaViewInfo(view?.findViewById(mediaPlayerType.viewDisplay), view?.findViewById(mediaPlayerType.viewControl))
     }

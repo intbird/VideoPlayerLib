@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.dialog.type
+package intbird.soft.lib.video.player.main.view.dialog.type
 
 /**
  * created by Bird

@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.dialog
+package intbird.soft.lib.video.player.main.view.dialog
 
 import android.app.Dialog
 import android.content.DialogInterface

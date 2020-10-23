@@ -1,8 +1,8 @@
 package intbird.soft.lib.video.player.main.player;
 
-import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
-import intbird.soft.lib.video.player.main.player.intent.call.IParamsStateInfo
-import intbird.soft.lib.video.player.main.player.intent.call.IPayloadPlaylist
+import intbird.soft.lib.video.player.main.player.player.call.IParamsChange
+import intbird.soft.lib.video.player.main.player.player.call.IParamsStateInfo
+import intbird.soft.lib.video.player.main.player.player.call.IPayloadPlaylist
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 
 /**

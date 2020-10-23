@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.view
+package intbird.soft.lib.video.player.main.view.typedui
 
 import intbird.soft.lib.video.player.R
 

@@ -1,15 +1,15 @@
-package intbird.soft.lib.video.player.main.player.intent
+package intbird.soft.lib.video.player.main.intent
 
 import android.os.Bundle
 import intbird.soft.lib.video.player.api.bean.MediaCheckedData
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
 import intbird.soft.lib.video.player.api.bean.MediaPlayItemInfo
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
-import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
-import intbird.soft.lib.video.player.main.player.intent.delegate.PlayerDelegate
-import intbird.soft.lib.video.player.main.player.intent.parser.MediaItemInfoParer
+import intbird.soft.lib.video.player.main.view.dialog.type.SingleChooseType
+import intbird.soft.lib.video.player.main.intent.delegate.PlayerListDelegate
+import intbird.soft.lib.video.player.main.intent.parser.MediaItemInfoParer
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
-import intbird.soft.lib.video.player.main.view.MediaPlayerType
+import intbird.soft.lib.video.player.main.view.typedui.MediaPlayerType
 import intbird.soft.lib.video.player.utils.MediaFileUtils
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 
@@ -21,7 +21,7 @@ import intbird.soft.lib.video.player.utils.MediaLogUtil
 class MediaIntentHelper(
     private val arguments: Bundle?,
     private val intentHelperCall: MediaIntentHelperCall?
-) : PlayerDelegate {
+) : PlayerListDelegate {
 
     interface MediaIntentHelperCall {
         fun getVideoCurrentTime(): Long?

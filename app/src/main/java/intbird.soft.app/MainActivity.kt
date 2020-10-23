@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import intbird.soft.app.MainActivityData.itemTestArrayModel
 import intbird.soft.app.MainActivityData.itemTestArray3
@@ -14,7 +13,7 @@ import intbird.soft.lib.service.loader.ServicesLoader
 import intbird.soft.lib.video.player.api.IVideoPlayer
 import intbird.soft.lib.video.player.api.bean.MediaRate
 import intbird.soft.lib.video.player.main.VideoPlayerFragment
-import intbird.soft.lib.video.player.main.view.MediaPlayerType
+import intbird.soft.lib.video.player.main.view.typedui.MediaPlayerType
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

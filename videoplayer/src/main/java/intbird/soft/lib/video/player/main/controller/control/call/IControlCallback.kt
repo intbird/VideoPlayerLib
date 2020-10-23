@@ -1,6 +1,6 @@
 package intbird.soft.lib.video.player.main.controller.control.call
 
-import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
+import intbird.soft.lib.video.player.main.view.dialog.type.SingleChooseType
 import intbird.soft.lib.video.player.main.notify.IMediaSeekNotify
 /**
  * created by intbird

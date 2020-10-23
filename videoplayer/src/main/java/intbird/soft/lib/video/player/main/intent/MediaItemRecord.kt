@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.player.intent
+package intbird.soft.lib.video.player.main.intent
 
 import android.text.TextUtils
 

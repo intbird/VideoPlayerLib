@@ -15,7 +15,7 @@ import intbird.soft.lib.video.player.main.player.display.subtitle.MediaPlayerSub
 import intbird.soft.lib.video.player.main.player.display.surface.IDisplay
 import intbird.soft.lib.video.player.main.player.display.surface.TextureDisplay
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
-import intbird.soft.lib.video.player.main.player.intent.delegate.PlayerDelegate
+import intbird.soft.lib.video.player.main.intent.delegate.PlayerListDelegate
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaTimeUtil.adjustValueBoundL
 
@@ -30,7 +30,7 @@ class MediaPlayerImpl(
     private val context: Context,
     private val display: TextureView?,
     private val subtitle: TextView,
-    private val playerDelegate: PlayerDelegate?,
+    private val playerListDelegate: PlayerListDelegate?,
     private val playerCallback: PlayerCallbacks?
 ) :
     IPlayer, IDisplay,
@@ -112,7 +112,7 @@ class MediaPlayerImpl(
         }
 
         //subtitle
-        mediaSubtitle?.onReceiveSubtitle(mediaFileInfo.timedPath)
+        mediaSubtitle?.onReceiveSubtitle(mediaFileInfo.subtitle)
     }
 
     override fun prepare(mediaFile: MediaFileInfo) {
@@ -215,11 +215,11 @@ class MediaPlayerImpl(
     }
 
     override fun last():Boolean {
-        return playerDelegate?.delegateLast() == true
+        return playerListDelegate?.delegateLast() == true
     }
 
     override fun next():Boolean {
-       return playerDelegate?.delegateNext() == true
+       return playerListDelegate?.delegateNext() == true
     }
 
     override fun stop() {

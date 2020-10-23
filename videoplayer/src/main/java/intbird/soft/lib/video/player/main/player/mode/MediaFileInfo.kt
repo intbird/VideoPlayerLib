@@ -13,12 +13,12 @@ class MediaFileInfo(
 
     var clarity: String? = "",
     var speedRate: Float? = 0f,
-    var timedPath: String? = "",
+    var subtitle: String? = "",
 
     var width: Int = 0,
     var height: Int = 0
 ) {
     override fun toString(): String {
-        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaUrl=$mediaUrl, mediaHeaders=$mediaHeaders, clarity=$clarity, speedRate=$speedRate, timeText=$timedPath, width=$width, height=$height)"
+        return "MediaFileInfo(mediaId='$mediaId', mediaName=$mediaName, mediaUrl=$mediaUrl, mediaHeaders=$mediaHeaders, clarity=$clarity, speedRate=$speedRate, timeText=$subtitle, width=$width, height=$height)"
     }
 }

@@ -34,9 +34,9 @@ import intbird.soft.lib.video.player.main.controller.control.ControlController
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
 import intbird.soft.lib.video.player.main.controller.touch.TouchController
 import intbird.soft.lib.video.player.main.controller.touch.call.IVideoTouchCallback
-import intbird.soft.lib.video.player.main.dialog.SingleChooseCallback
-import intbird.soft.lib.video.player.main.dialog.SingleChooseDialogFragment
-import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
+import intbird.soft.lib.video.player.main.view.dialog.SingleChooseCallback
+import intbird.soft.lib.video.player.main.view.dialog.SingleChooseDialogFragment
+import intbird.soft.lib.video.player.main.view.dialog.type.SingleChooseType
 import intbird.soft.lib.video.player.main.locker.LockController
 import intbird.soft.lib.video.player.main.notify.ILockExecute
 import intbird.soft.lib.video.player.main.notify.ITouchSystemExecute
@@ -45,16 +45,16 @@ import intbird.soft.lib.video.player.main.player.IPlayer
 import intbird.soft.lib.video.player.main.player.call.IPlayerCallback
 import intbird.soft.lib.video.player.main.player.call.IPlayerExecute
 import intbird.soft.lib.video.player.main.player.call.PlayerCallbacks
-import intbird.soft.lib.video.player.main.player.intent.MediaIntentHelper
+import intbird.soft.lib.video.player.main.intent.MediaIntentHelper
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
 import intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
 import intbird.soft.lib.video.player.main.player.player.WebViewPlayerImpl
 import intbird.soft.lib.video.player.main.user.AudioFocusChangeManager
 import intbird.soft.lib.video.player.main.user.SensorOrientationManager
-import intbird.soft.lib.video.player.main.view.MediaPlayerType
-import intbird.soft.lib.video.player.main.view.MediaViewInfo
-import intbird.soft.lib.video.player.main.view.MediaViewProvider
+import intbird.soft.lib.video.player.main.view.typedui.MediaPlayerType
+import intbird.soft.lib.video.player.main.view.typedui.MediaViewInfo
+import intbird.soft.lib.video.player.main.view.typedui.MediaViewProvider
 import intbird.soft.lib.video.player.utils.MediaLightUtils
 import intbird.soft.lib.video.player.utils.MediaLogUtil
 import intbird.soft.lib.video.player.utils.MediaScreenUtils
@@ -92,10 +92,10 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         }
 
         private fun addToBundle(extra:Bundle?,
-                      playList: ArrayList<MediaPlayItem>?,
-                      playIndex: Int = 0,
-                      playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_2,
-                      autoPlay:Boolean = true): Bundle {
+                                playList: ArrayList<MediaPlayItem>?,
+                                playIndex: Int = 0,
+                                playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_2,
+                                autoPlay:Boolean = true): Bundle {
             val args = extra ?: Bundle()
             args.putParcelableArrayList(EXTRA_FILE_URLS, playList)
             args.putInt(EXTRA_FILE_INDEX, playIndex)
@@ -171,7 +171,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
                 player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? PlayerView, intentHelper,  playerCall)
-                //also giving list: intentHelper.registerItemChanged() { player?.onAddMediaItems()}
+                // giving list: intentHelper.registerItemChanged() { player?.onAddMediaItems()} like TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
             }
             MediaPlayerType.PLAYER_STYLE_4 -> {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
@@ -422,7 +422,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         override fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo?) {
             if(null != mediaFileInfo) playingMediaInfo = mediaFileInfo
             log("player onVideoSizeChanged:$playingMediaInfo")
-            setFitToFillAspectRatio(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            //setFitToFillAspectRatio(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
         }
 
         override fun onBuffStart() {

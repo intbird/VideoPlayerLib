@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.player.intent.parser
+package intbird.soft.lib.video.player.main.intent.parser
 
 import android.text.TextUtils
 import androidx.annotation.NonNull

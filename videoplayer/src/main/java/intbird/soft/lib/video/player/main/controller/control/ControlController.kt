@@ -9,12 +9,12 @@ import android.widget.SeekBar
 import intbird.soft.lib.video.player.R
 import intbird.soft.lib.video.player.api.const.ConstConfigs
 import intbird.soft.lib.video.player.main.controller.control.call.IControlCallback
-import intbird.soft.lib.video.player.main.dialog.type.SingleChooseType
+import intbird.soft.lib.video.player.main.view.dialog.type.SingleChooseType
 import intbird.soft.lib.video.player.main.locker.call.ILockCallback
 import intbird.soft.lib.video.player.main.notify.ILandscapeExecute
 import intbird.soft.lib.video.player.main.notify.ILockExecute
 import intbird.soft.lib.video.player.main.player.IPlayer
-import intbird.soft.lib.video.player.main.player.intent.call.IParamsChange
+import intbird.soft.lib.video.player.main.player.player.call.IParamsChange
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import intbird.soft.lib.video.player.utils.MediaTimeUtil
 import kotlinx.android.synthetic.main.lib_media_player_control_comp_bottom_2.view.*
@@ -128,7 +128,7 @@ open class ControlController(
 
         resultSingleDialog(SingleChooseType.CLARITY, !TextUtils.isEmpty(mediaFileInfo?.clarity))
         resultSingleDialog(SingleChooseType.RATES, (mediaFileInfo?.speedRate?:0) != 0)
-        resultSingleDialog(SingleChooseType.TEXT, ConstConfigs.isVisible(mediaFileInfo?.timedPath))
+        resultSingleDialog(SingleChooseType.TEXT, ConstConfigs.isVisible(mediaFileInfo?.subtitle))
     }
 
     fun onPrepared(mediaFileInfo: MediaFileInfo?) {

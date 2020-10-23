@@ -1,4 +1,4 @@
-package intbird.soft.lib.video.player.main.player.intent.call
+package intbird.soft.lib.video.player.main.player.player.call
 
 import intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 

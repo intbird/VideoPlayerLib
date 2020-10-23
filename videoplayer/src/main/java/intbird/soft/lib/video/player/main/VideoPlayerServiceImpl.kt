@@ -6,7 +6,7 @@ import com.google.auto.service.AutoService
 import intbird.soft.lib.video.player.api.IVideoPlayer
 import intbird.soft.lib.video.player.api.bean.MediaClarity
 import intbird.soft.lib.video.player.api.bean.MediaPlayItem
-import intbird.soft.lib.video.player.main.view.MediaPlayerType
+import intbird.soft.lib.video.player.main.view.typedui.MediaPlayerType
 
 /**
  * created by intbird
