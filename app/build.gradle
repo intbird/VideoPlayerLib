@@ -8,7 +8,7 @@ android {
     buildToolsVersion versions.build_versions.buildToolsVersion
 
     defaultConfig {
-        applicationId "intbird.soft.app"
+        applicationId "net.intbird.soft.app"
         minSdkVersion versions.build_versions.minSdkVersion
         targetSdkVersion versions.build_versions.targetSdkVersion
         versionCode versions.build_versions.versionCode
@@ -48,6 +48,6 @@ dependencies {
 
     debugImplementation project(path: ':videoplayer')
     debugImplementation project(path: ':videoplayer-api')
-    releaseImplementation "intbird.soft.lib:video-player:$versions.flavors_versions.versionName"
-    releaseImplementation "intbird.soft.lib:video-player-api:$versions.flavors_versions.versionName"
+    releaseImplementation "net.intbird.soft.lib:video-player:$versions.flavors_versions.versionName"
+    releaseImplementation "net.intbird.soft.lib:video-player-api:$versions.flavors_versions.versionName"
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="intbird.soft.app">
+    package="net.intbird.soft.app">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name="net.intbird.soft.app.MainActivity"
             android:launchMode="singleTask"
             android:theme="@style/lib_media_playerNoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize|locale">

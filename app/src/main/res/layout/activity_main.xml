@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="intbird.soft.app.MainActivity">
+    tools:context="net.intbird.soft.app.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_player"

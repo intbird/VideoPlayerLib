@@ -1,3 +1,3 @@
--keepclassmembers class intbird.soft.lib.video.player.api.** {
+-keepclassmembers class net.intbird.soft.lib.video.player.api.* {
    public *;
 }

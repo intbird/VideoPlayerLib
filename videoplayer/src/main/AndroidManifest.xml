@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="intbird.soft.lib.video.player">
+    package="net.intbird.soft.lib.video.player">
 
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
@@ -12,7 +12,7 @@
 
     <application>
         <activity
-            android:name=".main.VideoPlayerActivity"
+            android:name="net.intbird.soft.lib.video.player.main.VideoPlayerActivity"
             android:launchMode="singleTask"
             android:theme="@style/lib_media_playerNoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize|locale" />
