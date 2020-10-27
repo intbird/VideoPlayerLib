@@ -422,7 +422,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         override fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo?) {
             if(null != mediaFileInfo) playingMediaInfo = mediaFileInfo
             log("player onVideoSizeChanged:$playingMediaInfo")
-            //setFitToFillAspectRatio(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            setFitToFillAspectRatio(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
         }
 
         override fun onBuffStart() {

@@ -71,6 +71,7 @@ class ExoPlayerImpl(
     }
 
     override fun start() {
+        player
         player.playWhenReady = true
     }
 

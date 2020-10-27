@@ -114,6 +114,17 @@ class ExoPlayerStateHandler(val player: SimpleExoPlayer?, val playerCallback: IP
         ) {
             super.onAudioUnderrun(eventTime, bufferSize, bufferSizeMs, elapsedSinceLastFeedMs)
         }
+
+        override fun onSurfaceSizeChanged(
+            eventTime: AnalyticsListener.EventTime,
+            width: Int,
+            height: Int
+        ) {
+            super.onSurfaceSizeChanged(eventTime, width, height)
+            mediaFileInfo?.width = width
+            mediaFileInfo?.height = height
+            playerCallback?.onVideoSizeChanged(mediaFileInfo)
+        }
     }
 
 
