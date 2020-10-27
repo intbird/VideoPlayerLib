@@ -14,16 +14,17 @@ import java.util.concurrent.TimeUnit
 
 object MainActivityData {
 
-    val itemTestIndex = 0
+    val itemTestIndex = 1
 
-    val itemTestUrl1 = "https://intbird.s3.ap-northeast-2.amazonaws.com/Instagram.mp4"
-    val itemTestUrl2 = "file:///sdcard/videos/My_Feed_on_Vimeo_0323_14_40_13.mp4"
-    val itemTestUrl3 = "file:///sdcard/videos/tiktok_0409_10_55_07.mp4"
-    val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/476426784_mp4_h264_aac_hq.m3u8"
-    val itemTestUrl5 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
+    val itemTestUrl1 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
+    val itemTestUrl2 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test2.mp4"
+    val itemTestUrl3 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test3.mp4"
+    val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test4.mp4"
+    val itemTestUrl5 = "file:///sdcard/videos/test5.mp4"
 
-    val itemTestSrt1 =  "file:///sdcard/videos/srt1.srt"
-    val itemTestSrt2 =  "https://sub.vanlong.stream/subdata/Undekhi.Season.1.Complete.srt"
+    val itemTestSrt1 = "https://sub.vanlong.stream/subdata/Undekhi.Season.1.Complete.srt"
+    val itemTestSrt2 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test1.srt"
+    val itemTestSrt3 = "file:///sdcard/videos/srt1.srt"
 
     var itemTest1 = MediaPlayItem(
         "1", "fileName1",
@@ -56,9 +57,9 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl2),
             MediaClarity("4K", itemTestUrl2)
         ), arrayListOf(
-            MediaRate("0.5",0.5f).checked(),
+            MediaRate("0.5",0.5f),
             MediaRate("normal",1.0f),
-            MediaRate("1.5",1.5f),
+            MediaRate("1.5",1.5f).checked(),
             MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭(隐藏关闭)", MediaTextConfig.HIDE_ICON),
@@ -120,8 +121,8 @@ object MainActivityData {
             MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭").checked(),
-            MediaText("中文", itemTestSrt1),
-            MediaText("英文", itemTestSrt1)
+            MediaText("中文", itemTestSrt3),
+            MediaText("英文", itemTestSrt3)
         ), TimeUnit.SECONDS.toMillis(5)
     )
 

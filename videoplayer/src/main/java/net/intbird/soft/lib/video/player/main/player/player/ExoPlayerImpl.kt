@@ -54,6 +54,7 @@ class ExoPlayerImpl(
         this.mediaFileInfo = mediaFileInfo
         this.playerEvent.mediaFileInfo = mediaFileInfo
         prepareMediaResource(mediaFileInfo.mediaUrl ?: "", mediaFileInfo.mediaHeaders , mediaFileInfo.subtitle)
+        onParamsChange(mediaFileInfo)
     }
 
     private fun prepareMediaResource(uri: String?, headers: Map<String, String>?,subtitlePath: String?) {

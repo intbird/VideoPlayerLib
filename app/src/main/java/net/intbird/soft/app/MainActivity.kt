@@ -2,11 +2,13 @@ package net.intbird.soft.app
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import net.intbird.soft.app.MainActivityData.itemTestArrayModel
+import kotlinx.android.synthetic.main.activity_main.*
 import net.intbird.soft.app.MainActivityData.itemTestArray3
+import net.intbird.soft.app.MainActivityData.itemTestArrayModel
 import net.intbird.soft.app.MainActivityData.itemTestArrayString
 import net.intbird.soft.app.MainActivityData.itemTestIndex
 import net.intbird.soft.lib.service.loader.ServicesLoader
@@ -14,7 +16,7 @@ import net.intbird.soft.lib.video.player.api.IVideoPlayer
 import net.intbird.soft.lib.video.player.api.bean.MediaRate
 import net.intbird.soft.lib.video.player.main.VideoPlayerFragment
 import net.intbird.soft.lib.video.player.main.view.typedui.MediaPlayerType
-import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        info.movementMethod = ScrollingMovementMethod()
 
         // use as a fragment
         add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) }

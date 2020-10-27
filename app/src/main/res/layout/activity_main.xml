@@ -155,6 +155,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:overScrollMode="always"
+        android:scrollbars="vertical"
         android:text="StateText" />
 
 </LinearLayout>
