@@ -36,8 +36,8 @@ repositories {
 #### 2.add dependence in app project `build.gradle` file
 ```
 dependencies {
-     implementation 'intbird.soft.lib:video-player:$lastVersion'
-     implementation 'intbird.soft.lib:video-player-api:$lastVersion'
+     implementation 'net.intbird.soft.lib:video-player:$lastVersion'
+     implementation 'net.intbird.soft.lib:video-player-api:$lastVersion'
 }
 ```
 
@@ -46,11 +46,11 @@ dependencies {
 
 1. support
 ```
-        intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
+        net.intbird.soft.lib.video.player.main.player.player.ExoPlayerImpl
 
-        intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
+        net.intbird.soft.lib.video.player.main.player.player.MediaPlayerImpl
 
-        intbird.soft.lib.video.player.main.player.player.WebViewPlayerImpl
+        net.intbird.soft.lib.video.player.main.player.player.WebViewPlayerImpl
 
 ```
 
@@ -117,8 +117,8 @@ newest $versionName is v1.1.2-SNAPSHOT
 
 ```
 dependencies {
-   implementation "intbird.soft.lib:video-player:$versionName"
-   implementation "intbird.soft.lib:video-player-api:$versionName"
+   implementation "net.intbird.soft.lib:video-player:$versionName"
+   implementation "net.intbird.soft.lib:video-player-api:$versionName"
 }
 ```
 

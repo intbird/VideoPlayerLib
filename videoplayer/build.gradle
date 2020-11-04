@@ -68,6 +68,6 @@ dependencies {
     implementation deps.kpat.auto_service_anotations
     implementation  deps.intbird.service_loader
 
-    releaseImplementation "intbird.soft.lib:video-player-api:$versions.flavors_versions.versionName"
+    releaseImplementation "net.intbird.soft.lib:video-player-api:$versions.flavors_versions.versionName"
     debugImplementation project(path: ':videoplayer-api')
 }
