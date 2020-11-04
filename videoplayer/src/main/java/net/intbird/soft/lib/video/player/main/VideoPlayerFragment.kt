@@ -287,8 +287,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
                 intent.data = Uri.parse("package:" + activity.packageName)
                 activity.startActivityForResult(intent, requestCode)
             } else {
-                ActivityCompat.requestPermissions(
-                    activity,
+                requestPermissions(
                     arrayOf(Manifest.permission.WRITE_SETTINGS),
                     requestCode
                 )
@@ -304,8 +303,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         ) {
             sdcardPermissionsGrand = true
         } else {
-            ActivityCompat.requestPermissions(
-                context,
+            requestPermissions(
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 requestCode
             )
