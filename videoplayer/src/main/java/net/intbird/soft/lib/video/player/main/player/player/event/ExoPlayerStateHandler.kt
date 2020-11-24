@@ -144,7 +144,10 @@ class ExoPlayerStateHandler(val player: SimpleExoPlayer?, val playerCallback: IP
 
 
     private val playerTextOutputListener = TextOutput {
-        log("${it.size}")
+        log("TextOutput: ${it.size}")
+        for (i in it) {
+            log("TextOutput: ${i.text}")
+        }
     }
 
     private fun log(message: String) {

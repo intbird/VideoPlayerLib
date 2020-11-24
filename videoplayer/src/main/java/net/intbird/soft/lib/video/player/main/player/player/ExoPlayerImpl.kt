@@ -1,33 +1,27 @@
 package net.intbird.soft.lib.video.player.main.player.player;
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.text.TextUtils
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.text.CaptionStyleCompat
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource
-import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.MimeTypes
 import net.intbird.soft.lib.video.player.api.error.MediaError
 import net.intbird.soft.lib.video.player.main.intent.delegate.PlayerListDelegate
 import net.intbird.soft.lib.video.player.main.player.IPlayer
 import net.intbird.soft.lib.video.player.main.player.call.IPlayerCallback
-import net.intbird.soft.lib.video.player.main.player.player.event.ExoPlayerStateHandler
 import net.intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
+import net.intbird.soft.lib.video.player.main.player.player.event.ExoPlayerStateHandler
 import net.intbird.soft.lib.video.player.utils.MediaLogUtil
-import java.io.File
 
 /**
  * created by intbird
@@ -42,26 +36,25 @@ class ExoPlayerImpl(
     private val playerListDelegate: PlayerListDelegate?,
     private val playerCallback: IPlayerCallback?
 ) : IPlayer {
-    private lateinit var player:SimpleExoPlayer
-    private lateinit var playerEvent:ExoPlayerStateHandler
+    private var player: SimpleExoPlayer? = null
+    private lateinit var playerEvent: ExoPlayerStateHandler
 
     private var mediaFileInfo: MediaFileInfo? = null
 
     init {
         initSimpleExoPlayer()
-        playerView?.player = player
         player?.addAnalyticsListener(EventLogger(DefaultTrackSelector(context)))
     }
 
     private fun initSimpleExoPlayer() {
-//        // Build a HttpDataSource.Factory with cross-protocol redirects enabled.
-//        val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSourceFactory(
-//            ExoPlayerLibraryInfo.DEFAULT_USER_AGENT,
-//            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-//            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,  /* allowCrossProtocolRedirects= */
-//            true
-//        )
-//
+        // Build a HttpDataSource.Factory with cross-protocol redirects enabled.
+        val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSourceFactory(
+            ExoPlayerLibraryInfo.DEFAULT_USER_AGENT,
+            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,  /* allowCrossProtocolRedirects= */
+            true
+        )
+
 //        val cacheDataSource = CacheDataSource.Factory()
 //            .setCache(
 //                SimpleCache(
@@ -78,17 +71,30 @@ class ExoPlayerImpl(
 //        // support for requesting data from other sources (e.g., files, resources, etc).
 //        val dataSourceFactory = DefaultDataSourceFactory(context, cacheDataSource)
 //
-//        player = SimpleExoPlayer.Builder(context)
-//            .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
-//            .build()
-
+        player = SimpleExoPlayer.Builder(context)
+            .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFactory))
+            .build()
         player = SimpleExoPlayer.Builder(context).build()
         playerEvent = ExoPlayerStateHandler(player, playerCallback)
+
+        playerView?.subtitleView?.setFixedTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 16f)
+        playerView?.subtitleView?.setStyle(
+            CaptionStyleCompat(
+                Color.WHITE, Color.TRANSPARENT, Color.parseColor("#70000000"),
+                CaptionStyleCompat.EDGE_TYPE_OUTLINE,
+                Color.TRANSPARENT,
+                Typeface.DEFAULT
+            )
+        )
+        playerView?.player = player
     }
 
     override fun onParamsChange(mediaFileInfo: MediaFileInfo?) {
         if (null == mediaFileInfo) return
-        mediaFileInfo.speedRate?.run { player.setPlaybackParameters(PlaybackParameters(this)) }
+        mediaFileInfo.speedRate?.run { player?.setPlaybackParameters(PlaybackParameters(this)) }
+
+        // 重新选择字幕
+        //player?.trackSelector.selectTracks()
     }
 
     override fun prepare(mediaFileInfo: MediaFileInfo) {
@@ -98,40 +104,83 @@ class ExoPlayerImpl(
         }
         this.mediaFileInfo = mediaFileInfo
         this.playerEvent.mediaFileInfo = mediaFileInfo
-        prepareMediaResource(mediaFileInfo.mediaUrl ?: "", mediaFileInfo.mediaHeaders , mediaFileInfo.subtitle)
-        onParamsChange(mediaFileInfo)
+        prepareMediaResource(
+            mediaFileInfo.mediaUrl ?: "",
+            mediaFileInfo.mediaHeaders,
+            mediaFileInfo.subtitle
+        )
+        mediaFileInfo.speedRate?.run { player?.setPlaybackParameters(PlaybackParameters(this)) }
     }
 
-    private fun prepareMediaResource(uri: String?, headers: Map<String, String>?,subtitlePath: String?) {
-        val mediaSubtitle = MediaItem.Subtitle(Uri.parse(subtitlePath?:""), MimeTypes.APPLICATION_SUBRIP,"")
-
+    private fun prepareMediaResource(
+        uri: String?,
+        headers: Map<String, String>?,
+        subtitlePath: String?
+    ) {
         val mediaItem: MediaItem = MediaItem.Builder()
+            .setSubtitles(setSubTitlePath(subtitlePath))
             .setUri(uri)
-            .setSubtitles(arrayListOf(mediaSubtitle))
             .build()
         player?.setMediaItem(mediaItem)
+        player?.prepare()
         player?.playWhenReady = true
         playerEvent.register()
-        player?.prepare()
+    }
+
+    private fun setSubTitlePath(subtitlePath: String?): ArrayList<MediaItem.Subtitle> {
+        val subtitleItem = when {
+            subtitlePath?.endsWith(".vtt") == true -> {
+                MediaItem.Subtitle(
+                    Uri.parse(subtitlePath),
+                    MimeTypes.TEXT_VTT,
+                    null,
+                    C.SELECTION_FLAG_FORCED
+                )
+            }
+            subtitlePath?.endsWith(".ssa") == true -> {
+                MediaItem.Subtitle(
+                    Uri.parse(subtitlePath),
+                    MimeTypes.TEXT_SSA,
+                    null,
+                    C.SELECTION_FLAG_FORCED
+                )
+            }
+            subtitlePath?.endsWith(".srt") == true -> {
+                MediaItem.Subtitle(
+                    Uri.parse(subtitlePath),
+                    MimeTypes.APPLICATION_SUBRIP,
+                    null,
+                    C.SELECTION_FLAG_FORCED
+                )
+            }
+            else -> {
+                MediaItem.Subtitle(
+                    Uri.parse(subtitlePath),
+                    MimeTypes.APPLICATION_SUBRIP,
+                    null,
+                    C.SELECTION_FLAG_FORCED
+                )
+            }
+        }
+        return arrayListOf(subtitleItem)
     }
 
     override fun start() {
-        player
-        player.playWhenReady = true
+        player?.playWhenReady = true
     }
 
     override fun seekTo(duration: Long, autoPlay: Boolean) {
         log("seekTo:$duration")
-        player.seekTo(duration)
-        player.playWhenReady = autoPlay
+        player?.seekTo(duration)
+        player?.playWhenReady = autoPlay
     }
 
     override fun resume() {
-        player.playWhenReady = true
+        player?.playWhenReady = true
     }
 
     override fun pause() {
-        player.playWhenReady = false
+        player?.playWhenReady = false
     }
 
     override fun last(): Boolean {
@@ -143,24 +192,24 @@ class ExoPlayerImpl(
     }
 
     override fun stop() {
-        player.stop()
+        player?.stop()
     }
 
     override fun destroy() {
         playerEvent.unregister()
-        player.release()
+        player?.release()
     }
 
     override fun isPlaying(): Boolean {
-        return player.isPlaying
+        return player?.isPlaying == true
     }
 
     override fun getCurrentTime(): Long {
-        return player.currentPosition
+        return player?.currentPosition ?: 0
     }
 
     override fun getTotalTime(): Long {
-        return player.duration
+        return player?.duration ?: 0
     }
 
     private fun log(message: String) {

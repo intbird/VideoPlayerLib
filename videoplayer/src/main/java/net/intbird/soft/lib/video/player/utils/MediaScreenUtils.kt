@@ -23,4 +23,10 @@ object MediaScreenUtils {
         wm.defaultDisplay.getMetrics(outMetrics)
         return outMetrics.heightPixels
     }
+
+
+    fun dp2px(context: Context, dip: Int): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dip.toFloat() * scale + 0.5f * (if (dip >= 0) 1 else -1).toFloat()).toInt()
+    }
 }

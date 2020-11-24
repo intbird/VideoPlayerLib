@@ -22,8 +22,8 @@ object MainActivityData {
     val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test4.mp4"
     val itemTestUrl5 = "file:///sdcard/videos/test5.mp4"
 
-    val itemTestSrt1 = "https://sub.vanlong.stream/subdata/Undekhi.Season.1.Complete.srt"
-    val itemTestSrt2 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test1.srt"
+    val itemTestSrt2 = "https://bitdash-a.akamaihd.net/content/sintel/hls/subtitles_en.vtt"
+    val itemTestSrt1 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/srt/test1.srt"
     val itemTestSrt3 = "file:///sdcard/videos/srt1.srt"
 
     var itemTest1 = MediaPlayItem(
@@ -58,8 +58,8 @@ object MainActivityData {
             MediaClarity("4K", itemTestUrl2)
         ), arrayListOf(
             MediaRate("0.5",0.5f),
-            MediaRate("normal",1.0f),
-            MediaRate("1.5",1.5f).checked(),
+            MediaRate("normal",1.0f).checked(),
+            MediaRate("1.5",1.5f),
             MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭(隐藏关闭)", MediaTextConfig.HIDE_ICON),
@@ -76,8 +76,8 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl3),
             MediaClarity("4K", itemTestUrl3)
         ), arrayListOf(
-            MediaRate("0.5",0.5f).checked(),
-            MediaRate("normal",1.0f),
+            MediaRate("0.5",0.5f),
+            MediaRate("normal",1.0f).checked(),
             MediaRate("1.5",1.5f),
             MediaRate("2",2.0f)
         ), arrayListOf(
