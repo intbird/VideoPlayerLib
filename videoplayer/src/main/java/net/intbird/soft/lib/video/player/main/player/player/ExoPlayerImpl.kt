@@ -61,7 +61,7 @@ class ExoPlayerImpl(
             true
         )
         val cacheDataSource = CacheDataSource.Factory()
-            .setCache(PlayerInstance.getSimpleLeastCache(context))
+            .setCache(PlayerInstance.getSimpleCache(context))
             .setUpstreamDataSourceFactory(httpDataSourceFactory)
 
         val dataSourceFactory = DefaultDataSourceFactory(context, cacheDataSource)
@@ -217,7 +217,7 @@ class ExoPlayerImpl(
                 simpleCache = SimpleCache(
                     File(context.applicationContext.cacheDir, "exoplayer-temps"),
                     NoOpCacheEvictor(),
-                    ExoDatabaseProvider(context)
+                    ExoDatabaseProvider(context.applicationContext)
                 )
             }
             return simpleCache!!
@@ -228,7 +228,7 @@ class ExoPlayerImpl(
                 simpleCache = SimpleCache(
                     File(context.applicationContext.cacheDir, "exoplayer-temps"),
                     LeastRecentlyUsedCacheEvictor(1 * 1024 * 1024),
-                    ExoDatabaseProvider(context)
+                    ExoDatabaseProvider(context.applicationContext)
                 )
             }
             return simpleCache!!

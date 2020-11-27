@@ -22,8 +22,8 @@ object MainActivityData {
     val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test4.mp4"
     val itemTestUrl5 = "file:///sdcard/videos/test5.mp4"
 
-    val itemTestSrt2 = "https://bitdash-a.akamaihd.net/content/sintel/hls/subtitles_en.vtt"
     val itemTestSrt1 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/srt/test1.srt"
+    val itemTestSrt2 = "https://bitdash-a.akamaihd.net/content/sintel/hls/subtitles_en.vtt"
     val itemTestSrt3 = "file:///sdcard/videos/srt1.srt"
 
     var itemTest1 = MediaPlayItem(
