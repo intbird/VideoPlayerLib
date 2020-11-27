@@ -28,7 +28,7 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, index)
         intentPlayer.putExtra(
             VideoPlayerFragment.EXTRA_PLAYER_TYPE,
-            MediaPlayerType.PLAYER_STYLE_1
+            MediaPlayerType.PLAYER_STYLE_WM_1
         )
         intentPlayer.putExtra(VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY, autoPlay)
         context.startActivity(intentPlayer)
@@ -41,7 +41,7 @@ class VideoPlayerServiceImpl : IVideoPlayer {
         intentPlayer.putExtra(VideoPlayerFragment.EXTRA_FILE_INDEX, index)
         intentPlayer.putExtra(
             VideoPlayerFragment.EXTRA_PLAYER_TYPE,
-            MediaPlayerType.PLAYER_STYLE_2
+            MediaPlayerType.PLAYER_STYLE_WM_2
         )
         intentPlayer.putExtra(VideoPlayerFragment.EXTRA_PLAYER_AUTO_PLAY, autoPlay)
         context.startActivity(intentPlayer)

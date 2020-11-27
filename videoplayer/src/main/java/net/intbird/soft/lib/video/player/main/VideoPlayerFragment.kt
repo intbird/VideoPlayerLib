@@ -15,7 +15,6 @@ import android.provider.Settings
 import android.view.*
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -84,7 +83,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
 
         fun newInstance(playList: ArrayList<MediaPlayItem>?,
                         playIndex: Int = 0,
-                        playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_2,
+                        playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_WM_2,
                         autoPlay:Boolean = true): VideoPlayerFragment {
             val fragment = VideoPlayerFragment()
             fragment.arguments = addToBundle(fragment.arguments, playList, playIndex, playerType, autoPlay)
@@ -94,7 +93,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         private fun addToBundle(extra:Bundle?,
                                 playList: ArrayList<MediaPlayItem>?,
                                 playIndex: Int = 0,
-                                playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_2,
+                                playerType: MediaPlayerType = MediaPlayerType.PLAYER_STYLE_WM_2,
                                 autoPlay:Boolean = true): Bundle {
             val args = extra ?: Bundle()
             args.putParcelableArrayList(EXTRA_FILE_URLS, playList)
@@ -162,18 +161,18 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
 
     private fun instanceMediaPlayer(mediaPlayerType: MediaPlayerType?) {
         when(mediaPlayerType) {
-            MediaPlayerType.PLAYER_STYLE_1, MediaPlayerType.PLAYER_STYLE_2 -> {
+            MediaPlayerType.PLAYER_STYLE_WM_1, MediaPlayerType.PLAYER_STYLE_WM_2 -> {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
                 player = MediaPlayerImpl(getInternalActivity(), playerView?.display as? TextureView, subtitleText, intentHelper, playerCall)
             }
-            MediaPlayerType.PLAYER_STYLE_3 -> {
+            MediaPlayerType.PLAYER_STYLE_EXO -> {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
                 player = ExoPlayerImpl(getInternalActivity(), playerView?.display as? PlayerView, intentHelper,  playerCall)
                 // giving list: intentHelper.registerItemChanged() { player?.onAddMediaItems()} like TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
             }
-            MediaPlayerType.PLAYER_STYLE_4 -> {
+            MediaPlayerType.PLAYER_STYLE_WEBVIEW -> {
                 playerCall = PlayerCallbacks(playerCallback, videoPlayerCallback)
                 playerView = MediaViewProvider(view).by(mediaPlayerType)
                 player = WebViewPlayerImpl(getInternalActivity(), playerView?.display as? WebView, playerCall)

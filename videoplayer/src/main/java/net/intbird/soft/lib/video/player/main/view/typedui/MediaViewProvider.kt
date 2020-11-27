@@ -19,7 +19,7 @@ data class MediaViewInfo<Display, Control>(
 class MediaViewProvider(private val view: View?) {
 
     fun by(mediaType: MediaPlayerType?): MediaViewInfo<out View, out View> {
-        val mediaPlayerType = mediaType?: MediaPlayerType.PLAYER_STYLE_1
+        val mediaPlayerType = mediaType?: MediaPlayerType.PLAYER_STYLE_WM_1
         addViewParent(view, mediaPlayerType)
         return MediaViewInfo(view?.findViewById(mediaPlayerType.viewDisplay), view?.findViewById(mediaPlayerType.viewControl))
     }

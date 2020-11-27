@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.lib_media_player_control_comp_bottom_2.vie
 import kotlinx.android.synthetic.main.lib_media_player_control_comp_center.view.*
 import kotlinx.android.synthetic.main.lib_media_player_control_comp_progress.view.*
 import kotlinx.android.synthetic.main.lib_media_player_control_comp_title.view.*
-import kotlinx.android.synthetic.main.lib_media_player_control_style_2.view.*
+import kotlinx.android.synthetic.main.lib_media_player_control_style_wm_2.view.*
 import java.util.concurrent.TimeUnit
 
 /**

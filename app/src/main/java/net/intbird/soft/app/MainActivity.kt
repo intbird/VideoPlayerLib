@@ -28,10 +28,10 @@ class MainActivity : AppCompatActivity() {
         info.movementMethod = ScrollingMovementMethod()
 
         // use as a fragment
-        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_1) }
-        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_2) }
-        add3.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_3) }
-        add4.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_4) }
+        add1.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_WM_1) }
+        add2.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_WM_2) }
+        add3.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_EXO) }
+        add4.setOnClickListener { addVideoPlayer(R.id.fragment_player, MediaPlayerType.PLAYER_STYLE_WEBVIEW) }
         remove.setOnClickListener { removeAudioPlayer(R.id.fragment_player) }
 
         reset.setOnClickListener {

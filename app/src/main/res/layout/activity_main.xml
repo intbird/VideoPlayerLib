@@ -72,21 +72,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="put playlist" />
+            android:textAllCaps="false"
+            android:text="setPlayList" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/last"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="play Last" />
+            android:text="Last" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="play Next" />
+            android:text="Next" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/pause"
