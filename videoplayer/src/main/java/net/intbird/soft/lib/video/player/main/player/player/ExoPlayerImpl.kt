@@ -6,13 +6,19 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.text.TextUtils
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.database.ExoDatabaseProvider
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.text.CaptionStyleCompat
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.MimeTypes
 import net.intbird.soft.lib.video.player.api.error.MediaError
@@ -22,6 +28,7 @@ import net.intbird.soft.lib.video.player.main.player.call.IPlayerCallback
 import net.intbird.soft.lib.video.player.main.player.mode.MediaFileInfo
 import net.intbird.soft.lib.video.player.main.player.player.event.ExoPlayerStateHandler
 import net.intbird.soft.lib.video.player.utils.MediaLogUtil
+import java.io.File
 
 /**
  * created by intbird
@@ -47,34 +54,20 @@ class ExoPlayerImpl(
     }
 
     private fun initSimpleExoPlayer() {
-        // Build a HttpDataSource.Factory with cross-protocol redirects enabled.
         val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSourceFactory(
             ExoPlayerLibraryInfo.DEFAULT_USER_AGENT,
             DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
             DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,  /* allowCrossProtocolRedirects= */
             true
         )
+        val cacheDataSource = CacheDataSource.Factory()
+            .setCache(PlayerInstance.getSimpleLeastCache(context))
+            .setUpstreamDataSourceFactory(httpDataSourceFactory)
 
-//        val cacheDataSource = CacheDataSource.Factory()
-//            .setCache(
-//                SimpleCache(
-//                File("exoplayer-temps"),
-//                NoOpCacheEvictor(),
-//                ExoDatabaseProvider(context)
-//            )
-//            )
-//            .setUpstreamDataSourceFactory(httpDataSourceFactory)
-//            .setCacheWriteDataSinkFactory(null)
-//            .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-//
-//        // Wrap the HttpDataSource.Factory in a DefaultDataSourceFactory, which adds in
-//        // support for requesting data from other sources (e.g., files, resources, etc).
-//        val dataSourceFactory = DefaultDataSourceFactory(context, cacheDataSource)
-//
+        val dataSourceFactory = DefaultDataSourceFactory(context, cacheDataSource)
         player = SimpleExoPlayer.Builder(context)
-            .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFactory))
+            .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
             .build()
-        player = SimpleExoPlayer.Builder(context).build()
         playerEvent = ExoPlayerStateHandler(player, playerCallback)
 
         playerView?.subtitleView?.setFixedTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 16f)
@@ -214,5 +207,31 @@ class ExoPlayerImpl(
 
     private fun log(message: String) {
         MediaLogUtil.log("ExoplayerImpl: $message")
+    }
+
+    object PlayerInstance {
+        private var simpleCache: SimpleCache? = null
+
+        fun getSimpleCache(context: Context): SimpleCache {
+            if (null == simpleCache) {
+                simpleCache = SimpleCache(
+                    File(context.applicationContext.cacheDir, "exoplayer-temps"),
+                    NoOpCacheEvictor(),
+                    ExoDatabaseProvider(context)
+                )
+            }
+            return simpleCache!!
+        }
+
+        fun getSimpleLeastCache(context: Context): SimpleCache {
+            if (null == simpleCache) {
+                simpleCache = SimpleCache(
+                    File(context.applicationContext.cacheDir, "exoplayer-temps"),
+                    LeastRecentlyUsedCacheEvictor(1 * 1024 * 1024),
+                    ExoDatabaseProvider(context)
+                )
+            }
+            return simpleCache!!
+        }
     }
 }
