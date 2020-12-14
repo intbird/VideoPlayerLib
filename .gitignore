@@ -2,7 +2,6 @@
 *.apk
 *.ap_
 *.DS_Store
-/gradle
 gradlew*
 /androidTest
 *.iml
