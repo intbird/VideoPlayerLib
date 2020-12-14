@@ -2,8 +2,8 @@
 *.apk
 *.ap_
 *.DS_Store
-/gradle
-gradlew*
+#/gradle
+#gradlew*
 /androidTest
 *.iml
 *.idea
