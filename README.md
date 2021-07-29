@@ -25,7 +25,6 @@ my blog: [https://blog.csdn.net/intbird/article/details/105970536](https://blog.
 ##### auto rotation
 ![image](https://camo.githubusercontent.com/efdb70638a6f376337375820bde48de3d7fa10180ea74cf9d0f9e5e5cfc17dab/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230313031343137303934383332362e676966237069635f63656e746572)
 
-##### develping...
 
 How to Use it
 --------
