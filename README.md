@@ -169,6 +169,10 @@ dependencies {
 
 ##### recoding...
 
+###### VideoPlyaerView: windowmanager,viewPager2,RecyclerView 内部需要引入的View
+> 修复: 权限申请要在activity或者fragment中,view要独立,切换数据和页面等等,要做成一个服务
+
+
 ###### windowmanager: 开启和关闭播放器小窗口: 用系统广播进行传递, 效率太低和surface圆角裁剪, 需要改进!   
 > 问题: 小窗和大窗每次需要对资源进行重载.    
 > 修复: 需要改进为可重复使用,挂载到不同的surfaceview上.      
