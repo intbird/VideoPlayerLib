@@ -12,5 +12,7 @@
     <color name="lib_media_player_adjust_wrapper_background">#323232</color>
     <color name="lib_media_player_progress_text_color">#FFA035</color>
 
-    <color name="lib_media_player_control_panel_alpha">#50000000</color>
+    <color name="lib_media_player_control_panel_black">#50000000</color>
+    <color name="lib_media_player_control_panel_alpha_start">#00000000</color>
+    <color name="lib_media_player_control_panel_alpha_end">#E6000000</color>
 </resources>

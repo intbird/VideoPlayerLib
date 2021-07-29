@@ -72,8 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAllCaps="false"
-            android:text="setPlayList" />
+            android:text="setPlayList"
+            android:textAllCaps="false" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/last"
@@ -149,6 +149,39 @@
             android:background="#aaafff"
             android:gravity="center"
             android:text="full Screen Style2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/developing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fullScreen3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#aaafff"
+            android:gravity="center"
+            android:text="RecycleView" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fullScreen4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#aaafff"
+            android:gravity="center"
+            android:text="ViewPager2" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fullScreen5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#aaafff"
+            android:gravity="center"
+            android:text="WindowManager" />
     </LinearLayout>
 
     <TextView

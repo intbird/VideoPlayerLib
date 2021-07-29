@@ -104,7 +104,7 @@ class SingleChooseDialogFragment : DialogFragment() {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
-            background = ContextCompat.getDrawable(context, R.color.lib_media_player_control_panel_alpha)
+            background = ContextCompat.getDrawable(context, R.color.lib_media_player_control_panel_black)
         }
     }
 

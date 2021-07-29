@@ -45,8 +45,8 @@ object MainActivityData {
         ),
         arrayListOf(
             MediaText("关闭(显示关闭)", MediaTextConfig.SHOW_ICON),
-            MediaText("中文", itemTestSrt1).checked(),
-            MediaText("英文", itemTestSrt2)
+            MediaText("中文", itemTestSrt1),
+            MediaText("英文", itemTestSrt2).checked()
         ),
         TimeUnit.SECONDS.toMillis(1)
     )
@@ -65,8 +65,8 @@ object MainActivityData {
             MediaRate("2",2.0f)
         ), arrayListOf(
             MediaText("关闭(隐藏关闭)", MediaTextConfig.HIDE_ICON),
-            MediaText("中文", itemTestSrt1).checked(),
-            MediaText("英文", itemTestSrt2)
+            MediaText("中文", itemTestSrt1),
+            MediaText("英文", itemTestSrt2).checked()
         ), TimeUnit.SECONDS.toMillis(10)
     )
     var itemTest3 = MediaPlayItem(
@@ -117,8 +117,8 @@ object MainActivityData {
             MediaClarity("2K", itemTestUrl5),
             MediaClarity("4K", itemTestUrl5)
         ), arrayListOf(
-            MediaRate("0.5",0.5f).checked(),
-            MediaRate("normal",1.0f),
+            MediaRate("0.5",0.5f),
+            MediaRate("normal",1.0f).checked(),
             MediaRate("1.5",1.5f),
             MediaRate("2",2.0f)
         ), arrayListOf(

@@ -51,7 +51,7 @@
                 android:layout_width="32dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="17dp"
-                android:background="@drawable/icon_video_player_timed_text"
+                android:background="@drawable/icon_video_player_caption"
                 android:visibility="gone" />
 
             <TextView
@@ -106,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/lib_media_player_control_panel_alpha"
+        android:background="@drawable/lib_media_player_control_panel_alpha "
         android:orientation="vertical">
 
         <LinearLayout
