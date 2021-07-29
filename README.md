@@ -171,12 +171,13 @@ dependencies {
 
 ###### windowmanager: 开启和关闭播放器小窗口: 用系统广播进行传递, 效率太低和surface圆角裁剪, 需要改进!   
 > 问题: 小窗和大窗每次需要对资源进行重载.    
-> 修复: 需要改进为可重复使用,挂载到不同的surfaceview上.    
-> ![image](https://user-images.githubusercontent.com/7553539/127447236-bf3be8a2-a039-4a9a-84b7-f6455509b6c1.png)    
+> 修复: 需要改进为可重复使用,挂载到不同的surfaceview上.      
+> ![image](https://user-images.githubusercontent.com/7553539/127451044-5e30b23f-b5e7-4411-bfc2-af259e974716.png)  
 
  
-###### viewPager2:大家一起仿抖音(滑动youtube的webview实现的播放器接口)  
-> ![image](https://user-images.githubusercontent.com/7553539/127447700-0d06370f-0912-4d13-b526-8eb06718d434.png)  
+###### viewPager2:大家一起仿抖音(滑动youtube的webview实现的播放器接口 和 流媒体视频)  
+> ![image](https://user-images.githubusercontent.com/7553539/127451347-123cd39c-2a1e-4fa7-92eb-92534bb6a062.png)
+
  
 ###### style5:弹出菜单等不再视频内部,弹层选择播放器速率和字幕,以及播放器的各种样式UI等  
 > 问题: 不管是在视频内部弹出视频还是使用独立的对话框弹出,都需要播放器内部定义样式    
