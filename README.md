@@ -175,7 +175,7 @@ dependencies {
 > ![image](https://user-images.githubusercontent.com/7553539/127447236-bf3be8a2-a039-4a9a-84b7-f6455509b6c1.png)    
 
  
-###### viewPager2:大家一起仿抖音  
+###### viewPager2:大家一起仿抖音(滑动youtube的webview实现的播放器接口)  
 > ![image](https://user-images.githubusercontent.com/7553539/127447700-0d06370f-0912-4d13-b526-8eb06718d434.png)  
  
 ###### style5:弹出菜单等不再视频内部,弹层选择播放器速率和字幕,以及播放器的各种样式UI等  
