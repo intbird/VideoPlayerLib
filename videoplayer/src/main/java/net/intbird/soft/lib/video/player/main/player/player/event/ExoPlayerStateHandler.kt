@@ -91,13 +91,6 @@ class ExoPlayerStateHandler(val player: SimpleExoPlayer?, val playerCallback: IP
      */
     private val playerAnalyticsListener = object : AnalyticsListener {
 
-        override fun onRenderedFirstFrame(
-            eventTime: AnalyticsListener.EventTime,
-            surface: Surface?
-        ) {
-            super.onRenderedFirstFrame(eventTime, surface)
-        }
-
         override fun onDroppedVideoFrames(
             eventTime: AnalyticsListener.EventTime,
             droppedFrames: Int,

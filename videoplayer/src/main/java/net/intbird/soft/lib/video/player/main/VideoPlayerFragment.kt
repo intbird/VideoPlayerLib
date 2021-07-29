@@ -413,7 +413,7 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         override fun onError(errorCode:Int, errorMessage: String?) {
             contentLoading.hide()
             videoControlController?.onStop()
-            log("player onError")
+            log("player onError: $errorCode: $String")
         }
 
         override fun onVideoSizeChanged(mediaFileInfo: MediaFileInfo?) {
@@ -423,11 +423,11 @@ open class VideoPlayerFragment : Fragment(), ILockExecute, IPlayerExecute {
         }
 
         override fun onBuffStart() {
-            contentLoading.show()
+            //contentLoading.show()
         }
 
         override fun onBuffEnded() {
-            contentLoading.hide()
+            //contentLoading.hide()
         }
     }
 

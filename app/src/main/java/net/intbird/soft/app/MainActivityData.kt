@@ -17,14 +17,16 @@ object MainActivityData {
     val itemTestIndex = 1
 
     val itemTestUrl1 = "https://llvod.mxplay.com/video/d89b306af415d293a66a74a26c560ab5/2/hls/h264_baseline.m3u8"
-    val itemTestUrl2 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test2.mp4"
-    val itemTestUrl3 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test3.mp4"
-    val itemTestUrl4 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/test4.mp4"
-    val itemTestUrl5 = "file:///sdcard/videos/test5.mp4"
+    val itemTestUrl2 = "https://intbird.net/apache/videos/test2.mp4"
+    val itemTestUrl3 = "https://intbird.net/apache/videos/test3.mp4"
+    val itemTestUrl4 = "https://intbird.net/apache/videos/test4.mp4"
+    val itemTestUrl5 = "https://intbird.net/apache/videos/test5.mp4"
+    val localfile = "file:///sdcard/videos/test5.mp4"
 
-    val itemTestSrt1 = "https://intbird.s3.ap-northeast-2.amazonaws.com/videos/srt/test1.srt"
-    val itemTestSrt2 = "https://bitdash-a.akamaihd.net/content/sintel/hls/subtitles_en.vtt"
-    val itemTestSrt3 = "file:///sdcard/videos/srt1.srt"
+    val itemTestSrt1 = "https://intbird.net/apache/videos/srt/test1.srt"
+    val itemTestSrt2 = "https://intbird.net/apache/videos/srt/test1.vtt"
+    val itemTestSrt3 = "https://intbird.net/apache/videos/srt/test2.srt"
+    val localsrt= "file:///sdcard/videos/srt1.srt"
 
     var itemTest1 = MediaPlayItem(
         "1", "fileName1",

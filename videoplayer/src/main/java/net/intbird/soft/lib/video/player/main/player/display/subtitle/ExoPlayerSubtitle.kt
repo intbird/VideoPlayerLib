@@ -8,7 +8,7 @@ import android.text.TextUtils
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.text.CaptionStyleCompat
+import com.google.android.exoplayer2.ui.CaptionStyleCompat
 import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.util.MimeTypes
 import net.intbird.soft.lib.video.player.api.const.MediaTextConfig

@@ -44,11 +44,11 @@ class SensorOrientationManager(
             sensor = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         }
         if (sensor != null) {
-            MediaLogUtil.log("Sensor sensor: success")
+            //MediaLogUtil.log("Sensor sensor: success")
             sensorEvent = object : SensorEventListener {
 
                 override fun onSensorChanged(event: SensorEvent?) {
-                    MediaLogUtil.log("Sensor onSensorChanged: ${(event?.values?.get(2) ?: 0)} ")
+                    //MediaLogUtil.log("Sensor onSensorChanged: ${(event?.values?.get(2) ?: 0)} ")
                     if (null == event) return
                     enableOrientationEvent(event.values[2] <= 5) // 0 ~ 10
                 }
