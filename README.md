@@ -163,18 +163,26 @@ dependencies {
 
 ##  developing...
 
-windowmanager: 开启和关闭播放器小窗口: 用系统广播进行传递, 效率太低, 需要改进!
-问题: 小窗和大窗每次需要对资源进行重载.
-修复: 需要改进为可重复使用,挂载到不同的surfaceview上.
-![image](https://user-images.githubusercontent.com/7553539/127447236-bf3be8a2-a039-4a9a-84b7-f6455509b6c1.png)
+###### issues
+> https://github.com/intbird/VideoPlayerLib/issues/2  
 
-viewPager2:大家一起仿抖音
-![image](https://user-images.githubusercontent.com/7553539/127447700-0d06370f-0912-4d13-b526-8eb06718d434.png)
 
-style5:弹出菜单等不再视频内部,弹层选择播放器速率和字幕等
-问题: 不管是在视频内部弹出视频还是使用独立的对话框弹出,都需要播放器内部定义样式
-修复: 公开内部api可实现的功能,外部获取当前参数和信息,弹出自定义UI后,通过接口回调给播放器
-![image](https://user-images.githubusercontent.com/7553539/127448087-9cb6a895-a54b-408d-ba6d-bbad94cd9a6a.png)
-![image](https://user-images.githubusercontent.com/7553539/127448132-6249b8ec-a301-4edc-8279-4bf5c0094cbc.png)
+##### recoding...
 
-etc...
+###### windowmanager: 开启和关闭播放器小窗口: 用系统广播进行传递, 效率太低和surface圆角裁剪, 需要改进!   
+> 问题: 小窗和大窗每次需要对资源进行重载.    
+> 修复: 需要改进为可重复使用,挂载到不同的surfaceview上.    
+> ![image](https://user-images.githubusercontent.com/7553539/127447236-bf3be8a2-a039-4a9a-84b7-f6455509b6c1.png)    
+
+ 
+###### viewPager2:大家一起仿抖音  
+> ![image](https://user-images.githubusercontent.com/7553539/127447700-0d06370f-0912-4d13-b526-8eb06718d434.png)  
+ 
+###### style5:弹出菜单等不再视频内部,弹层选择播放器速率和字幕,以及播放器的各种样式UI等  
+> 问题: 不管是在视频内部弹出视频还是使用独立的对话框弹出,都需要播放器内部定义样式    
+> 修复: 公开内部api可实现的功能,外部获取当前参数和信息,弹出自定义UI(xml文件或者api)后,通过接口设置播放  
+> ![image](https://user-images.githubusercontent.com/7553539/127448087-9cb6a895-a54b-408d-ba6d-bbad94cd9a6a.png)  
+> 
+> ![image](https://user-images.githubusercontent.com/7553539/127448132-6249b8ec-a301-4edc-8279-4bf5c0094cbc.png)  
+
+###### etc...
