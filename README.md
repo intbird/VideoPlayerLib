@@ -182,8 +182,9 @@ dependencies {
 ###### style5:弹出菜单等不再视频内部,弹层选择播放器速率和字幕,以及播放器的各种样式UI等  
 > 问题: 不管是在视频内部弹出视频还是使用独立的对话框弹出,都需要播放器内部定义样式    
 > 修复: 公开内部api可实现的功能,外部获取当前参数和信息,弹出自定义UI(xml文件或者api)后,通过接口设置播放  
+> style5:   
 > ![image](https://user-images.githubusercontent.com/7553539/127448087-9cb6a895-a54b-408d-ba6d-bbad94cd9a6a.png)  
-> 
+> popwindow:   
 > ![image](https://user-images.githubusercontent.com/7553539/127448132-6249b8ec-a301-4edc-8279-4bf5c0094cbc.png)  
 
 ###### etc...
