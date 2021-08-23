@@ -112,6 +112,7 @@ class ExoPlayerImpl(
     ) {
         val mediaItem: MediaItem = MediaItem.Builder()
             .setSubtitles(setSubTitlePath(subtitlePath))
+            .setDrmLicenseRequestHeaders(headers)
             .setUri(uri)
             .build()
         player?.setMediaItem(mediaItem)
@@ -127,7 +128,7 @@ class ExoPlayerImpl(
                     Uri.parse(subtitlePath),
                     MimeTypes.TEXT_VTT,
                     null,
-                    C.SELECTION_FLAG_FORCED
+                    C.SELECTION_FLAG_DEFAULT
                 )
             }
             subtitlePath?.endsWith(".ssa") == true -> {
@@ -135,7 +136,7 @@ class ExoPlayerImpl(
                     Uri.parse(subtitlePath),
                     MimeTypes.TEXT_SSA,
                     null,
-                    C.SELECTION_FLAG_FORCED
+                    C.SELECTION_FLAG_DEFAULT
                 )
             }
             subtitlePath?.endsWith(".srt") == true -> {
@@ -143,7 +144,7 @@ class ExoPlayerImpl(
                     Uri.parse(subtitlePath),
                     MimeTypes.APPLICATION_SUBRIP,
                     null,
-                    C.SELECTION_FLAG_FORCED
+                    C.SELECTION_FLAG_DEFAULT
                 )
             }
             else -> {
@@ -151,7 +152,7 @@ class ExoPlayerImpl(
                     Uri.parse(subtitlePath),
                     MimeTypes.APPLICATION_SUBRIP,
                     null,
-                    C.SELECTION_FLAG_FORCED
+                    C.SELECTION_FLAG_DEFAULT
                 )
             }
         }
